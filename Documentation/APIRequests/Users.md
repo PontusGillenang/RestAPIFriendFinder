@@ -12,7 +12,7 @@
 
 ###### Users that like knitting, lives in mölndal and skill level (advanced)
 
-/users/?hobby= <knitting>& location=<mölndal>& 
+/users/?hobby= <knitting>& location=<mölndal>&userskilllevel = <advance>
 
 
 
