@@ -8,5 +8,7 @@
    1. Get(User,Hobby, Location)
 4. As a user I want to be able to Create an Account
    1. Post(User, List<Hobby>Hobbies, List<Location>Locations)
-5. As a user I want to be able to Delete my Account 
+5. As a user i want to be able to update my information, such as hoppies etc.
+   1. Put(/users/hobbies=<hobbies>)
+6. As a user I want to be able to Delete my Account 
    1. Delete(User, List<Hobby>Hobbies, List<Location>Locations)

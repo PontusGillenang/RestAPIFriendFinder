@@ -60,4 +60,4 @@ Int UserTwo
 # Class EventPlace
 
 HobbyID
-Location
+LocationID
