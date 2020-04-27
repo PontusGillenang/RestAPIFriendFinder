@@ -47,7 +47,10 @@ Const List<City> Cities
 
 # Class Match
 
+MatchID
 UserID UserOne
+UserID UserTwo
+
 UserID UserTwo
 
 int UserOne
