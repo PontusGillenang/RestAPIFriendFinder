@@ -6,7 +6,7 @@ You can search via location, hobby, age, activity level and skill of user!
 
 
 1. I'm interested in learning to Climb
-   1. Get (Beginner, Hobby)
+   1. Get (Location, Hobby)
 2. Find Places where you can ride bikes
    1. Get(Location, Hobby)
 3. Find new friends that likes knitting

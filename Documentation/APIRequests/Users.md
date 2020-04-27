@@ -16,3 +16,9 @@
 
 
 
+# <u>Post</u>
+
+###### Create new user
+
+/users/userID= <userID>?name= <name>&Adress=<Address>&Phonenumber=<phonenumber>&age=<age>
+
