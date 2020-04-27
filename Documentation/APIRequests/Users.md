@@ -14,6 +14,10 @@
 
 /users/?hobby= <knitting>& location=<mölndal>&userskilllevel = <advance>
 
+###### Users that teach climbing, lives in mölndal
+
+/users/?hobby= <climbing>& location=<mölndal>&teacher=<true>
+
 
 
 # <u>Post</u>

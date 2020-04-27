@@ -5,6 +5,7 @@ Name
 Adress
 PhoneNumber
 Age
+Teacher
 
 List<Hobbie> Hobbies
 List<FavoritePlace> FavoritePlaces
