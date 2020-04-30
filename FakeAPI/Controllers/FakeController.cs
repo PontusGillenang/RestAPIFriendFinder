@@ -10,7 +10,7 @@ namespace FakeAPI.Controllers
         public string Get()
         {
             // Anrop till Fake Repo
-            return "Baka en kaka";
+            return "Hello good sir";
         }
     }
 }
