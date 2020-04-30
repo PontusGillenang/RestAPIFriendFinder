@@ -27,6 +27,7 @@ namespace FakeAPI
         {
             services.AddMvc(options => options.EnableEndpointRouting=false)
             .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
+            
             services.AddDbContext<FakeContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));        
         }

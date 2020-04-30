@@ -6,11 +6,11 @@ namespace FakeAPI.Services
 {
     public class FakeRepository: IFakeRepository
     {
-        private DbContext context;
+        // private DbContext context;
 
-        public FakeRepository(){
-            context = new FakeContext();
-        }
+        // public FakeRepository(){
+        //     context = new FakeContext();
+        // }
 
         public string GetFake(){
             return "Hy there!";

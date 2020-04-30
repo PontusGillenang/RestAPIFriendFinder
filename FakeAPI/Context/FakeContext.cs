@@ -10,10 +10,5 @@ namespace FakeAPI.Models
             
         }
         public DbSet<Fake> Fakes {get; set;}
-
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder){
-        //     IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json", true).Build();
-        //     optionBuilder.UseSqlServer(config["ConnectionStrings:DefaultConnection"]);
-        // }
     }
 }
