@@ -5,6 +5,7 @@ namespace FakeAPI.Services
 {
     public interface IFakeRepository
     {
-        Task<Fake> GetFake();
+        // Task<Fake> GetFake();
+        string GetFake();
     }
 }

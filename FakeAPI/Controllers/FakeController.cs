@@ -4,7 +4,7 @@ namespace FakeAPI.Controllers
 {
     [Route("api/v1.0/[controller]")]
     [ApiController]
-    public class FakeController
+    public class FakeController : ControllerBase
     {
         [HttpGet]
         public string Get()
