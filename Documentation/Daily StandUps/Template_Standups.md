@@ -1,29 +1,62 @@
-# **<u>Finished with all issues?</u> **
+# Daily Standup
+
+## Oscar K
+
+### Done since last Standup:
 
 
 
-# <u>**If not, why?**</u>
+### Planning to do until next Standup:
 
 
 
-# **<u>Issues, not done:</u>**
+### Do you need any extra resources?:
 
 
 
-- Create Repo
-  - New time estimate?
-  - Some parts done?
-  - What do we need to finish next time?
+## Oskar M
 
-# **<u>What can we do better in next sprint?</u>**
+### Done since last Standup:
 
 
 
-# **<u>Is there anything we need to add to the backlog?</u>**
+### Planning to do until next Standup:
 
 
 
-# **<u>Keeper of this standup:</u>**
+### Do you need any extra resources?:
+
+
+
+## Sebastian J
+
+### Done since last Standup:
+
+
+
+### Planning to do until next Standup:
+
+
+
+### Do you need any extra resources?:
+
+
+
+## William L
+
+### Done since last Standup:
+
+
+
+### Planning to do until next Standup:
+
+
+
+### Do you need any extra resources?:
+
+
+
+# **<u>Keeper of this sprint review:</u>**
 
 WilliamTest
 
