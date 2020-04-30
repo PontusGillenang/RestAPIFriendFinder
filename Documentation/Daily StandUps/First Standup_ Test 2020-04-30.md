@@ -24,6 +24,8 @@ We set up the FakeAPI with following:
   - Microsoft.EntityFrameworkCore.Tools
 - Set up a Fake Context file that inheritice from DbContext
 - Create first FakeInitial Migration
+- Create DB
+- Add Connection to DB
 - Our Goal today is to be able to Get() just a string. To see that the basics is on place.
 
 

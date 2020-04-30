@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace FakeAPI.Models
 {
@@ -6,8 +7,8 @@ namespace FakeAPI.Models
     {
         public DbSet<Fake> Fakes {get; set;}
 
-        protected override void OnConfiguring(DbContextOptionBuilder optionBuilder){
-            IConfiguration config = new ConfigurationBuilder().AddJsonFile("config.json", true).Build();
+        protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder){
+            IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json", true).Build();
             optionBuilder.UseSqlServer(config["ConnectionStrings:DefaultConnection"]);
         }
     }
