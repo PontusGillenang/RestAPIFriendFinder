@@ -1,11 +1,11 @@
 # <u>Class User</u>
 
-UserID
-Name
-Adress
-PhoneNumber
-Age
-Teacher
+int UserID
+string Name
+string Adress
+string PhoneNumber
+int Age
+string Teacher
 
 List<Hobbie> Hobbies
 List<FavoritePlace> FavoritePlaces
@@ -13,45 +13,45 @@ List<Match> Matches
 
 # <u>Class UserPlace</u>
 
-UserID
-PlaceID
-FavoritePlace
-LeastFavoritePlace
+int UserID
+int PlaceID
+string FavoritePlace
+string LeastFavoritePlace
 
 # <u>Class UserHobby</u>
 
-UserID
-UserSkillLevel
-HobbyID
+inte UserID
+enum UserSkillLevel
+int HobbyID
 
 Const List<string> Hobbies 
 
 # <u>Class Hobby</u>
 
-UserID
-HobbyID
-Name
-ActivationLevel
+int UserID
+int HobbyID
+stromg Name
+enum ActivationLevel
 
 # <u>Class City</u>
 
-Name
-Country
-County
+int CityID
+
+string Name
+string Country
+string County
 
 # <u>Class Place</u>
 
-UserID
+int UserID
 
 
 Const List<City> Cities 
 
 # Class Match
 
-MatchID
+int MatchID
 UserID UserOne
-UserID UserTwo
-
 UserID UserTwo
 
 int UserOne
@@ -59,5 +59,5 @@ Int UserTwo
 
 # Class EventPlace
 
-HobbyID
-LocationID
+int HobbyID
+int LocationID
