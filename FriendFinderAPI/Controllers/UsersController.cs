@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FriendFinderAPI.Controllers
 {
+    [Route("api/v1.0/[controller]")]
+    [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly UserContext _context;
