@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using FriendFinderAPI.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using FriendFinderAPI.Models;
 
 namespace FriendFinderAPI.Controllers
 {
@@ -39,14 +40,14 @@ namespace FriendFinderAPI.Controllers
             //Important to dont forget that save the changes in context when using POST
             _context.SaveChanges();
 
-            return CreatedAtAction("GetUser", new User{Id = user.Id}, user);
+            return CreatedAtAction("GetUser", new User{UserID = user.UserID}, user);
         }
 
         //PUT:      api/users/n
         [HttpPut("{id}")]
         public ActionResult PutUser(int id, User user)
         {
-            if(id != user.Id)
+            if(id != user.UserID)
                 return BadRequest();
             
             _context.Entry(user).State = EntityState.Modified;

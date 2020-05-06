@@ -12,15 +12,15 @@ namespace FriendFinderAPI.Services
 
         private readonly UserContext _context;
 
-        public UserRepository(UserContext _context)
+        public UserRepository(UserContext context)
         {
-            _context = context;
+            context = _context;
         }
         public async Task<User> GetUser()
         {
 
-            var query = _context.User;
-            return await query.FirstorDefaultAsync();
+            var query = _context.Users;
+            return await query.FirstOrDefaultAsync();
         }
 
 
@@ -28,13 +28,13 @@ namespace FriendFinderAPI.Services
          //missing models and context to test. 
         public IEnumerable<User> GetAllUsers()
         {
-            return _context.User.ToList();
+            return _context.Users.ToList();
         }
         
         //missing models and context to test. 
         public User GetUserByID(int id)
         {
-            return _context.User.FirstorDefault(p=> p.UserID == id);
+            return _context.Users.FirstOrDefault(p=> p.UserID == id);
         }
 
         

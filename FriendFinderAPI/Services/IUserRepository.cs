@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using FriendFinderAPI.Models;
 
 namespace FriendFinderAPI.Services
 {
