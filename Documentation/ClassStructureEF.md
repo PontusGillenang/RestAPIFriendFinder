@@ -1,50 +1,41 @@
 # <u>Class User</u>
 
 int UserID  
-string Name  
-string Adress    
-string PhoneNumber  
-int Age  
-string Teacher  
+string UserName  
+string UserAdress    
+string UserPhoneNumber  
+int UserAge  
+bool UserIsTeacher  
 
-List<Hobbie> Hobbies
-
-List<FavoritePlace> FavoritePlaces
-
-List<Match> Matches
+ICollection<Hobbie> Hobbies
+ICollection<Match> Matches
 
 # <u>Class Hobby</u>
 
-int UserID  
 int HobbyID  
-stromg Name  
-enum ActivationLevel     
+string HobbyName  
+enum HobbyActivationLevel     
 
 # <u>Class City</u>
 
 int CityID  
-
-string Name   
-string Country  
-string County       
+string CityName   
+string CityCountry  
+string CityCounty       
 
 # <u>Class Place</u>
-
-int UserID  
-
-
-Const List<City> Cities   
+ 
+ICollection<City> Cities
+ICollection<Hobby> Hobbies
 
 # Class Match
 
 int MatchID  
-UserID UserOne  
-UserID UserTwo  
-
-int UserOne  
-Int UserTwo  
+User UserOne  
+User UserTwo  
 
 # Class Event
 
-int HobbyID  
-int LocationID  
+Hobby Hobby
+User Responsible
+City City
