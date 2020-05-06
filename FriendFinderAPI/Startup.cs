@@ -24,7 +24,7 @@ namespace FriendFinderAPI
         {
 //            services.AddDbContext<User>
 //                (opt => opt.UseSqlServer(Configuration["Data:FriendFinderAPIConnection:ConnectionString"]));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(options => options.EnableEndpointRouting=false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
