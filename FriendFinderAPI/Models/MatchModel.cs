@@ -1,9 +1,9 @@
 namespace FriendFinderAPI.Models
 {
-    public class MatchModel
+    public class Match
     {
         public int MatchID { get; set; }
-        public UserModel MatchedUser1 { get; set; }
-        public UserModel MatchedUser2 { get; set; }
+        public User MatchedUser1 { get; set; }
+        public User MatchedUser2 { get; set; }
     }
 }

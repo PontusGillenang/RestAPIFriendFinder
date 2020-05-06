@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FriendFinderAPI.Models
 {
-    public class UserModel
+    public class User
     {
         public int UserID { get; set; }
         public string UserName { get; set; }
@@ -10,7 +10,7 @@ namespace FriendFinderAPI.Models
         public string UserPhoneNumber { get; set; }
         public int UserAge { get; set; }
         public bool UserIsTeacher { get; set; }
-        public ICollection<HobbyModel> Hobbies { get; set; }
-        public ICollection<MatchModel> Matches { get; set; }
+        public ICollection<Hobby> Hobbies { get; set; }
+        public ICollection<Match> Matches { get; set; }
     }
 }

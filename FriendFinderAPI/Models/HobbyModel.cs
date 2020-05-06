@@ -1,6 +1,6 @@
 namespace FriendFinderAPI.Models
 {
-    public class HobbyModel
+    public class Hobby
     {
         enum HobbyActivationLevel 
         {

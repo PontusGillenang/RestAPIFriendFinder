@@ -6,7 +6,7 @@ namespace FriendFinderAPI.Models
     {
         public int LocationID { get; set; }
         public string LocationName { get; set; }
-        public CityModel City { get; set; }
-        public ICollection<HobbyModel> Hobbies { get; set; }
+        public City City { get; set; }
+        public ICollection<Hobby> Hobbies { get; set; }
     }
 }
