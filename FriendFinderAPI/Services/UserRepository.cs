@@ -1,7 +1,9 @@
 using System.Threading.Tasks;
-//using FriendFinderAPI.Models;
+using FriendFinderAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using FriendFinderAPI.Context;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace FriendFinderAPI.Services
 {
