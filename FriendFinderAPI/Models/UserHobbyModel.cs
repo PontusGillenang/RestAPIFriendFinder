@@ -11,6 +11,6 @@ namespace FriendFinderAPI.Models
         }
         public int UserID { get; set; }
         public int HobbyID { get; set; }
-        //const List<Hobby> Hobbies;
+        //const List<HobbyModel> Hobbies;
     }
 }
