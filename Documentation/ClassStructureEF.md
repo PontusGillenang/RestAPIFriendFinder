@@ -7,7 +7,7 @@ string UserPhoneNumber
 int UserAge  
 bool UserIsTeacher  
 
-ICollection<Hobbie> Hobbies
+ICollection<Hobbie> Hobbies  
 ICollection<Match> Matches
 
 # <u>Class Hobby</u>
@@ -23,19 +23,21 @@ string CityName
 string CityCountry  
 string CityCounty       
 
-# <u>Class Place</u>
- 
-ICollection<City> Cities
+# <u>Class Location</u>
+
+int LocationID  
+string LocationName  
+City City  
 ICollection<Hobby> Hobbies
 
 # Class Match
 
-int MatchID  
+int MatchID    
 User UserOne  
 User UserTwo  
 
 # Class Event
 
-Hobby Hobby
-User Responsible
-City City
+Hobby Hobby  
+User Responsible  
+City City  
