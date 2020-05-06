@@ -5,19 +5,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using FriendFinderAPI.Models;
+using FriendFinderAPI.Context;
 
 namespace FriendFinderAPI
 {
     public class Startup
     {
-        public IConfiguration Configuration {get;}
-
-        public Startup(IConfiguration configuration) => Configuration = configuration;
-
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<User>
-                (opt => opt.UseSqlServer(Configuration["Data:FriendFinderAPIConnection:ConnectionString"]));
+            services.AddDbContext<FriendFinderContext>();
             services.AddMvc(options => options.EnableEndpointRouting=false).SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
         }
 

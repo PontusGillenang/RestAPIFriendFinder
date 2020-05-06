@@ -10,9 +10,9 @@ namespace FriendFinderAPI.Services
     public class UserRepository : IUserRepository
     {
 
-        private readonly UserContext _context;
+        private readonly FriendFinderContext _context;
 
-        public UserRepository(UserContext context)
+        public UserRepository(FriendFinderContext context)
         {
             context = _context;
         }
