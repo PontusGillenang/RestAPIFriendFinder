@@ -1,9 +1,13 @@
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace FriendFinderAPI.Models
 {
     public class Match
     {
+        
         public int MatchID { get; set; }
 
         [ForeignKey("UserID1")]
