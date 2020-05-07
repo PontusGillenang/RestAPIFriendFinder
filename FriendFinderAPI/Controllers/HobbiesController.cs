@@ -33,7 +33,7 @@ namespace FriendFinderAPI.Controllers
         [HttpPost]
         public ActionResult<Hobby> PostHobby(Hobby hobby)
         {
-            _context.Hobbies.Add(Hobby);
+            _context.Hobbies.Add(hobby);
             //Important to dont forget that save the changes in context when using POST
             _context.SaveChanges();
 
