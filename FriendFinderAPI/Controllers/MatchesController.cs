@@ -45,11 +45,25 @@ namespace FriendFinderAPI.Controllers
         {
             if(id != match.MatchID)
                 return BadRequest();
-                
+
             _context.Entry(match).State = EntityState.Modified;
             _context.SaveChanges();
 
             return NoContent();
-        }     
+        } 
+
+        //DELETE:       api/v1.0/matches/n    
+        [HttpDelete("{id}")]
+        public ActionResult<Match> DeleteMatch(int id)
+        {
+            var match = _context.Matches.Find(id);
+            if(match == null)
+                return NotFound();
+
+            _context.Matches.Remove(match);
+            _context.SaveChanges();
+
+            return match;
+        }
     }
 }
