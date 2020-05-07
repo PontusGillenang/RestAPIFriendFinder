@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace FriendFinderAPI.Controllers
 {
    
-        [Route("api/v1.0/[controller]")]
-        [ApiController]
+    [Route("api/v1.0/[controller]")]
+    [ApiController]
     public class LocationsController : ControllerBase
     {
         private readonly FriendFinderContext _context;
