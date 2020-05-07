@@ -80,8 +80,6 @@ namespace FriendFinderAPI.Context
             LocationName = "Fjäderborgen",
 
             });
-           
-            //  modelBuilder.Entity<Match>.HasMany(match=>match.)
         }
     }
 }

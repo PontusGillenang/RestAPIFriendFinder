@@ -4,14 +4,16 @@ using FriendFinderAPI.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FriendFinderAPI.Migrations
 {
     [DbContext(typeof(FriendFinderContext))]
-    partial class FriendFinderContextModelSnapshot : ModelSnapshot
+    [Migration("20200507133450_ChangedMatchProperty")]
+    partial class ChangedMatchProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,17 +171,12 @@ namespace FriendFinderAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("UserID1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserID2")
+                    b.Property<int?>("UserID")
                         .HasColumnType("int");
 
                     b.HasKey("MatchID");
 
-                    b.HasIndex("UserID1");
-
-                    b.HasIndex("UserID2");
+                    b.HasIndex("UserID");
 
                     b.ToTable("Matches");
                 });
@@ -266,13 +263,9 @@ namespace FriendFinderAPI.Migrations
 
             modelBuilder.Entity("FriendFinderAPI.Models.Match", b =>
                 {
-                    b.HasOne("FriendFinderAPI.Models.User", "MatchedUser1")
+                    b.HasOne("FriendFinderAPI.Models.User", null)
                         .WithMany("Matches")
-                        .HasForeignKey("UserID1");
-
-                    b.HasOne("FriendFinderAPI.Models.User", "MatchedUser2")
-                        .WithMany()
-                        .HasForeignKey("UserID2");
+                        .HasForeignKey("UserID");
                 });
 #pragma warning restore 612, 618
         }

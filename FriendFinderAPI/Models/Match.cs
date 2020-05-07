@@ -10,9 +10,12 @@ namespace FriendFinderAPI.Models
     {
         
         public int MatchID { get; set; }
-        [NotMapped]
+        
+        [ForeignKey("UserID1")]
+        [InverseProperty("Matches")]
          public User MatchedUser1{get;set;}
-         [NotMapped]
+
+        [ForeignKey("UserID2")]
          public User MatchedUser2{get;set;}
     }
 }
