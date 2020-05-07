@@ -22,7 +22,7 @@ namespace FriendFinderAPI.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Data:FriendFinderAPIConnection:ConnectionString"));
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("FriendFinderAPIConnection"));
         }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,7 +37,7 @@ namespace FriendFinderAPI.Context
             UserIsTeacher = false
             }
             ,new{
-            UserID = 1,
+            UserID = 2,
             UserName = "Oskar",
             UserAdress = "Kungsgatan",
             UserPhoneNumber = "+46XXXXXXX2",
@@ -65,12 +65,12 @@ namespace FriendFinderAPI.Context
 
             modelBuilder.Entity<Hobby>()
             .HasData(new{
-             HobbyActivationLevel = 1,
+             HobbyActivationLevel = HobbyActivationLevel.Skilled,
              HobbyID = 1,
              HobbyName = "Badminton"
             },
             new{
-                HobbyActivationLevel = 1,
+                HobbyActivationLevel = HobbyActivationLevel.Skilled,
                 HobbyID = 2,
                 HobbyName = "Tennis"
             });
@@ -80,54 +80,6 @@ namespace FriendFinderAPI.Context
             LocationName = "Fjäderborgen",
 
             });
-             modelBuilder.Entity<Match>()
-            .HasData(new{
-                 MatchID =1 ,
-                   MatchedUser1 = new User
-                   {
-                   UserID = 3, 
-                   UserName = "MockUser1",
-                   UserAdress = "MockAdress1",
-                   UserPhoneNumber ="MockNumber1",
-                   UserAge = 35,
-                   UserIsTeacher = false
-                   },
-                   MatchedUser2 = new User
-                   {
-                       UserID = 4, 
-                   UserName = "MockUser2",
-                   UserAdress = "MockAdress2",
-                   UserPhoneNumber ="MockNumber2",
-                   UserAge = 40,
-                   UserIsTeacher = true
-                   },
-             });
-             modelBuilder.Entity<Event>()
-             .HasData(new{
-                 EventId = 1,
-                 EventName = "MockEvent",
-                 EventHobby = new Hobby{
-                    HobbyActivationLevel = HobbyActivationLevel.Skilled,
-                    HobbyID = 3,
-                    HobbyName = "MockHobby"
-                 },
-                 EventResposible =new User
-                   {
-                   UserID = 5, 
-                   UserName = "MockUser3",
-                   UserAdress = "MockAdress3",
-                   UserPhoneNumber ="MockNumber3",
-                   UserAge = 26,
-                   UserIsTeacher = true
-                   },
-                 EventCity = new City
-                 {
-                CityID = 4,
-                CityName ="MockCity",
-                CityCountry = "MockCountry",
-                CityCounty = "MockCounty"
-                 },
-             });
         }
     }
 }
