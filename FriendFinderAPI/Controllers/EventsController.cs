@@ -22,58 +22,59 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/events/n
          [HttpGet("{id}")]
-         public ActionResult<Event> GetEventsByID(int id)
+          public ActionResult<Event> GetEventsByID(int id)
         {
-            //  var event = _context.Events.Find(id);
-            // if(event == null)
-            //     return NotFound();
-           
-             return null;
-              var event = _context.Events.Find(id);
+              var eventByID = _context.Events.Find(id);
+              if(eventByID == null)
+                 return NotFound();
+            
+              return eventByID;
+              
+          }
+         //POST:      api/v1.0/events
+         [HttpPost]
+         public ActionResult<Event> PostEvents(Event eventPost)
+         {
+             _context.Events.Add(eventPost);
+             //Important to dont forget that save the changes in context when using POST
+             _context.SaveChanges();
+
+             return CreatedAtAction("GetEvent", new Event{EventID = eventPost.EventID}, eventPost);
+            
          }
-        // //POST:      api/v1.0/events
-        // [HttpPost]
-        // public ActionResult<Event> PostEvents(Event event)
-        // {
-        //     _context.Events.Add(Event);
-        //     //Important to dont forget that save the changes in context when using POST
-        //     _context.SaveChanges();
 
-        //     return CreatedAtAction("GetEvent", new Event{EventID = event.EventID}, Event);
-        // }
-
-        // //PUT:      api/v1.0/events/n
-        // [HttpPut("{id}")]
-        // public ActionResult PutEvent(int id, Event event)
-        // {
-        //     if(id != event.EventID)
-        //         return BadRequest();
+         //PUT:      api/v1.0/events/n
+         [HttpPut("{id}")]
+         public ActionResult PutEvent(int id, Event eventPut)
+        {
+            if(id != eventPut.EventID)
+                return BadRequest();
             
-        //     _context.Entry(event).State = EntityState.Modified;
-        //     // Above code line make the changes to we want, in our context,
-        //     // Which means that when we Save context it will save those changes and get rid of previous value
+             _context.Entry(eventPut).State = EntityState.Modified;
+             // Above code line make the changes to we want, in our context,
+             // Which means that when we Save context it will save those changes and get rid of previous value
 
-        //     _context.SaveChanges();
+             _context.SaveChanges();
 
-        //     // Because of that the changes already been done, we do not need to return any content.
-        //     // That´s why we return method NoContent. So we kinda returns a NoContent object. => Returns a "204 NoContent" Status
+             // Because of that the changes already been done, we do not need to return any content.
+             // That´s why we return method NoContent. So we kinda returns a NoContent object. => Returns a "204 NoContent" Status
 
-        //     return NoContent();
-        // }
+            return NoContent();
+         }
 
-        // //DELETE:       api/v1.0/cities/n
-        // [HttpDelete("{id}")]
-        // public ActionResult<City> DeleteEvent(int id)
-        // {
-        //     var event = _context.Events.Find(id);
-        //     if(event == null)
-        //         return NotFound();
+         //DELETE:       api/v1.0/events/n
+         [HttpDelete("{id}")]
+         public ActionResult<Event> DeleteEvent(int id)
+        {
+             var eventDel = _context.Events.Find(id);
+             if(eventDel == null)
+                return NotFound();
             
-        //     _context.Events.Remove(event);
-        //     _context.SaveChanges();
+             _context.Events.Remove(eventDel);
+             _context.SaveChanges();
 
-        //     return event;
-        // }
+            return eventDel;
+         }
 
     }
 }
