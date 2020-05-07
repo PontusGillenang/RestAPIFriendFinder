@@ -62,7 +62,7 @@ namespace FriendFinderAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Hobby> DeleteHobby(int id)
         {
-            var hobby = _context.Hobby.Find(id);
+            var hobby = _context.Hobbies.Find(id);
             if(hobby == null)
                 return NotFound();
             
