@@ -104,6 +104,7 @@ namespace FriendFinderAPI.Context
              });
              modelBuilder.Entity<Event>()
              .HasData(new{
+                 EventId = 1,
                  EventName = "MockEvent",
                  EventHobby = new Hobby{
                     HobbyActivationLevel = HobbyActivationLevel.Skilled,
