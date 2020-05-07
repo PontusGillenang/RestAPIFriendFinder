@@ -8,68 +8,70 @@ namespace FriendFinderAPI.Controllers
 {
     [Route("api/v1.0/[controller]")]
     [ApiController]
-    public class HobbiesController : ControllerBase
+    public class CitiesController : ControllerBase
     {
         private readonly FriendFinderContext _context;
 
-        public HobbiesController(FriendFinderContext context) => _context = context;
+        public CitiesController(FriendFinderContext context) => _context = context;
 
-        //GET:      api/v1.0/hobbies
+        //GET:      api/v1.0/cities
         [HttpGet]
-        public ActionResult<IEnumerable<Hobby>> GetHobbies() => _context.Hobbies;
+        public ActionResult<IEnumerable<City>> GetCities() => _context.Cities;
 
-        //GET:      api/v1.0/hobbies/n
+        //GET:      api/v1.0/cities/n
         [HttpGet("{id}")]
-        public ActionResult<Hobby> GetHobbyByID(int id)
+        public ActionResult<City> GetCityByID(int id)
         {
-            var hobby = _context.Hobbies.Find(id);
-            if(hobby == null)
+            var city = _context.Cities.Find(id);
+            if(city == null)
                 return NotFound();
             
-            return hobby;
+            return city;
         }
 
-        //POST: api/v1.0/hobbies
+        //POST:      api/v1.0/cities
         [HttpPost]
-        public ActionResult<Hobby> PostHobby(Hobby hobby)
+        public ActionResult<City> PostCity(City city)
         {
-            _context.Hobbies.Add(hobby);
+            _context.Cities.Add(city);
             //Important to dont forget that save the changes in context when using POST
             _context.SaveChanges();
 
-            return CreatedAtAction("GetHobby", new Hobby{HobbyID = hobby.HobbyID}, hobby);
+            return CreatedAtAction("GetCity", new City{CityID = city.CityID}, city);
         }
 
-        //PUT:      api/v1.0/hobbies/n
+        //PUT:      api/v1.0/cities/n
         [HttpPut("{id}")]
-        public ActionResult PutHobby(int id, Hobby hobby)
+        public ActionResult PutCity(int id, City city)
         {
-            if(id !=  hobby.HobbyID)
+            if(id != city.CityID)
                 return BadRequest();
             
-            _context.Entry(hobby).State = EntityState.Modified;
+            _context.Entry(city).State = EntityState.Modified;
             // Above code line make the changes to we want, in our context,
             // Which means that when we Save context it will save those changes and get rid of previous value
 
             _context.SaveChanges();
+
             // Because of that the changes already been done, we do not need to return any content.
             // That´s why we return method NoContent. So we kinda returns a NoContent object. => Returns a "204 NoContent" Status
 
             return NoContent();
         }
 
-        //DELETE:       api/hobbies/n
+        //DELETE:       api/v1.0/cities/n
         [HttpDelete("{id}")]
-        public ActionResult<Hobby> DeleteHobby(int id)
+        public ActionResult<City> DeleteCity(int id)
         {
-            var hobby = _context.Hobbies.Find(id);
-            if(hobby == null)
+            var city = _context.Cities.Find(id);
+            if(city == null)
                 return NotFound();
             
-            _context.Hobbies.Remove(hobby);
+            _context.Cities.Remove(city);
             _context.SaveChanges();
 
-            return hobby;
+            return city;
         }
+        
     }
 }

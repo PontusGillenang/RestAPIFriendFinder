@@ -14,11 +14,11 @@ namespace FriendFinderAPI.Controllers
 
         public UsersController(FriendFinderContext context) => _context = context;
 
-        //GET:      api/users
+        //GET:      api/v1.0/users
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers() => _context.Users;
 
-        //GET:      api/users/n
+        //GET:      api/v1.0/users/n
         [HttpGet("{id}")]
         public ActionResult<User> GetUserByID(int id)
         {
@@ -29,7 +29,7 @@ namespace FriendFinderAPI.Controllers
             return user;
         }
 
-        //POST:     api/users
+        //POST:     api/v1.0/users
         [HttpPost]
         public ActionResult<User> PostUser(User user)
         {
@@ -40,7 +40,7 @@ namespace FriendFinderAPI.Controllers
             return CreatedAtAction("GetUser", new User{UserID = user.UserID}, user);
         }
 
-        //PUT:      api/users/n
+        //PUT:      api/v1.0/users/n
         [HttpPut("{id}")]
         public ActionResult PutUser(int id, User user)
         {
@@ -59,7 +59,7 @@ namespace FriendFinderAPI.Controllers
             return NoContent();
         }
 
-        //DELETE        api/users/n
+        //DELETE        api/v1.0/users/n
         [HttpDelete("{id}")]
         public ActionResult<User> DeleteUser(int id)
         {
