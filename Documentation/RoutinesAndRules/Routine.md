@@ -34,4 +34,8 @@
   * 1. Try to figure it out for 30 min (Google)
     2. Ask a teammate 
     3. Ask teacher
+  
+* ## Are you sick or cant be part of a meeting? 
+
+  * Write as soon as you can to the group on discord and inform them of this. 
 
