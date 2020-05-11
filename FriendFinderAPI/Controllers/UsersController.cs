@@ -1,8 +1,12 @@
-using System.Collections.Generic;
 using FriendFinderAPI.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FriendFinderAPI.Models;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System;
+using FriendFinderAPI.Services;
+using System.Collections.Generic;
 
 namespace FriendFinderAPI.Controllers
 {
@@ -11,22 +15,45 @@ namespace FriendFinderAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly FriendFinderContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(FriendFinderContext context) => _context = context;
+        public UsersController(FriendFinderContext context, IUserRepository userRepository)
+        {
+            _context = context;
+            _userRepository = userRepository;
+        }
 
         //GET:      api/v1.0/users
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers() => _context.Users;
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            try
+            {
+                var results = await _userRepository.GetAllUsers();
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
 
         //GET:      api/v1.0/users/n
         [HttpGet("{id}")]
-        public ActionResult<User> GetUserByID(int id)
+        public async Task<ActionResult<User>> GetUserByID(int id)
         {
-            var user = _context.Users.Find(id);
-            if(user == null)
-                return NotFound();
+            try
+            {
+                var result = await _userRepository.GetUser(id);
+                if(result == null)
+                    return NotFound();
 
-            return user;
+                return Ok(result);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
         //POST:     api/v1.0/users

@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FriendFinderAPI.Context;
 using FriendFinderAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,22 +14,45 @@ namespace FriendFinderAPI.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly FriendFinderContext _context;
+        private readonly ICityRepository _cityRepository;
 
-        public CitiesController(FriendFinderContext context) => _context = context;
+        public CitiesController(FriendFinderContext context, ICityRepository cityRepository)
+        {
+            _context = context;
+            _cityRepository = cityRepository;
+        }
 
         //GET:      api/v1.0/cities
         [HttpGet]
-        public ActionResult<IEnumerable<City>> GetCities() => _context.Cities;
+        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        {
+            try
+            {
+                var results = await _cityRepository.GetAllCities();
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
 
         //GET:      api/v1.0/cities/n
         [HttpGet("{id}")]
-        public ActionResult<City> GetCityByID(int id)
+        public async Task<ActionResult<City>> GetCityByID(int id)
         {
-            var city = _context.Cities.Find(id);
-            if(city == null)
-                return NotFound();
-            
-            return city;
+            try
+            {
+                var result = await _cityRepository.GetUser(id);
+                if(result == null)
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
         //POST:      api/v1.0/cities
