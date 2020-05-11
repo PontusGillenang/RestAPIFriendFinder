@@ -3,8 +3,10 @@ using FriendFinderAPI.Models;
 
 namespace FriendFinderAPI.Services
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRespository
     {
-         Task<User> GetUser();
+        Task<User[]> GetAllUsers();
+         Task<User> GetUser(int userID);
+         
     }
 }
