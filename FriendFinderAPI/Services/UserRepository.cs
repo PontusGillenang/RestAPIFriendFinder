@@ -23,7 +23,8 @@ namespace FriendFinderAPI.Services
 
             return await query.FirstOrDefaultAsync();
         }
-         async Task<User[]> IUserRepository.GetAllUsers()
+
+        public async Task<User[]> GetAllUsers()
         {
             _logger.LogInformation("Getting Users");
             IQueryable<User> query = _context.Users;
