@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using FriendFinderAPI.Models;
@@ -45,23 +46,23 @@ namespace FriendFinderAPI.Context
             UserIsTeacher = false
             });
 
-            modelBuilder.Entity<City>()
-            .HasData(new{
-            CityID = 1,
-            CityName ="Göteborg",
-            CityCountry = "Sweden",
-            CityCounty = "Västra Götaland"
-            }, new{
-            CityID = 2,
-            CityName ="Malmo",
-            CityCountry = "Denmark",
-            CityCounty = "Malmo"
-            }, new{
-            CityID = 3,
-            CityName ="Stockholm",
-            CityCountry = "Sweden",
-            CityCounty = "Stockholm"
-            });
+            // modelBuilder.Entity<City>()
+            // .HasData(new{
+            // CityID = 1,
+            // CityName ="Göteborg",
+            // CityCountry = "Sweden",
+            // CityCounty = "Västra Götaland"
+            // }, new{
+            // CityID = 2,
+            // CityName ="Malmo",
+            // CityCountry = "Denmark",
+            // CityCounty = "Malmo"
+            // }, new{
+            // CityID = 3,
+            // CityName ="Stockholm",
+            // CityCountry = "Sweden",
+            // CityCounty = "Stockholm"
+            // });
 
             modelBuilder.Entity<Hobby>()
             .HasData(new{
@@ -80,6 +81,21 @@ namespace FriendFinderAPI.Context
             LocationName = "Fjäderborgen",
 
             });
+
+
+            string filePath = "./Documentation/DataSets/world-cities.csv";
+            string[] lines= System.IO.File.ReadAllLines(filePath);
+
+            foreach (var line in lines)
+            {
+                string[] split = line.Split(',');
+                City c= new City{
+                    CityName= split[0],c
+                    CityCountry= split[1],
+                    CityCounty= split[2],
+                };
+                modelBuilder.Entity<City>().HasData(c);
+            }
         }
     }
 }
