@@ -5,7 +5,7 @@ namespace FriendFinderAPI.Services
 {
     public interface ICityRepository : IRespository
     {
-        Task<City[]> GetAllCities();
+        Task<City[]> GetCities();
         Task<City> GetCity(int CityID);
 
     }

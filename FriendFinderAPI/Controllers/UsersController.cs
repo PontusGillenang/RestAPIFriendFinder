@@ -29,7 +29,7 @@ namespace FriendFinderAPI.Controllers
         {
             try
             {
-                var results = await _userRepository.GetAllUsers();
+                var results = await _userRepository.GetUsers();
                 return Ok(results);
             }
             catch(Exception e)
