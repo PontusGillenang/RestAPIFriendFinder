@@ -45,18 +45,6 @@ namespace FriendFinderAPI.Context
             UserAge = 22,
             UserIsTeacher = false
             });
-
-            // modelBuilder.Entity<Hobby>()
-            // .HasData(new{
-            //  HobbyActivationLevel = HobbyActivationLevel.Skilled,
-            //  HobbyID = 1,
-            //  HobbyName = "Badminton"
-            // },
-            // new{
-            //     HobbyActivationLevel = HobbyActivationLevel.Skilled,
-            //     HobbyID = 2,
-            //     HobbyName = "Tennis"
-            // });
             
             modelBuilder.Entity<Location>()
             .HasData(new{
