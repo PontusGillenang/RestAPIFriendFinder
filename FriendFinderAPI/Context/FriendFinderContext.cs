@@ -7,18 +7,18 @@ namespace FriendFinderAPI.Context
     public class FriendFinderContext : DbContext
     {
         private readonly IConfiguration _configuration;
-
+        public FriendFinderContext(){}
         public FriendFinderContext(IConfiguration config , DbContextOptions options) : base (options)
         {
             _configuration = config;
         }
 
-        public DbSet<User> Users {get; set;}
-        public DbSet<City> Cities {get; set;}
-       public DbSet<Hobby> Hobbies {get; set;}
-       public DbSet<Location> Locations {get; set;}
-       public DbSet<Match> Matches {get; set;}
-       public DbSet<Event> Events {get; set;} 
+        public virtual DbSet<User> Users {get; set;}
+        public virtual DbSet<City> Cities {get; set;}
+        public virtual DbSet<Hobby> Hobbies {get; set;}
+        public virtual DbSet<Location> Locations {get; set;}
+        public virtual DbSet<Match> Matches {get; set;}
+        public virtual DbSet<Event> Events {get; set;} 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
