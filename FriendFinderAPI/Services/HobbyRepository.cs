@@ -19,7 +19,7 @@ namespace FriendFinderAPI.Services
 
             return await query.FirstOrDefaultAsync();
         }
-        async Task<Hobby[]> IHobbyRepository.GetHobbies()
+       public async Task<Hobby[]> GetHobbies()
         {
             _logger.LogInformation("Getting Hobbies");
             IQueryable<Hobby> query = _context.Hobbies;
