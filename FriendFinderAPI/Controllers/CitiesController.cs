@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FriendFinderAPI.Context;
 using FriendFinderAPI.Models;
+using FriendFinderAPI.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,22 +15,45 @@ namespace FriendFinderAPI.Controllers
     public class CitiesController : ControllerBase
     {
         private readonly FriendFinderContext _context;
+        private readonly ICityRepository _cityRepository;
 
-        public CitiesController(FriendFinderContext context) => _context = context;
+        public CitiesController(FriendFinderContext context, ICityRepository cityRepository)
+        {
+            _context = context;
+            _cityRepository = cityRepository;
+        }
 
         //GET:      api/v1.0/cities
         [HttpGet]
-        public ActionResult<IEnumerable<City>> GetCities() => _context.Cities;
+        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        {
+            try
+            {
+                var results = await _cityRepository.GetAllCities();
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
 
         //GET:      api/v1.0/cities/n
         [HttpGet("{id}")]
-        public ActionResult<City> GetCityByID(int id)
+        public async Task<ActionResult<City>> GetCityByID(int id)
         {
-            var city = _context.Cities.Find(id);
-            if(city == null)
-                return NotFound();
-            
-            return city;
+            try
+            {
+                var result = await _cityRepository.GetCity(id);
+                if(result == null)
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
         //POST:      api/v1.0/cities
@@ -34,7 +61,7 @@ namespace FriendFinderAPI.Controllers
         public ActionResult<City> PostCity(City city)
         {
             _context.Cities.Add(city);
-            //Important to dont forget that save the changes in context when using POST
+            //Important to not forget to save the changes in context when using POST
             _context.SaveChanges();
 
             return CreatedAtAction("GetCity", new City{CityID = city.CityID}, city);
@@ -48,13 +75,13 @@ namespace FriendFinderAPI.Controllers
                 return BadRequest();
             
             _context.Entry(city).State = EntityState.Modified;
-            // Above code line make the changes to we want, in our context,
-            // Which means that when we Save context it will save those changes and get rid of previous value
+            /* Above code line makes the changes that we want in our context,
+            which means that when we save context it will save those changes and get rid of previous value */
 
             _context.SaveChanges();
 
-            // Because of that the changes already been done, we do not need to return any content.
-            // That´s why we return method NoContent. So we kinda returns a NoContent object. => Returns a "204 NoContent" Status
+            // Because of the changes has already been done, we do not need to return any content.
+            // That´s why we return method NoContent. So we kinda return a NoContent object. => Returns a "204 NoContent" Status 
 
             return NoContent();
         }

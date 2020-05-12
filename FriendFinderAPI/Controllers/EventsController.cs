@@ -36,7 +36,7 @@ namespace FriendFinderAPI.Controllers
          public ActionResult<Event> PostEvents(Event eventPost)
          {
              _context.Events.Add(eventPost);
-             //Important to dont forget that save the changes in context when using POST
+             //Important to not forget to save the changes in context when using POST
              _context.SaveChanges();
 
              return CreatedAtAction("GetEvent", new Event{EventID = eventPost.EventID}, eventPost);
@@ -51,13 +51,13 @@ namespace FriendFinderAPI.Controllers
                 return BadRequest();
             
              _context.Entry(eventPut).State = EntityState.Modified;
-             // Above code line make the changes to we want, in our context,
-             // Which means that when we Save context it will save those changes and get rid of previous value
+             /* Above code line makes the changes that we want in our context,
+            which means that when we save context it will save those changes and get rid of previous value */
 
              _context.SaveChanges();
 
-             // Because of that the changes already been done, we do not need to return any content.
-             // That´s why we return method NoContent. So we kinda returns a NoContent object. => Returns a "204 NoContent" Status
+             // Because of the changes has already been done, we do not need to return any content.
+             // That´s why we return method NoContent. So we kinda return a NoContent object. => Returns a "204 NoContent" Status
 
             return NoContent();
          }
