@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using FriendFinderAPI.Models;
@@ -45,24 +46,6 @@ namespace FriendFinderAPI.Context
             UserIsTeacher = false
             });
 
-            modelBuilder.Entity<City>()
-            .HasData(new{
-            CityID = 1,
-            CityName ="Göteborg",
-            CityCountry = "Sweden",
-            CityCounty = "Västra Götaland"
-            }, new{
-            CityID = 2,
-            CityName ="Malmo",
-            CityCountry = "Denmark",
-            CityCounty = "Malmo"
-            }, new{
-            CityID = 3,
-            CityName ="Stockholm",
-            CityCountry = "Sweden",
-            CityCounty = "Stockholm"
-            });
-
             modelBuilder.Entity<Hobby>()
             .HasData(new{
              HobbyActivationLevel = HobbyActivationLevel.Skilled,
@@ -74,12 +57,33 @@ namespace FriendFinderAPI.Context
                 HobbyID = 2,
                 HobbyName = "Tennis"
             });
+            
             modelBuilder.Entity<Location>()
             .HasData(new{
             LocationID = 1,
             LocationName = "Fjäderborgen",
 
             });
+
+
+            string filePath = @"../Documentation/DataSets/world-cities.txt";
+            string[] lines= System.IO.File.ReadAllLines(filePath);
+            var count=1;
+            
+            foreach (var line in lines)
+            {
+                
+                string[] split = line.Split(',');
+                City c= new City{
+                    CityID= count,
+                    CityName= split[0],
+                    CityCountry= split[1],
+                    CityCounty= split[2],
+                };
+                
+                modelBuilder.Entity<City>().HasData(c);
+                count +=1;
+            }
         }
     }
 }
