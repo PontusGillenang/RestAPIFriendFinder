@@ -29,7 +29,7 @@ namespace FriendFinderAPI.Tests
             var userRepository = new UserRepository(FriendFinderContextMock.Object, logger);
 
             //Act
-            var result = await userRepository.GetAllUsers();
+            var result = await userRepository.GetUsers();
 
             //Assert
             Assert.Equal(2, (int)result.Length);

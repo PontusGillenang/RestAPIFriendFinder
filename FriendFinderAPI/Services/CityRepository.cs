@@ -19,7 +19,7 @@ namespace FriendFinderAPI.Services
 
             return await query.FirstOrDefaultAsync();
         }
-        async Task<City[]> ICityRepository.GetAllCities()
+        async Task<City[]> ICityRepository.GetCities()
         {
             _logger.LogInformation("Getting Cities");
             IQueryable<City> query = _context.Cities;

@@ -5,7 +5,7 @@ namespace FriendFinderAPI.Services
 {
     public interface IUserRepository : IRespository
     {
-        Task<User[]> GetAllUsers();
+        Task<User[]> GetUsers();
          Task<User> GetUser(int userID);
          
     }

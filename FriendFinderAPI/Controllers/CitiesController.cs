@@ -29,7 +29,7 @@ namespace FriendFinderAPI.Controllers
         {
             try
             {
-                var results = await _cityRepository.GetAllCities();
+                var results = await _cityRepository.GetCities();
                 return Ok(results);
             }
             catch(Exception e)
