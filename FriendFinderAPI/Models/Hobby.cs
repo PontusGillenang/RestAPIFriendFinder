@@ -12,9 +12,9 @@ namespace FriendFinderAPI.Models
         }
     public class Hobby
     {
-       public HobbyActivationLevel HobbyActivationLevel{get;set;}
+        public HobbyActivationLevel HobbyActivationLevel{get;set;}
        
-       [Key]
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int HobbyID { get; set; }
         public string HobbyName { get; set; }

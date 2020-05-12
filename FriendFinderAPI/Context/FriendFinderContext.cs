@@ -46,17 +46,17 @@ namespace FriendFinderAPI.Context
             UserIsTeacher = false
             });
 
-            modelBuilder.Entity<Hobby>()
-            .HasData(new{
-             HobbyActivationLevel = HobbyActivationLevel.Skilled,
-             HobbyID = 1,
-             HobbyName = "Badminton"
-            },
-            new{
-                HobbyActivationLevel = HobbyActivationLevel.Skilled,
-                HobbyID = 2,
-                HobbyName = "Tennis"
-            });
+            // modelBuilder.Entity<Hobby>()
+            // .HasData(new{
+            //  HobbyActivationLevel = HobbyActivationLevel.Skilled,
+            //  HobbyID = 1,
+            //  HobbyName = "Badminton"
+            // },
+            // new{
+            //     HobbyActivationLevel = HobbyActivationLevel.Skilled,
+            //     HobbyID = 2,
+            //     HobbyName = "Tennis"
+            // });
             
             modelBuilder.Entity<Location>()
             .HasData(new{
@@ -66,22 +66,35 @@ namespace FriendFinderAPI.Context
             });
 
 
-            string filePath = @"../Documentation/DataSets/world-cities.txt";
-            string[] lines= System.IO.File.ReadAllLines(filePath);
+            string citiesPath = @"../Documentation/DataSets/world-cities.txt";
+            string[] lines= System.IO.File.ReadAllLines(citiesPath);
             var count=1;
             
             foreach (var line in lines)
             {
                 
                 string[] split = line.Split(',');
-                City c= new City{
+                City city= new City{
                     CityID= count,
                     CityName= split[0],
                     CityCountry= split[1],
                     CityCounty= split[2],
                 };
                 
-                modelBuilder.Entity<City>().HasData(c);
+                modelBuilder.Entity<City>().HasData(city);
+                count +=1;
+            }
+
+            string hobbiesPath = @"../Documentation/DataSets/HobbiesList.txt";
+            string[] hobbies = System.IO.File.ReadAllLines(hobbiesPath);
+            count = 1;
+            foreach (var hobbie in hobbies)
+            {
+                Hobby hobby= new Hobby{
+                    HobbyID= count,
+                    HobbyName= hobbie,
+                };
+                modelBuilder.Entity<Hobby>().HasData(hobby);
                 count +=1;
             }
         }
