@@ -20,9 +20,9 @@ namespace FriendFinderAPI.Tests
         public async void GetCitiesTest()
         {
            //Arrange
-            IList<City> city = GenerateCities();
+            IList<City> cities = GenerateCities();
             var FriendFinderContextMock = new Mock<FriendFinderContext>();
-            FriendFinderContextMock.Setup(u=>u.Cities).ReturnsDbSet(city);
+            FriendFinderContextMock.Setup(u=>u.Cities).ReturnsDbSet(cities);
 
             var logger = Mock.Of<ILogger<CityRepository>>();
             var cityRepository = new CityRepository(FriendFinderContextMock.Object, logger);
@@ -37,9 +37,9 @@ namespace FriendFinderAPI.Tests
         public async void GetCityByIDTest()
         {
              //Arrange
-            IList<City> city = GenerateCities();
+            IList<City> cities = GenerateCities();
             var FriendFinderContextMock = new Mock<FriendFinderContext>();
-            FriendFinderContextMock.Setup(u=>u.Cities).ReturnsDbSet(city);
+            FriendFinderContextMock.Setup(u=>u.Cities).ReturnsDbSet(cities);
 
             var logger = Mock.Of<ILogger<CityRepository>>();
             var cityRepository = new CityRepository(FriendFinderContextMock.Object, logger);
