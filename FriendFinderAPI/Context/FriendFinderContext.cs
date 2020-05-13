@@ -18,7 +18,6 @@ namespace FriendFinderAPI.Context
         public virtual DbSet<City> Cities {get; set;}
         public virtual DbSet<Hobby> Hobbies {get; set;}
         public virtual DbSet<Location> Locations {get; set;}
-        public virtual DbSet<Match> Matches {get; set;}
         public virtual DbSet<Event> Events {get; set;} 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -45,7 +44,7 @@ namespace FriendFinderAPI.Context
             UserAge = 22,
             UserIsTeacher = false
             });
-            
+             
             modelBuilder.Entity<Location>()
             .HasData(new{
             LocationID = 1,
