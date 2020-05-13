@@ -18,7 +18,6 @@ namespace FriendFinderAPI.Context
         public virtual DbSet<City> Cities {get; set;}
         public virtual DbSet<Hobby> Hobbies {get; set;}
         public virtual DbSet<Location> Locations {get; set;}
-        public virtual DbSet<Match> Matches {get; set;}
         public virtual DbSet<Event> Events {get; set;} 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,6 +27,28 @@ namespace FriendFinderAPI.Context
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<HobbyUser>()
+            .HasKey(hu => new {hu.HobbyID, hu.UserID});
+            modelBuilder.Entity<HobbyUser>()
+            .HasOne(hu => hu.Hobby)
+            .WithMany(h => h.HobbyUsers)
+            .HasForeignKey(hu => hu.HobbyID);
+            modelBuilder.Entity<HobbyUser>()
+            .HasOne(hu => hu.User)
+            .WithMany(h => h.HobbyUsers)
+            .HasForeignKey(hu => hu.UserID);
+
+            modelBuilder.Entity<HobbyLocation>()
+            .HasKey(hl => new {hl.HobbyID, hl.LocationID});
+            modelBuilder.Entity<HobbyLocation>()
+            .HasOne(hl => hl.Hobby)
+            .WithMany(h => h.HobbyLocations)
+            .HasForeignKey(hl => hl.HobbyID);
+            modelBuilder.Entity<HobbyLocation>()
+            .HasOne(hl => hl.Location)
+            .WithMany(h => h.HobbyLocations)
+            .HasForeignKey(hl => hl.LocationID);
+
             modelBuilder.Entity<User>()
             .HasData(new{
             UserID = 1,
@@ -45,7 +66,7 @@ namespace FriendFinderAPI.Context
             UserAge = 22,
             UserIsTeacher = false
             });
-            
+             
             modelBuilder.Entity<Location>()
             .HasData(new{
             LocationID = 1,
