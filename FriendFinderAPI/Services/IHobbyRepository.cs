@@ -7,5 +7,7 @@ namespace FriendFinderAPI.Services
     {
         Task<Hobby[]> GetHobbies();
         Task<Hobby> GetHobby(int CityID);
+
+        Task<Hobby> GetTeachersByHobby(string hobbyName);
     }
 }
