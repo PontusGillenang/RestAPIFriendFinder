@@ -54,7 +54,7 @@ namespace FriendFinderAPI.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
-          }
+        }
          //POST:      api/v1.0/events
          [HttpPost]
          public ActionResult<Event> PostEvents(Event eventPost)
