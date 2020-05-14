@@ -36,17 +36,17 @@ namespace FriendFinderAPI.Services
 
             return await query.ToArrayAsync();
        }
-       public async Task<Event[]> GetEventsByHobbyLocation(int hobbyID, int locationID)
+       public async Task<Event[]> GetEventsByHobbyCity(int hobbyID, int cityID)
        {
-           _logger.LogInformation($"Getting Events for hobby with ID:{hobbyID} and in the location with id: {locationID}");
-            IQueryable<Event> query = _context.Events.Where(h=>h.EventHobby.HobbyID == hobbyID && h.EventLocation.LocationID == locationID);
+           _logger.LogInformation($"Getting Events for hobby with ID:{hobbyID} and in the location with id: {cityID}");
+            IQueryable<Event> query = _context.Events.Where(h=>h.EventHobby.HobbyID == hobbyID && h.EventCity.CityID == cityID);
 
             return await query.ToArrayAsync();
        }
-        public async Task<Event[]> GetEventsByLocation(int locationID)
+        public async Task<Event[]> GetEventsByCity(int cityID)
         {
-            _logger.LogInformation($"Getting Events in location with location id{locationID}");
-            IQueryable<Event> query = _context.Events.Where(l=>l.EventLocation.LocationID == locationID);
+            _logger.LogInformation($"Getting Events in location with location id{cityID}");
+            IQueryable<Event> query = _context.Events.Where(l=>l.EventCity.CityID == cityID);
 
             return await query.ToArrayAsync();
             
