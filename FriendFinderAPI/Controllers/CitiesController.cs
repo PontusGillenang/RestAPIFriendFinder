@@ -40,7 +40,7 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/cities/n
         [HttpGet("{id}")]
-        public async Task<ActionResult<City>> GetCityByID(int id)
+        public async Task<ActionResult<City>> GetCity(int id)
         {
             try
             {

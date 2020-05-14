@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FriendFinderAPI.Context;
 using FriendFinderAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace FriendFinderAPI.Controllers
@@ -11,22 +14,45 @@ namespace FriendFinderAPI.Controllers
     public class LocationsController : ControllerBase
     {
         private readonly FriendFinderContext _context;
+        private readonly ILocationRepository _locationRepository;
 
-        public LocationsController(FriendFinderContext context) => _context = context;
+        public LocationsController(FriendFinderContext context, ILocationRepository locationRepository)
+        {
+            _context = context;
+            _locationRepository = locationRepository;
+        }
 
         //GET:      api/v1.0/locations
         [HttpGet]
-        public ActionResult<IEnumerable<Location>> GetLocations() => _context.Locations;
+        public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
+        {
+            try
+            {
+                var results = await _locationRepository.GetLocations();
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
 
         //GET:      api/v1.0/locations/n
         [HttpGet("{id}")]
-        public ActionResult<Location> GetLocationByID(int id)
+        public ActionResult<Location> GetLocation(int id)
         {
-            var location = _context.Locations.Find(id);
-            if(location == null)
-                return NotFound();
-            
-            return location;
+            try
+            {
+                var result = _locationRepository.GetLocation(id);
+                if(result == null)
+                    return NotFound();
+                
+                return result;
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
         //POST:      api/v1.0/locations
