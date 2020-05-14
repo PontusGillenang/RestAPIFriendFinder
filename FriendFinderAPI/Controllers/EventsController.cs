@@ -15,7 +15,7 @@ namespace FriendFinderAPI.Controllers
     public class EventsController : ControllerBase
     {
         private readonly FriendFinderContext _context;
-        private readonly EventRepository _eventRepository;
+        private readonly IEventRepository _eventRepository;
 
         public EventsController(FriendFinderContext context, IEventRepository eventRepository)
         {
