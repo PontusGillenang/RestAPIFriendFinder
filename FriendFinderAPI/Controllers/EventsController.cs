@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FriendFinderAPI.Context;
 using FriendFinderAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,25 +14,45 @@ namespace FriendFinderAPI.Controllers
     public class EventsController : ControllerBase
     {
         private readonly FriendFinderContext _context;
+        private readonly IEventRepository _eventRepository;
 
-        public EventsController(FriendFinderContext context) => _context = context;
+        public EventsController(FriendFinderContext context, IEventRepository eventRepository)
+        {
+            _context = context;
+            _eventRepository = eventRepository;
+        }
 
         //GET:      api/v1.0/events
         [HttpGet]
-        public ActionResult<IEnumerable<Event>> GetEvents() => _context.Events;
-
-
+        public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+        {
+            try
+            {
+                var results = await _eventRepository.GetHobbies();
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
 
         //GET:      api/v1.0/events/n
          [HttpGet("{id}")]
-          public ActionResult<Event> GetEventsByID(int id)
+          public async Task<ActionResult<Event>> GetEventsByID(int id)
         {
-              var eventByID = _context.Events.Find(id);
-              if(eventByID == null)
-                 return NotFound();
-            
-              return eventByID;
-              
+            try
+            {              
+                var result = await _eventRepository.GetHobby(id);
+                if(result == null)
+                    return NotFound();
+
+                return result;
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
           }
          //POST:      api/v1.0/events
          [HttpPost]

@@ -40,7 +40,7 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/users/n
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUserByID(int id)
+        public async Task<ActionResult<User>> GetUser(int id)
         {
             try
             {

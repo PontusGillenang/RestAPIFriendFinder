@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FriendFinderAPI.Context;
 using FriendFinderAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,22 +14,45 @@ namespace FriendFinderAPI.Controllers
     public class MatchesController : ControllerBase
     {
         private readonly FriendFinderContext _context;
+        private readonly IMatchRepository _matchRepository;
 
-        public MatchesController(FriendFinderContext context) => _context = context;
+        public MatchesController(FriendFinderContext context, IMatchRepository matchRepository)
+        {
+            _context = context;
+            _matchRepository = matchRepository;
+        }
 
         //GET:      api/v1.0/matches
         [HttpGet]
-        public ActionResult<IEnumerable<Match>> GetMatches() => _context.Matches;
+        public async Task<ActionResult<IEnumerable<Match>>> GetMatches()
+        {
+            try
+            {
+                var results = await _matchRepository.GetMatches();
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
 
         //GET:      api/v1.0/matches/n
         [HttpGet("{id}")]
-        public ActionResult<Match> GetMatchByID(int id)
+        public async Task<ActionResult<Match>> GetMatch(int id)
         {
-            var match = _context.Matches.Find(id);
-            if(match == null)
-                return NotFound();
-            
-            return match;
+            try
+            {
+                var result = await _matchRepository.GetMatch(id);
+                if(result == null)
+                    return NotFound();
+                
+                return result;
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
         //POST:     api/v1.0/matches

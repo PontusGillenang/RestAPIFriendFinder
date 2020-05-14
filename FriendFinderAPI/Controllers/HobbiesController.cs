@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FriendFinderAPI.Context;
 using FriendFinderAPI.Models;
+using FriendFinderAPI.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,22 +15,45 @@ namespace FriendFinderAPI.Controllers
     public class HobbiesController : ControllerBase
     {
         private readonly FriendFinderContext _context;
+        private readonly IHobbyRepository _hobbyRepository;
 
-        public HobbiesController(FriendFinderContext context) => _context = context;
+        public HobbiesController(FriendFinderContext context, IHobbyRepository hobbyRepository)
+        {
+            _context = context;
+            _hobbyRepository = hobbyRepository;
+        }
 
         //GET:      api/v1.0/hobbies
         [HttpGet]
-        public ActionResult<IEnumerable<Hobby>> GetHobbies() => _context.Hobbies;
+        public async Task<ActionResult<IEnumerable<Hobby>>> GetHobbies()
+        {
+            try
+            {
+                var results = await _hobbyRepository.GetHobbies();
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
 
         //GET:      api/v1.0/hobbies/n
         [HttpGet("{id}")]
-        public ActionResult<Hobby> GetHobbyByID(int id)
+        public async Task<ActionResult<Hobby>> GetHobby(int id)
         {
-            var hobby = _context.Hobbies.Find(id);
-            if(hobby == null)
-                return NotFound();
-            
-            return hobby;
+            try
+            {
+                var result = await _hobbyRepository.GetHobby(id);
+                if(result == null)
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
         }
 
         //POST: api/v1.0/hobbies
