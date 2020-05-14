@@ -8,6 +8,8 @@ namespace FriendFinderAPI.Services
         Task<City[]> GetCities();
         Task<City> GetCity(int CityID);
 
+        Task<City[]> GetCitiesByHobby(int hobbyID);
+
     }
 
 }
