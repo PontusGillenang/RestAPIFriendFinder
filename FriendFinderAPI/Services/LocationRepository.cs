@@ -22,6 +22,14 @@ namespace FriendFinderAPI.Services
 
         }
 
+        public async Task<Location> GetLocationByHobby(int locationID, int hobbyID)
+        {
+            _logger.LogInformation($" Getting location with id{locationID} if it includes hobby with id {hobbyID}");
+            IQueryable<Location> query = _context.Locations.Where(l=>l.LocationID == locationID)
+            .Include(t=>t.HobbyLocations).Where(h=>h.HobbyLocations.Any(i=>i.HobbyID == hobbyID));
+
+            return await query.FirstOrDefaultAsync();
+        }
         public async Task<Location[]> GetLocations()
         {
             _logger.LogInformation("Getting Locations");
@@ -29,5 +37,17 @@ namespace FriendFinderAPI.Services
             return await query.ToArrayAsync();
             
         }
+        public async Task<Location[]> GetLocationsByHobby(int hobbyID)
+        {
+            _logger.LogInformation($" Getting locations for hobby with id {hobbyID}");
+            IQueryable<Location> query = _context.Locations.Where(l=>l.HobbyLocations.Any(h=>h.Hobby.HobbyID == hobbyID));
+
+            return await query.ToArrayAsync();
+
+        }
+
+        
+        
+        
     }
 }
