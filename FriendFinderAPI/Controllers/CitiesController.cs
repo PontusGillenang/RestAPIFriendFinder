@@ -55,6 +55,20 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<City>>> GetCitiesByHobby(int id)
+        {
+            try
+            {
+                var results = await _cityRepository.GetCitiesByHobby(id);
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
 
         //POST:      api/v1.0/cities
         [HttpPost]

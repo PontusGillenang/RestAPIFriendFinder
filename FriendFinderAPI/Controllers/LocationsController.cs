@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FriendFinderAPI.Context;
 using FriendFinderAPI.Models;
+using FriendFinderAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,14 +40,45 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/locations/n
         [HttpGet("{id}")]
-        public ActionResult<Location> GetLocation(int id)
+        public async Task<ActionResult<Location>> GetLocation(int id)
         {
             try
             {
-                var result = _locationRepository.GetLocation(id);
+                var result = await _locationRepository.GetLocation(id);
                 if(result == null)
                     return NotFound();
                 
+                return result;
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<Location>>> GetLocationsByHobby(int id)
+        {
+            try
+            {
+                var results = await _locationRepository.GetLocationsByHobby(id);
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
+
+        [HttpGet("{locationid, hobbyid}")]
+        public async Task<ActionResult<Location>> GetLocationByHobby(int locationid, int hobbyid)
+        {
+            try
+            {
+                var result = await _locationRepository.GetLocationByHobby(locationid, hobbyid);
+                if (result == null)
+                    return NotFound();
+
                 return result;
             }
             catch(Exception e)

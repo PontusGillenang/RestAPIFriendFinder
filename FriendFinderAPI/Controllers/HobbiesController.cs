@@ -56,6 +56,36 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
+        [HttpGet("hobbyid, cityid")]
+        public async Task<ActionResult<Hobby>> GetHobbyByCity(int hobbyid, int cityid)
+        {
+            try
+            {
+                var result = await _hobbyRepository.GetHobbyByCity(hobbyid, cityid);
+                if (result == null)
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
+        [HttpGet("id")]
+        public async Task<ActionResult<IEnumerable<Hobby>>> GetHobbiesByCity(int id)
+        {
+            try
+            {
+                var result = await _hobbyRepository.GetHobbiesByCity(id);
+                return Ok(result);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
+
         //POST: api/v1.0/hobbies
         [HttpPost]
         public ActionResult<Hobby> PostHobby(Hobby hobby)
