@@ -6,6 +6,7 @@ using FriendFinderAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using FriendFinderAPI.Services;
 
 namespace FriendFinderAPI.Controllers
 {
@@ -14,7 +15,7 @@ namespace FriendFinderAPI.Controllers
     public class EventsController : ControllerBase
     {
         private readonly FriendFinderContext _context;
-        private readonly IEventRepository _eventRepository;
+        private readonly EventRepository _eventRepository;
 
         public EventsController(FriendFinderContext context, IEventRepository eventRepository)
         {
