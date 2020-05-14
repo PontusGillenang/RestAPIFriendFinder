@@ -1,15 +1,13 @@
 # <u>Get</u>
 
-/hobbies/
+- ## GetHobbies()
 
-###### Hobbies by ID
+  - api/v1.0/hobbies
 
-/hobbies/<id>
+- ## GetHobby(int id)
 
-###### Hobbies in Mölndal
+  - api/v1.0/hobbies/n
+  
+- ## GetHobbyByCity()
 
-/hobbies/hobby/& location=<mölndal>
-
-###### Hobbies with activation lever = low
-
-/hobbies/activationlever=<low>/
+- ## GetHobbiesByCity()

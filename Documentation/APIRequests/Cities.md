@@ -1,12 +1,14 @@
 # <u>Get</u>
 
-/cities/
+- ## GetCities()
 
-###### Cities by ID
+  - api/v1.0/cities
 
-/cities/<id>
+- ## GetCity(int id)
 
-###### Cities with hobby = fishing
+  - api/v1.0/cities/n
+  
+- ## GetCitiesByHobby()
 
-/cities/hobby= <fishing>
+  - api/v1.0/cities/n.........
 
