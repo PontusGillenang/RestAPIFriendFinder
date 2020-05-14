@@ -47,16 +47,20 @@ namespace FriendFinderAPI.Tests
             Assert.Equal(2, result.HobbyID);
             
         }
+       
+
         
+       
         private static IList<Hobby> GenerateHobbies()
+        { 
+      return new List<Hobby> 
         {
-        return new List<Hobby>
-        {
-            new Hobby
+         new Hobby
             {
            HobbyActivationLevel = HobbyActivationLevel.Skilled,
              HobbyID = 1,
-             HobbyName = "Badminton"
+             HobbyName = "Badminton",
+
             },
             new Hobby{
             HobbyActivationLevel = HobbyActivationLevel.Expert,
