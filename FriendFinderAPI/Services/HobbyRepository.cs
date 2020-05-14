@@ -26,14 +26,21 @@ namespace FriendFinderAPI.Services
             return await query.ToArrayAsync();
         }
 
-        public async Task<Hobby[]> GetTeachersByHobby(int hobbyID)
+        public async Task<Hobby[]> GetHobbyByCity(int hobbyID, int cityID)
         {
-                _logger.LogInformation($"Getting Teachers for hobby with ID:{hobbyID} ");
-                IQueryable<Hobby> query = _context.Hobbies.Where(h => h.HobbyID == hobbyID)
-                .Include(t=>t.HobbyUsers).Where(u=>u.HobbyUsers.Any(u=>u.User.UserIsTeacher == true ));
+             _logger.LogInformation($"Getting Hobby in city with id {cityID}");
+             IQueryable<Hobby> query = _context.Hobbies.Where(h=>h.HobbyLocations.Any(l=>l.Location.LocationCity.CityID == cityID) && h.HobbyID ==hobbyID);
 
-                return await query.ToArrayAsync();
-
+             return await query.ToArrayAsync();
         }
+
+        public async Task<Hobby[]> GetHobbiesByCity(int cityID)
+        {
+            _logger.LogInformation($"Getting Hobbies in city with id{cityID}");
+            IQueryable<Hobby> query = _context.Hobbies.Where(h=>h.HobbyLocations.Any(l=>l.Location.LocationCity.CityID == cityID));
+
+            return await query.ToArrayAsync();
+        }
+        
     }
 }

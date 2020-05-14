@@ -7,6 +7,11 @@ namespace FriendFinderAPI.Services
     {
         Task<User[]> GetUsers();
          Task<User> GetUser(int userID);
+        
+         Task<User[]> GetUsersByHobby(int hobbyID);
+
+         Task<User[]>GetUserTeacherByHobby(int hobbyID);
+
          
     }
 }

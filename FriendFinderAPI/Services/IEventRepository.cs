@@ -11,8 +11,8 @@ namespace FriendFinderAPI.Services
 
          Task<Event[]> GetEventsByHobby(int hobbyID);
 
-         Task<Event[]> GetEventsByHobbyLocation(int hobbyID, int locationID);
+         Task<Event[]> GetEventsByHobbyCity(int hobbyID, int cityID);
 
-         Task<Event[]> GetEventsByLocation(int locationID);
+         Task<Event[]> GetEventsByCity(int cityID);
     }
 }
