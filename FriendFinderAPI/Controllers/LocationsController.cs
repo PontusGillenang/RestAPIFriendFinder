@@ -40,11 +40,11 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/locations/n
         [HttpGet("{id}")]
-        public ActionResult<Location> GetLocation(int id)
+        public async Task<ActionResult<Location>> GetLocation(int id)
         {
             try
             {
-                var result = _locationRepository.GetLocation(id);
+                var result = await _locationRepository.GetLocation(id);
                 if(result == null)
                     return NotFound();
                 

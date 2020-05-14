@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace FriendFinderAPI.Models
 {
     public class Event

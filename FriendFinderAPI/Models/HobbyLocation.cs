@@ -6,6 +6,7 @@ namespace FriendFinderAPI.Models
     {
         public int HobbyID { get; set; }
         public Hobby Hobby { get; set; }
+        
         public int LocationID { get; set; }
         public Location Location { get; set; }
     }

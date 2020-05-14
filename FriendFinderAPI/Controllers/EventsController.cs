@@ -29,7 +29,7 @@ namespace FriendFinderAPI.Controllers
         {
             try
             {
-                var results = await _eventRepository.GetHobbies();
+                var results = await _eventRepository.GetEvents();
                 return Ok(results);
             }
             catch(Exception e)
@@ -40,11 +40,11 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/events/n
          [HttpGet("{id}")]
-          public async Task<ActionResult<Event>> GetEventsByID(int id)
+          public async Task<ActionResult<Event>> GetEvent(int id)
         {
             try
             {              
-                var result = await _eventRepository.GetHobby(id);
+                var result = await _eventRepository.GetEvent(id);
                 if(result == null)
                     return NotFound();
 
