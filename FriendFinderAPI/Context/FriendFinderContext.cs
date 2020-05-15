@@ -31,10 +31,12 @@ namespace FriendFinderAPI.Context
         {
             modelBuilder.Entity<HobbyUser>()
             .HasKey(hu => new { hu.HobbyID, hu.UserID });
+
             modelBuilder.Entity<HobbyUser>()
             .HasOne(hu => hu.Hobby)
             .WithMany(h => h.HobbyUsers)
             .HasForeignKey(hu => hu.HobbyID);
+
             modelBuilder.Entity<HobbyUser>()
             .HasOne(hu => hu.User)
             .WithMany(h => h.HobbyUsers)
@@ -42,14 +44,32 @@ namespace FriendFinderAPI.Context
 
             modelBuilder.Entity<HobbyLocation>()
             .HasKey(hl => new { hl.HobbyID, hl.LocationID });
+
             modelBuilder.Entity<HobbyLocation>()
             .HasOne(hl => hl.Hobby)
             .WithMany(h => h.HobbyLocations)
             .HasForeignKey(hl => hl.HobbyID);
+
             modelBuilder.Entity<HobbyLocation>()
             .HasOne(hl => hl.Location)
             .WithMany(h => h.HobbyLocations)
             .HasForeignKey(hl => hl.LocationID);
+
+            modelBuilder.Entity<City>()
+            .HasMany<User>(c=> c.CityUsers)
+            .WithOne(u=>u.UserCity)
+            .HasForeignKey(u=> u.UserCityID)
+            .OnDelete(DeleteBehavior.ClientSetNull);
+
+            // modelBuilder.Entity<City>()
+            // .HasMany<User>(u=> u.CityUsers)
+            // .WithOne(c=> c.UserCity)
+            // .OnDelete(DeleteBehavior.NoAction);
+
+            // modelBuilder.Entity<User>()
+            // .HasOne(u=> u.UserCity)
+            // .WithMany(c=> c.CityUsers)
+            // .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>()
             .HasData(new

@@ -13,6 +13,9 @@ namespace FriendFinderAPI.Models
         public string UserPhoneNumber { get; set; }
         public int UserAge { get; set; }
         public bool UserIsTeacher { get; set; }
+
+        [ForeignKey("CityID")]
+        public int UserCityID { get; set; }
         public City UserCity { get; set; }
         public ICollection<HobbyUser> HobbyUsers { get; set; }
     }
