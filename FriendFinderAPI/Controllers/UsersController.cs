@@ -56,6 +56,34 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsersByHobby(int id)
+        {
+            try
+            {
+                var results = await _userRepository.GetUsersByHobby(id);
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUserTeacherByHobby(int id)
+        {
+            try
+            {
+                var results = await _userRepository.GetUserTeacherByHobby(id);
+                return Ok(results);
+            }
+            catch(Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
+
         //POST:     api/v1.0/users
         [HttpPost]
         public ActionResult<User> PostUser(User user)
