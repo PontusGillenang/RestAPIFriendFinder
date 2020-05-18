@@ -132,5 +132,5 @@ namespace FriendFinderAPI.Controllers
         }
         
     }
-    }
+}
 

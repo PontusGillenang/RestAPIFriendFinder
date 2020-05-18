@@ -39,6 +39,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/events/n
+         [HttpGet("{id}")]
+          public async Task<ActionResult<Event>> GetEvent(int id)
+        {
+            try
+            {              
+                var result = await _eventRepository.GetEvent(id);
+                if(result == null)
         [HttpGet("{id}")]
         public async Task<ActionResult<Event>> GetEvent(int id)
         {
@@ -83,6 +90,22 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
+        
+         //POST:      api/v1.0/events
+         [HttpPost]
+         public ActionResult<Event> PostEvents(Event eventPost)
+         {
+             _context.Events.Add(eventPost);
+             //Important to not forget to save the changes in context when using POST
+             _context.SaveChanges();
+
+             return CreatedAtAction("GetEvent", new Event{EventID = eventPost.EventID}, eventPost);
+            
+         }
+
+         //PUT:      api/v1.0/events/n
+         [HttpPut("{id}")]
+         public ActionResult PutEvent(int id, Event eventPut)
 
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Event>>> GetEventsByCity(int id)
