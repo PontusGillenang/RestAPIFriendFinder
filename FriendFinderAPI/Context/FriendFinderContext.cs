@@ -55,11 +55,11 @@ namespace FriendFinderAPI.Context
             .WithMany(h => h.HobbyLocations)
             .HasForeignKey(hl => hl.LocationID);
 
-            modelBuilder.Entity<City>()
-            .HasMany<User>(c=> c.CityUsers)
-            .WithOne(u=>u.UserCity)
-            .HasForeignKey(u=> u.UserCityID)
-            .OnDelete(DeleteBehavior.ClientSetNull);
+            // modelBuilder.Entity<City>()
+            // .HasMany<User>(c=> c.CityUsers)
+            // .WithOne(u=>u.UserCity)
+            // .HasForeignKey(u=> u.UserCityID)
+            // .OnDelete(DeleteBehavior.ClientSetNull);
 
             // modelBuilder.Entity<City>()
             // .HasMany<User>(u=> u.CityUsers)
@@ -80,7 +80,7 @@ namespace FriendFinderAPI.Context
                 UserPhoneNumber = "+46XXXXXXX",
                 UserAge = 20,
                 UserIsTeacher = true,
-                UserCityID = 18153,
+                UserCityID = 1,
             }
             , new
             {
@@ -90,7 +90,7 @@ namespace FriendFinderAPI.Context
                 UserPhoneNumber = "+46XXXXXXX2",
                 UserAge = 22,
                 UserIsTeacher = false,
-                UserCityID = 18153,
+                UserCityID = 2,
             }
             , new
             {
@@ -100,7 +100,7 @@ namespace FriendFinderAPI.Context
                 UserPhoneNumber = "+46XXXXXXX3",
                 UserAge = 28,
                 UserIsTeacher = true,
-                UserCityID = 18133,
+                UserCityID = 1,
             });
 
             modelBuilder.Entity<Location>()
@@ -108,13 +108,13 @@ namespace FriendFinderAPI.Context
             {
                 LocationID = 1,
                 LocationName = "Fjäderborgen",
-                LocationCityID= 18153,
+                LocationCityID= 2,
             }
             , new
             {
                 LocationID=2,
                 LocationName = "The Castle With Zero Books...",
-                LocationCityID= 18133,
+                LocationCityID= 1,
             });
 
             modelBuilder.Entity<Event>()
@@ -122,28 +122,30 @@ namespace FriendFinderAPI.Context
             {
                 EventID = 1,
                 EventName = "Lets Do some Awsome Curling",
-                EventHobbyID = 297,
+                //EventHobbyID = 297,
+                EventHobbyID = 2,
                 EventResposibleID = 1,
-                EventCityID = 18153,
+                EventCityID = 1,
             }    
             , new
             {
                 EventID = 2,
                 EventName = "BookClub All About The Books",
-                EventHobbyID = 922,
+                //EventHobbyID = 922,
+                EventHobbyID = 1,
                 EventResposibleID = 3,
-                EventCityID = 18133,
+                EventCityID = 2,
             });
 
             modelBuilder.Entity<HobbyLocation>()
             .HasData(new
             {
-                HobbyID = 297,
+                HobbyID = 1,
                 LocationID = 1,
             }
             , new
             {
-                HobbyID = 922,
+                HobbyID = 2,
                 LocationID = 2,
             });
 
@@ -151,51 +153,48 @@ namespace FriendFinderAPI.Context
             .HasData(new
             {
                 UserID = 1,
-                HobbyID = 297,
+                HobbyID = 1,
             }
             , new
             {
                 UserID = 2,
-                HobbyID = 297,
+                HobbyID = 2,
             }
             , new
             {
                 UserID = 3,
-                HobbyID = 922,
+                HobbyID = 3,
             });
 
             string citiesPath = @"../Documentation/DataSets/world-cities.txt";
             string[] lines = System.IO.File.ReadAllLines(citiesPath);
-            var count = 1;
 
-            foreach (var line in lines)
+            for (int i = 1; i < 4; i++)
             {
-
-                string[] split = line.Split(',');
+                string[] split = lines[i].Split(',');
                 City city = new City
                 {
-                    CityID = count,
+                    CityID = i,
                     CityName = split[0],
                     CityCountry = split[1],
                     CityCounty = split[2],
                 };
 
                 modelBuilder.Entity<City>().HasData(city);
-                count += 1;
+                
             }
 
             string hobbiesPath = @"../Documentation/DataSets/HobbiesList.txt";
             string[] hobbies = System.IO.File.ReadAllLines(hobbiesPath);
-            count = 1;
-            foreach (var hobbie in hobbies)
+
+            for (int i = 1; i < 4; i++)
             {
                 Hobby hobby = new Hobby
                 {
-                    HobbyID = count,
-                    HobbyName = hobbie,
+                    HobbyID = i,
+                    HobbyName = hobbies[i],
                 };
                 modelBuilder.Entity<Hobby>().HasData(hobby);
-                count += 1;
             }
         }
     }
