@@ -72,7 +72,7 @@ namespace FriendFinderAPI.Controllers
 
         //POST:      api/v1.0/cities
         [HttpPost]
-        public ActionResult<CityDto> PostCity(CityDto cityDto)
+        public async Task<ActionResult<CityDto>> PostCity(CityDto cityDto)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/cities/n
         [HttpPut("{id}")]
-        public ActionResult<CityDto> PutCity(CityDto cityDto)
+        public async Task<ActionResult<CityDto>> PutCity(CityDto cityDto)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace FriendFinderAPI.Controllers
                 _cityRepository.Update(mappedEntity);
 
                 if(await _cityRepository.Save())
-                    return Updated($"api/v1.0/cities/{mappedEntity.CityID}", _mapper.Map<CityDto>(mappedEntity));
+                    return Created($"api/v1.0/cities/{mappedEntity.CityID}", _mapper.Map<CityDto>(mappedEntity));
             }
             catch (Exception e)
             {
@@ -111,7 +111,7 @@ namespace FriendFinderAPI.Controllers
 
         //DELETE:       api/v1.0/cities/n
         [HttpDelete("{id}")]
-        public ActionResult<CityDto> DeleteCity(CityDto cityDto)
+        public async Task<ActionResult<CityDto>> DeleteCity(CityDto cityDto)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace FriendFinderAPI.Controllers
                 _cityRepository.Delete(mappedEntity);
 
                 if(await _cityRepository.Save())
-                    return Deleted($"api/v1.0/cities/{mappedEntity.CityID}", _mapper.Map<CityDto>(mappedEntity));
+                    return Created($"api/v1.0/cities/{mappedEntity.CityID}", _mapper.Map<CityDto>(mappedEntity));
             }
             catch (Exception e)
             {

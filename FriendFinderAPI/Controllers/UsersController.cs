@@ -86,7 +86,7 @@ namespace FriendFinderAPI.Controllers
 
         //POST:     api/v1.0/users
         [HttpPost]
-        public ActionResult<UserDto> PostUser(UserDto userDto)
+        public async Task<ActionResult<UserDto>> PostUser(UserDto userDto)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/users/n
         [HttpPut("{id}")]
-        public ActionResult<UserDto> PutUser(UserDto userDto)
+        public async Task<ActionResult<UserDto>> PutUser(UserDto userDto)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace FriendFinderAPI.Controllers
                 _userRepository.Update(mappedEntity);
                 
                 if(await _userRepository.Save())
-                    return Updated($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
+                    return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
             }
             catch (Exception e)
             {
@@ -124,7 +124,7 @@ namespace FriendFinderAPI.Controllers
 
         //DELETE        api/v1.0/users/n
         [HttpDelete("{id}")]
-        public ActionResult<UserDto> DeleteUser(UserDto userDto)
+        public async Task<ActionResult<UserDto>> DeleteUser(UserDto userDto)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace FriendFinderAPI.Controllers
                 _userRepository.Delete(mappedEntity);
                 
                 if(await _userRepository.Save())
-                    return Deleted($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
+                    return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
             }
             catch (Exception e)
             {
