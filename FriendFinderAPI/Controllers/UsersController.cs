@@ -14,14 +14,14 @@ namespace FriendFinderAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly FriendFinderContext _context;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UsersController(FriendFinderContext context, IUserRepository userRepository)
+        public UsersController(IUserRepository userRepository, IMapper mapper) 
         {
-            _context = context;
-            _userRepository = userRepository;
-        }
+            _userRepository = userRepository; 
+            _mapper = mapper;
+        }    
 
         //GET:      api/v1.0/users
         [HttpGet]
@@ -86,46 +86,60 @@ namespace FriendFinderAPI.Controllers
 
         //POST:     api/v1.0/users
         [HttpPost]
-        public ActionResult<User> PostUser(User user)
+        public ActionResult<UserDto> PostUser(UserDto userDto)
         {
-            _context.Users.Add(user);
-            //Important to not forget to save the changes in context when using POST
-            _context.SaveChanges();
-
-            return CreatedAtAction("GetUser", new User{UserID = user.UserID}, user);
+            try
+            {
+                var mappedEntity = _mapper.Map<User>(userDto);
+                _userRepository.Add(mappedEntity);
+                if(await _userRepository.Save())
+                    return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
 
         //PUT:      api/v1.0/users/n
         [HttpPut("{id}")]
-        public ActionResult PutUser(int id, User user)
+        public ActionResult<UserDto> PutUser(UserDto userDto)
         {
-            if(id != user.UserID)
-                return BadRequest();
-            
-            _context.Entry(user).State = EntityState.Modified;
-            /* Above code line makes the changes that we want in our context,
-            which means that when we save context it will save those changes and get rid of previous value */
+            try
+            {
+                var mappedEntity = _mapper.Map<User>(userDto);
+                _userRepository.Update(mappedEntity);
+                
+                if(await _userRepository.Save())
+                    return Updated($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
 
-            _context.SaveChanges();
-
-            // Because of the changes has already been done, we do not need to return any content.
-            // That´s why we return method NoContent. So we kinda return a NoContent object. => Returns a "204 NoContent" Status
-
-            return NoContent();
+            return BadRequest();
         }
 
         //DELETE        api/v1.0/users/n
         [HttpDelete("{id}")]
-        public ActionResult<User> DeleteUser(int id)
+        public ActionResult<UserDto> DeleteUser(UserDto userDto)
         {
-            var user = _context.Users.Find(id);
-            if(user == null)
-                return NotFound();
-            
-            _context.Users.Remove(user);
-            _context.SaveChanges();
+            try
+            {
+                var mappedEntity = _mapper.Map<User>(userDto);
+                _userRepository.Delete(mappedEntity);
+                
+                if(await _userRepository.Save())
+                    return Deleted($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
 
-            return user;
+            return BadRequest();
         }
         
     }
