@@ -1,6 +1,6 @@
 # Daily Standup
 
-## Oscar K
+## Ahmad Y
 
 ### Done since last Standup:
 
@@ -14,7 +14,7 @@
 
 
 
-## Oskar M
+## Samuel B
 
 ### Done since last Standup:
 
