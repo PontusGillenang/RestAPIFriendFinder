@@ -27,7 +27,9 @@
 
 * ## Tests - Unit test
 
-  * Every method should have a Unit test. (BEFORE being pushed to master, as well as a confirmed pull request)
+  * We do not set any demands on unit tests, but if you want to do it, we  much appreciates it. And we have created the environment for you to work on if you wish.
+
+    
 
 * ## Panic stuff (When you get into trouble)
 
