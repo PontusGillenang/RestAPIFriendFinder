@@ -14,13 +14,14 @@ namespace FriendFinderAPI.Controllers
     [ApiController]
     public class HobbiesController : ControllerBase
     {
-        private readonly FriendFinderContext _context;
         private readonly IHobbyRepository _hobbyRepository;
+        private readonly IMapper _mapper;
 
-        public HobbiesController(FriendFinderContext context, IHobbyRepository hobbyRepository)
+        public HobbiesController(IHobbyRepository hobbyRepository, IMapper mapper)
         {
-            _context = context;
             _hobbyRepository = hobbyRepository;
+            _mapper = mapper;
+
         }
 
         //GET:      api/v1.0/hobbies
@@ -88,45 +89,62 @@ namespace FriendFinderAPI.Controllers
 
         //POST: api/v1.0/hobbies
         [HttpPost]
-        public ActionResult<Hobby> PostHobby(Hobby hobby)
+        public async Task<ActionResult<HobbyDto>> PostHobby(HobbyDto hobbyDto)
         {
-            _context.Hobbies.Add(hobby);
-            //Important to not forget to save the changes in context when using POST
-            _context.SaveChanges();
+            try
+            {
+                var mappedEntity = _mapper.Map<HobbyDto>(hobbyDto);
+                _hobbyRepository.Add(mappedEntity);
 
-            return CreatedAtAction("GetHobby", new Hobby{HobbyID = hobby.HobbyID}, hobby);
+                if(await _hobbyRepository.Save())
+                     return Created($"api/v1.0/cities/{mappedEntity.HobbyID}", _mapper.Map<HobbyDto>(mappedEntity));
+                   
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
 
         //PUT:      api/v1.0/hobbies/n
         [HttpPut("{id}")]
-        public ActionResult PutHobby(int id, Hobby hobby)
+        public async Task<ActionResult<HobbyDto>> PutHobby(HobbyDto hobbyDto)
         {
-            if(id !=  hobby.HobbyID)
-                return BadRequest();
-            
-            _context.Entry(hobby).State = EntityState.Modified;
-            /* Above code line makes the changes that we want in our context,
-            which means that when we save context it will save those changes and get rid of previous value */
+            try
+            {
+                var mappedEntity = _mapper.Map<HobbyDto>(hobbyDto);
+                _hobbyRepository.Update(mappedEntity);
 
-            _context.SaveChanges();
-            // Because of the changes has already been done, we do not need to return any content.
-            // That´s why we return method NoContent. So we kinda return a NoContent object. => Returns a "204 NoContent" Status
+                if(await _hobbyRepository.Save())
+                     return Created($"api/v1.0/cities/{mappedEntity.HobbyID}", _mapper.Map<HobbyDto>(mappedEntity));
 
-            return NoContent();
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
 
         //DELETE:       api/hobbies/n
         [HttpDelete("{id}")]
-        public ActionResult<Hobby> DeleteHobby(int id)
+        public async Task<ActionResult<HobbyDto>> DeleteHobby(HobbyDto hobbyDto)
         {
-            var hobby = _context.Hobbies.Find(id);
-            if(hobby == null)
-                return NotFound();
-            
-            _context.Hobbies.Remove(hobby);
-            _context.SaveChanges();
+            try
+            {
+                var mappedEntity = _mapper.Map<HobbyDto>(hobbyDto);
+                _hobbyRepository.Delete(mappedEntity);
 
-            return hobby;
+                if(await _hobbyRepository.Save())
+                     return Created($"api/v1.0/cities/{mappedEntity.HobbyID}", _mapper.Map<HobbyDto>(mappedEntity));
+
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
     }
 }

@@ -14,13 +14,13 @@ namespace FriendFinderAPI.Controllers
     [ApiController]
     public class LocationsController : ControllerBase
     {
-        private readonly FriendFinderContext _context;
         private readonly ILocationRepository _locationRepository;
+        private readonly IMapper _mapper;
 
-        public LocationsController(FriendFinderContext context, ILocationRepository locationRepository)
+        public LocationsController(ILocationRepository locationRepository, IMapper mapper)
         {
-            _context = context;
             _locationRepository = locationRepository;
+            _mapper = mapper;
         }
 
         //GET:      api/v1.0/locations
@@ -89,46 +89,59 @@ namespace FriendFinderAPI.Controllers
 
         //POST:      api/v1.0/locations
         [HttpPost]
-        public ActionResult<Location> PostLocation(Location location)
+        public async Task<ActionResult<LocationDto>> PostLocation(LocationDto locationDto)
         {
-            _context.Locations.Add(location);
-            //Important to not forget to save the changes in context when using POST
-            _context.SaveChanges();
+            try
+            {
+                var mappedEntity = _mapper.Map<LocationDto>(locationDto);
+                _locationRepository.Add(mappedEntity);
 
-            return CreatedAtAction("GetLocation", new Location{LocationID = location.LocationID}, location);
+                if(await _locationRepository.Save())
+                    return Created($"api/v1.0/cities/{mappedEntity.LocationID}", _mapper.Map<LocationDto>(mappedEntity));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
 
         //PUT:      api/v1.0/locations/n
         [HttpPut("{id}")]
-        public ActionResult PutLocation(int id, Location location)
+        public async Task<ActionResult<LocationDto>> PutLocation(LocationDto locationDto)
         {
-            if(id != location.LocationID)
-                return BadRequest();
-            
-            _context.Entry(location).State = EntityState.Modified;
-            /* Above code line makes the changes that we want in our context,
-            which means that when we save context it will save those changes and get rid of previous value */
+            try
+            {
+                var mappedEntity = _mapper.Map<LocationDto>(locationDto);
+                _locationRepository.Update(mappedEntity);
 
-            _context.SaveChanges();
-
-            // Because of the changes has already been done, we do not need to return any content.
-            // That´s why we return method NoContent. So we kinda return a NoContent object. => Returns a "204 NoContent" Status
-
-            return NoContent();
+                if(await _locationRepository.Save())
+                    return Created($"api/v1.0/cities/{mappedEntity.LocationID}", _mapper.Map<LocationDto>(mappedEntity));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
 
         //DELETE:       api/v1.0/locations/n
         [HttpDelete("{id}")]
-        public ActionResult<Location> DeleteLocation(int id)
+        public async Task<ActionResult<LocationDto>> DeleteLocation(LocationDto locationDto)
         {
-            var location = _context.Locations.Find(id);
-            if(location == null)
-                return NotFound();
-            
-            _context.Locations.Remove(location);
-            _context.SaveChanges();
+            try
+            {
+                var mappedEntity = _mapper.Map<LocationDto>(locationDto);
+                _locationRepository.Delete(mappedEntity);
 
-            return location;
+                if(await _locationRepository.Save())
+                    return Created($"api/v1.0/cities/{mappedEntity.LocationID}", _mapper.Map<LocationDto>(mappedEntity));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
         
     }
