@@ -2,6 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using FriendFinderAPI.Models;
+using System.Collections.Generic;
 
 namespace FriendFinderAPI.Context
 {
@@ -21,6 +22,7 @@ namespace FriendFinderAPI.Context
         public virtual DbSet<HobbyUser> HobbyUsers { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<EventUser> EventUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -55,21 +57,58 @@ namespace FriendFinderAPI.Context
             .WithMany(h => h.HobbyLocations)
             .HasForeignKey(hl => hl.LocationID);
 
+            // modelBuilder.Entity<User>()
+            // .HasRequired<User>(u => u.User)
+            // .WithMany(u => u.Event);
+
+            modelBuilder.Entity<EventUser>()
+            .HasKey(bc => new { bc.EventID, bc.UserID });  
+            modelBuilder.Entity<EventUser>()
+            .HasOne(bc => bc.Event)
+            .WithMany(b => b.EventUsers)
+            .HasForeignKey(bc => bc.EventID);  
+            modelBuilder.Entity<EventUser>()
+            .HasOne(bc => bc.User)
+            .WithMany(c => c.EventUsers)
+            .HasForeignKey(bc => bc.UserID)
+            .OnDelete(DeleteBehavior.NoAction);
+
+            // modelBuilder.Entity<Event>()
+            // .HasOne(e => e.EventResposibleUser)
+            // .WithMany(h => h.Event)
+            // .HasForeignKey(hl => hl.);
+
             // modelBuilder.Entity<City>()
             // .HasMany<User>(c=> c.CityUsers)
             // .WithOne(u=>u.UserCity)
-            // .HasForeignKey(u=> u.UserCityID)
+            // .HasForeignKey(u=> u.UserCityID);
             // .OnDelete(DeleteBehavior.ClientSetNull);
 
-            // modelBuilder.Entity<City>()
-            // .HasMany<User>(u=> u.CityUsers)
-            // .WithOne(c=> c.UserCity)
-            // .OnDelete(DeleteBehavior.NoAction);
+            // modelBuilder.Entity<Event>()
+            // .HasKey(hu => new { hu.EventID, hu.EventUserID });
 
             // modelBuilder.Entity<User>()
             // .HasOne(u=> u.UserCity)
             // .WithMany(c=> c.CityUsers)
             // .OnDelete(DeleteBehavior.NoAction);
+
+            string citiesPath = @"../Documentation/DataSets/world-cities.txt";
+            string[] lines = System.IO.File.ReadAllLines(citiesPath);
+            List<City> tempCities = new List<City>();
+            for (int i = 1; i < 4; i++)
+            {
+                string[] split = lines[i].Split(',');
+                City city = new City
+                {
+                    CityID = i,
+                    CityName = split[0],
+                    CityCountry = split[1],
+                    CityCounty = split[2],
+                };
+                tempCities.Add(city);
+                modelBuilder.Entity<City>().HasData(city);
+                
+            }
 
             modelBuilder.Entity<User>()
             .HasData(new
@@ -80,7 +119,7 @@ namespace FriendFinderAPI.Context
                 UserPhoneNumber = "+46XXXXXXX",
                 UserAge = 20,
                 UserIsTeacher = true,
-                UserCityID = 1,
+                UserCityID = 2
             }
             , new
             {
@@ -90,7 +129,7 @@ namespace FriendFinderAPI.Context
                 UserPhoneNumber = "+46XXXXXXX2",
                 UserAge = 22,
                 UserIsTeacher = false,
-                UserCityID = 2,
+                UserCityID = 1
             }
             , new
             {
@@ -100,7 +139,7 @@ namespace FriendFinderAPI.Context
                 UserPhoneNumber = "+46XXXXXXX3",
                 UserAge = 28,
                 UserIsTeacher = true,
-                UserCityID = 1,
+                UserCityID = 1
             });
 
             modelBuilder.Entity<Location>()
@@ -124,7 +163,7 @@ namespace FriendFinderAPI.Context
                 EventName = "Lets Do some Awsome Curling",
                 //EventHobbyID = 297,
                 EventHobbyID = 2,
-                EventResposibleID = 1,
+                EventResposibleUserID = 1,
                 EventCityID = 1,
             }    
             , new
@@ -133,7 +172,7 @@ namespace FriendFinderAPI.Context
                 EventName = "BookClub All About The Books",
                 //EventHobbyID = 922,
                 EventHobbyID = 1,
-                EventResposibleID = 3,
+                EventResposibleUserID = 3,
                 EventCityID = 2,
             });
 
@@ -166,23 +205,6 @@ namespace FriendFinderAPI.Context
                 HobbyID = 3,
             });
 
-            string citiesPath = @"../Documentation/DataSets/world-cities.txt";
-            string[] lines = System.IO.File.ReadAllLines(citiesPath);
-
-            for (int i = 1; i < 4; i++)
-            {
-                string[] split = lines[i].Split(',');
-                City city = new City
-                {
-                    CityID = i,
-                    CityName = split[0],
-                    CityCountry = split[1],
-                    CityCounty = split[2],
-                };
-
-                modelBuilder.Entity<City>().HasData(city);
-                
-            }
 
             string hobbiesPath = @"../Documentation/DataSets/HobbiesList.txt";
             string[] hobbies = System.IO.File.ReadAllLines(hobbiesPath);

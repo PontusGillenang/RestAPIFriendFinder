@@ -14,6 +14,8 @@ namespace FriendFinderAPI.Models
         public int UserAge { get; set; }
         public bool UserIsTeacher { get; set; }
         public City UserCity { get; set; }
+        public int UserCityID { get; set; }
         public ICollection<HobbyUser> HobbyUsers { get; set; }
+        public ICollection<EventUser> EventUsers { get; set; }
     }
 }
