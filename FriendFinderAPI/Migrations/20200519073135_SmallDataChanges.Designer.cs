@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FriendFinderAPI.Migrations
 {
     [DbContext(typeof(FriendFinderContext))]
-    [Migration("20200519071132_SmallDataChanges")]
+    [Migration("20200519073135_SmallDataChanges")]
     partial class SmallDataChanges
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,22 @@ namespace FriendFinderAPI.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("EventUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            EventID = 1,
+                            UserID = 2,
+                            EventUserID = 1,
+                            UserIsResponsible = true
+                        },
+                        new
+                        {
+                            EventID = 1,
+                            UserID = 1,
+                            EventUserID = 2,
+                            UserIsResponsible = false
+                        });
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.Hobby", b =>

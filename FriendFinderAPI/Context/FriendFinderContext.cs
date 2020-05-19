@@ -57,35 +57,23 @@ namespace FriendFinderAPI.Context
             .WithMany(h => h.HobbyLocations)
             .HasForeignKey(hl => hl.LocationID);
 
-            // modelBuilder.Entity<User>()
-            // .HasRequired<User>(u => u.User)
-            // .WithMany(u => u.Event);
-
             modelBuilder.Entity<EventUser>()
             .HasKey(bc => new { bc.EventID, bc.UserID });  
             modelBuilder.Entity<EventUser>()
             .HasOne(bc => bc.Event)
             .WithMany(b => b.EventUsers)
-            .HasForeignKey(bc => bc.EventID);  
+            .HasForeignKey(bc => bc.EventID);
             modelBuilder.Entity<EventUser>()
             .HasOne(bc => bc.User)
             .WithMany(c => c.EventUsers)
             .HasForeignKey(bc => bc.UserID)
             .OnDelete(DeleteBehavior.NoAction);
 
-            // modelBuilder.Entity<Event>()
-            // .HasOne(e => e.EventResposibleUser)
-            // .WithMany(h => h.Event)
-            // .HasForeignKey(hl => hl.);
-
             // modelBuilder.Entity<City>()
             // .HasMany<User>(c=> c.CityUsers)
             // .WithOne(u=>u.UserCity)
             // .HasForeignKey(u=> u.UserCityID);
             // .OnDelete(DeleteBehavior.ClientSetNull);
-
-            // modelBuilder.Entity<Event>()
-            // .HasKey(hu => new { hu.EventID, hu.EventUserID });
 
             // modelBuilder.Entity<User>()
             // .HasOne(u=> u.UserCity)
@@ -186,6 +174,22 @@ namespace FriendFinderAPI.Context
             {
                 HobbyID = 2,
                 LocationID = 2,
+            });
+
+            modelBuilder.Entity<EventUser>()
+            .HasData(new
+            {
+                EventUserID = 1,
+                EventID = 1,
+                UserID = 2,
+                UserIsResponsible = true
+            }
+            , new
+            {
+                EventUserID = 2,
+                EventID = 1,
+                UserID = 1,
+                UserIsResponsible = false
             });
 
             modelBuilder.Entity<HobbyUser>()

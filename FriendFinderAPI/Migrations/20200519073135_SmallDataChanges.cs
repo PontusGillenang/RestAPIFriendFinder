@@ -228,6 +228,15 @@ namespace FriendFinderAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "EventUsers",
+                columns: new[] { "EventID", "UserID", "EventUserID", "UserIsResponsible" },
+                values: new object[,]
+                {
+                    { 1, 2, 1, true },
+                    { 1, 1, 2, false }
+                });
+
+            migrationBuilder.InsertData(
                 table: "HobbyLocations",
                 columns: new[] { "HobbyID", "LocationID" },
                 values: new object[,]

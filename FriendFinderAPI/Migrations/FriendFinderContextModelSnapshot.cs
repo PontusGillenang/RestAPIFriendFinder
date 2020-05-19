@@ -122,6 +122,22 @@ namespace FriendFinderAPI.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("EventUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            EventID = 1,
+                            UserID = 2,
+                            EventUserID = 1,
+                            UserIsResponsible = true
+                        },
+                        new
+                        {
+                            EventID = 1,
+                            UserID = 1,
+                            EventUserID = 2,
+                            UserIsResponsible = false
+                        });
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.Hobby", b =>
