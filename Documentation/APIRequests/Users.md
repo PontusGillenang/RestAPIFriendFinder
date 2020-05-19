@@ -10,4 +10,9 @@
   
 - ## GetUsersByHobby()
 
-- ## GetUsersThatIsTeacherByHobby()
+- ## GetUsersThatAreTeacherByHobby()
+
+- GetUserByCity
+
+- GetUsersThatHaveEvents()
+

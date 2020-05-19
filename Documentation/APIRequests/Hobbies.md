@@ -8,6 +8,5 @@
 
   - api/v1.0/hobbies/n
   
-- ## GetHobbyByCity()
-
 - ## GetHobbiesByCity()
+
