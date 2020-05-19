@@ -2,7 +2,7 @@
 
 namespace FriendFinderAPI.Migrations
 {
-    public partial class Initial : Migration
+    public partial class SmallDataChanges : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -66,17 +66,44 @@ namespace FriendFinderAPI.Migrations
                     UserPhoneNumber = table.Column<string>(nullable: true),
                     UserAge = table.Column<int>(nullable: false),
                     UserIsTeacher = table.Column<bool>(nullable: false),
-                    UserCityCityID = table.Column<int>(nullable: true)
+                    UserCityID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserID);
                     table.ForeignKey(
-                        name: "FK_Users_Cities_UserCityCityID",
-                        column: x => x.UserCityCityID,
+                        name: "FK_Users_Cities_UserCityID",
+                        column: x => x.UserCityID,
                         principalTable: "Cities",
                         principalColumn: "CityID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    EventID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventName = table.Column<string>(nullable: true),
+                    EventHobbyID = table.Column<int>(nullable: false),
+                    EventCityID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.EventID);
+                    table.ForeignKey(
+                        name: "FK_Events_Cities_EventCityID",
+                        column: x => x.EventCityID,
+                        principalTable: "Cities",
+                        principalColumn: "CityID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Events_Hobbies_EventHobbyID",
+                        column: x => x.EventHobbyID,
+                        principalTable: "Hobbies",
+                        principalColumn: "HobbyID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,40 +131,6 @@ namespace FriendFinderAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Events",
-                columns: table => new
-                {
-                    EventID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EventName = table.Column<string>(nullable: true),
-                    EventHobbyID = table.Column<int>(nullable: false),
-                    EventResposibleID = table.Column<int>(nullable: false),
-                    EventCityID = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Events", x => x.EventID);
-                    table.ForeignKey(
-                        name: "FK_Events_Cities_EventCityID",
-                        column: x => x.EventCityID,
-                        principalTable: "Cities",
-                        principalColumn: "CityID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Events_Hobbies_EventHobbyID",
-                        column: x => x.EventHobbyID,
-                        principalTable: "Hobbies",
-                        principalColumn: "HobbyID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Events_Users_EventResposibleID",
-                        column: x => x.EventResposibleID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "HobbyUsers",
                 columns: table => new
                 {
@@ -161,6 +154,31 @@ namespace FriendFinderAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "EventUsers",
+                columns: table => new
+                {
+                    EventID = table.Column<int>(nullable: false),
+                    UserID = table.Column<int>(nullable: false),
+                    EventUserID = table.Column<int>(nullable: false),
+                    UserIsResponsible = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventUsers", x => new { x.EventID, x.UserID });
+                    table.ForeignKey(
+                        name: "FK_EventUsers_Events_EventID",
+                        column: x => x.EventID,
+                        principalTable: "Events",
+                        principalColumn: "EventID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventUsers_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "UserID");
+                });
+
             migrationBuilder.InsertData(
                 table: "Cities",
                 columns: new[] { "CityID", "CityCountry", "CityCounty", "CityName" },
@@ -182,32 +200,12 @@ namespace FriendFinderAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "UserID", "UserAdress", "UserAge", "UserCityCityID", "UserIsTeacher", "UserName", "UserPhoneNumber" },
-                values: new object[,]
-                {
-                    { 1, "Drottninggatan", 20, null, true, "Sebbe", "+46XXXXXXX" },
-                    { 2, "Kungsgatan", 22, null, false, "Oskar", "+46XXXXXXX2" },
-                    { 3, "MorTest", 28, null, true, "William", "+46XXXXXXX3" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Events",
-                columns: new[] { "EventID", "EventCityID", "EventHobbyID", "EventName", "EventResposibleID" },
+                columns: new[] { "EventID", "EventCityID", "EventHobbyID", "EventName" },
                 values: new object[,]
                 {
-                    { 1, 1, 2, "Lets Do some Awsome Curling", 1 },
-                    { 2, 2, 1, "BookClub All About The Books", 3 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "HobbyUsers",
-                columns: new[] { "HobbyID", "UserID" },
-                values: new object[,]
-                {
-                    { 1, 1 },
-                    { 2, 2 },
-                    { 3, 3 }
+                    { 2, 2, 1, "BookClub All About The Books" },
+                    { 1, 1, 2, "Lets Do some Awsome Curling" }
                 });
 
             migrationBuilder.InsertData(
@@ -220,14 +218,42 @@ namespace FriendFinderAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "HobbyLocations",
-                columns: new[] { "HobbyID", "LocationID" },
-                values: new object[] { 2, 2 });
+                table: "Users",
+                columns: new[] { "UserID", "UserAdress", "UserAge", "UserCityID", "UserIsTeacher", "UserName", "UserPhoneNumber" },
+                values: new object[,]
+                {
+                    { 2, "Kungsgatan", 22, 1, false, "Oskar", "+46XXXXXXX2" },
+                    { 3, "MorTest", 28, 1, true, "William", "+46XXXXXXX3" },
+                    { 1, "Drottninggatan", 20, 2, true, "Sebbe", "+46XXXXXXX" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "EventUsers",
+                columns: new[] { "EventID", "UserID", "EventUserID", "UserIsResponsible" },
+                values: new object[,]
+                {
+                    { 1, 2, 1, true },
+                    { 1, 1, 2, false }
+                });
 
             migrationBuilder.InsertData(
                 table: "HobbyLocations",
                 columns: new[] { "HobbyID", "LocationID" },
-                values: new object[] { 1, 1 });
+                values: new object[,]
+                {
+                    { 2, 2 },
+                    { 1, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "HobbyUsers",
+                columns: new[] { "HobbyID", "UserID" },
+                values: new object[,]
+                {
+                    { 2, 2 },
+                    { 3, 3 },
+                    { 1, 1 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_EventCityID",
@@ -240,9 +266,9 @@ namespace FriendFinderAPI.Migrations
                 column: "EventHobbyID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_EventResposibleID",
-                table: "Events",
-                column: "EventResposibleID");
+                name: "IX_EventUsers_UserID",
+                table: "EventUsers",
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HobbyLocations_LocationID",
@@ -260,15 +286,15 @@ namespace FriendFinderAPI.Migrations
                 column: "LocationCityID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_UserCityCityID",
+                name: "IX_Users_UserCityID",
                 table: "Users",
-                column: "UserCityCityID");
+                column: "UserCityID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Events");
+                name: "EventUsers");
 
             migrationBuilder.DropTable(
                 name: "HobbyLocations");
@@ -277,13 +303,16 @@ namespace FriendFinderAPI.Migrations
                 name: "HobbyUsers");
 
             migrationBuilder.DropTable(
+                name: "Events");
+
+            migrationBuilder.DropTable(
                 name: "Locations");
 
             migrationBuilder.DropTable(
-                name: "Hobbies");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Hobbies");
 
             migrationBuilder.DropTable(
                 name: "Cities");
