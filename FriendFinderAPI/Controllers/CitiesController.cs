@@ -16,7 +16,7 @@ namespace FriendFinderAPI.Controllers
     {
         private readonly ICityRepository _cityRepository;
         private readonly IMapper _mapper;
-        public CitiesController(ICityRepository cityRepository, Imapper mapper)
+        public CitiesController(ICityRepository cityRepository, IMapper mapper)
         {
             
             _cityRepository = cityRepository;

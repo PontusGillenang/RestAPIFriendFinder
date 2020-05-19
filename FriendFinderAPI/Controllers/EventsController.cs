@@ -14,13 +14,13 @@ namespace FriendFinderAPI.Controllers
     [ApiController]
     public class EventsController : ControllerBase
     {
-        private readonly FriendFinderContext _context;
         private readonly IEventRepository _eventRepository;
+        private readonly IMapper _mapper;
 
-        public EventsController(FriendFinderContext context, IEventRepository eventRepository)
+        public EventsController(IEventRepository eventRepository, IMapper mapper)
         {
-            _context = context;
             _eventRepository = eventRepository;
+            _mapper = mapper;
         }
 
         //GET:      api/v1.0/events
@@ -101,47 +101,59 @@ namespace FriendFinderAPI.Controllers
 
         //POST:      api/v1.0/events
         [HttpPost]
-        public ActionResult<Event> PostEvents(Event eventPost)
+        public async Task<ActionResult<EventDto>> PostEvents(EventDto eventDto)
         {
-            _context.Events.Add(eventPost);
-            //Important to not forget to save the changes in context when using POST
-            _context.SaveChanges();
+            try
+            {
+                var mappedEntity = _mapper.Map<EventDto>(eventDto);
+                _eventRepository.Add(mappedEntity);
 
-            return CreatedAtAction("GetEvent", new Event { EventID = eventPost.EventID }, eventPost);
-
+                if(await _eventRepository.Save())
+                    return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
 
         //PUT:      api/v1.0/events/n
         [HttpPut("{id}")]
-        public ActionResult PutEvent(int id, Event eventPut)
+        public async Task<ActionResult<EventDto>> PutEvent(EventDto eventDto)
         {
-            if (id != eventPut.EventID)
-                return BadRequest();
+            try
+            {
+                var mappedEntity =_mapper.Map<EventDto>(eventDto);
+                _eventRepository.Update(mappedEntity);
 
-            _context.Entry(eventPut).State = EntityState.Modified;
-            /* Above code line makes the changes that we want in our context,
-           which means that when we save context it will save those changes and get rid of previous value */
-
-            _context.SaveChanges();
-
-            // Because of the changes has already been done, we do not need to return any content.
-            // That´s why we return method NoContent. So we kinda return a NoContent object. => Returns a "204 NoContent" Status
-
-            return NoContent();
+                if(await _eventRepository.Save())
+                    return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
 
         //DELETE:       api/v1.0/events/n
         [HttpDelete("{id}")]
-        public ActionResult<Event> DeleteEvent(int id)
+        public async Task<ActionResult<EventDto>> DeleteEvent(EventDto eventDto)
         {
-            var eventDel = _context.Events.Find(id);
-            if (eventDel == null)
-                return NotFound();
+            try
+            {
+                var mappedEntity = _mapper.Map<EventDto>(eventDto);
+                _eventRepository.Delete(mappedEntity);
 
-            _context.Events.Remove(eventDel);
-            _context.SaveChanges();
-
-            return eventDel;
+                if(await _eventRepository.Save())
+                    return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+            }
+            return BadRequest();
         }
 
     }
