@@ -1,18 +1,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using FriendFinderAPI.Enums;
 using static FriendFinderAPI.Enums.Enums;
 
-namespace FriendFinderAPI.Models
+namespace FriendFinderAPI.Dtos
 {
-    public class Hobby
+    public class HobbyDto
     {
         public HobbyActivationLevel HobbyActivationLevel{get;set;}
         [Key]
         public int HobbyID { get; set; }
         public string HobbyName { get; set; }
-        public ICollection<HobbyUser> HobbyUsers { get; set; }
-        public ICollection<HobbyLocation> HobbyLocations { get; set; }
+        public ICollection<HobbyUserDto> HobbyUsers { get; set; }
+        public ICollection<HobbyLocationDto> HobbyLocations { get; set; }
     }
 }

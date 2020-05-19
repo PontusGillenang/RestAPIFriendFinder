@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using System;
 using FriendFinderAPI.Services;
 using System.Collections.Generic;
+using FriendFinderAPI.Dtos;
+using AutoMapper;
 
 namespace FriendFinderAPI.Controllers
 {

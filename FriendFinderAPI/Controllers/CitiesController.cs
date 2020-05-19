@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using FriendFinderAPI.Context;
 using FriendFinderAPI.Models;
 using FriendFinderAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using FriendFinderAPI.Dtos;
+
 
 namespace FriendFinderAPI.Controllers
 {
