@@ -111,15 +111,19 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/locations/n
         [HttpPut("{id}")]
-        public async Task<ActionResult<LocationDto>> PutLocation(LocationDto locationDto)
+        public async Task<ActionResult<LocationDto>> PutLocation(int locationID, LocationDto locationDto)
         {
             try
             {
-                var mappedEntity = _mapper.Map<LocationDto>(locationDto);
-                _locationRepository.Update(mappedEntity);
+                var oldLocation = await _locationRepository.GetLocation(locationID);
+                if(oldLocation == null)
+                    return NotFound($"We could not find a location with that id: {locationID}");
+
+                var newLocation = _mapper.Map(locationDto, oldLocation);
+                _locationRepository.Update(newLocation);
 
                 if(await _locationRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.LocationID}", _mapper.Map<LocationDto>(mappedEntity));
+                    return NoContent();
             }
             catch (Exception e)
             {
@@ -130,15 +134,17 @@ namespace FriendFinderAPI.Controllers
 
         //DELETE:       api/v1.0/locations/n
         [HttpDelete("{id}")]
-        public async Task<ActionResult<LocationDto>> DeleteLocation(LocationDto locationDto)
+        public async Task<ActionResult> DeleteLocation(int locationID)
         {
             try
             {
-                var mappedEntity = _mapper.Map<LocationDto>(locationDto);
-                _locationRepository.Delete(mappedEntity);
-
+                var location = await _locationRepository.GetLocation(locationID);
+                if(location == null)
+                    return NotFound($"We could not find a location with that id: {locationID}");
+                
+                _locationRepository.Delete(location);
                 if(await _locationRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.LocationID}", _mapper.Map<LocationDto>(mappedEntity));
+                    return NoContent();
             }
             catch (Exception e)
             {

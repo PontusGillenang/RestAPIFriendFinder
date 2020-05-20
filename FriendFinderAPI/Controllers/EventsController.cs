@@ -122,15 +122,19 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/events/n
         [HttpPut("{id}")]
-        public async Task<ActionResult<EventDto>> PutEvent(EventDto eventDto)
+        public async Task<ActionResult<EventDto>> PutEvent(int eventID, EventDto eventDto)
         {
             try
             {
-                var mappedEntity =_mapper.Map<EventDto>(eventDto);
-                _eventRepository.Update(mappedEntity);
+                var oldEvent = await _eventRepository.GetEvent(eventID);
+                if(oldEvent == null)
+                    return NotFound($"Could not find the event with id {eventID}");
+                
+                var newEvent =_mapper.Map(eventDto, oldEvent);
+                _eventRepository.Update(newEvent);
 
                 if(await _eventRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+                    return NoContent();
             }
             catch (Exception e)
             {
@@ -141,15 +145,17 @@ namespace FriendFinderAPI.Controllers
 
         //DELETE:       api/v1.0/events/n
         [HttpDelete("{id}")]
-        public async Task<ActionResult<EventDto>> DeleteEvent(EventDto eventDto)
+        public async Task<ActionResult> DeleteEvent(int eventID)
         {
             try
             {
-                var mappedEntity = _mapper.Map<EventDto>(eventDto);
-                _eventRepository.Delete(mappedEntity);
-
+                var eventToRemove = await _eventRepository.GetEvent(eventID);
+                if(eventToRemove == null)
+                    return NotFound($"Could not find an event with the id: {eventID}");
+                
+                _eventRepository.Delete(eventToRemove);
                 if(await _eventRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+                    return NoContent();
             }
             catch (Exception e)
             {
