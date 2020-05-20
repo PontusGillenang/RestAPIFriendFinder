@@ -110,15 +110,18 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/users/n
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> PutUser(UserDto userDto)
+        public async Task<ActionResult<UserDto>> PutUser(int userID, UserDto userDto)
         {
             try
             {
-                var mappedEntity = _mapper.Map<User>(userDto);
-                _userRepository.Update(mappedEntity);
-                
+                var oldUser = await _userRepository.GetUser(userID);
+                if(oldUser == null)
+                    return NotFound($"Can't find any user with that id: {userID}");
+
+                var newUser = _mapper.Map(userDto, oldUser);
+                _userRepository.Update(newUser);
                 if(await _userRepository.Save())
-                    return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
+                    return NoContent();
             }
             catch (Exception e)
             {
@@ -129,16 +132,18 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE        api/v1.0/users/n
-        [HttpDelete("{id}", Name = "DeleteUser")]
-        public async Task<ActionResult<UserDto>> DeleteUser(UserDto userDto)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteUser(int userID)
         {
             try
             {
-                var mappedEntity = _mapper.Map<User>(userDto);
-                _userRepository.Delete(mappedEntity);
+                var user = await _userRepository.GetUser(userID);
+                if(user == null)
+                    return NotFound($"We could not find a user with that id: {userID}");
                 
+                _userRepository.Delete(user);
                 if(await _userRepository.Save())
-                return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
+                    return NoContent();
             }
             catch (Exception e)
             {
