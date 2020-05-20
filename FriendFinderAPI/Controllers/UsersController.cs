@@ -29,12 +29,16 @@ namespace FriendFinderAPI.Controllers
         }    
 
         //GET:      api/v1.0/users
-        [HttpGet]
+        [HttpGet(Name= "GetAllUsers")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             try
             {
                 var results = await _userRepository.GetUsers();
+                for(int i =0; i< results.Length; i++)
+                {
+                    results[i].UserLinks = CreateLinksGetAllUsers(results[i]);
+                }
                 return Ok(results);
             }
             catch(Exception e)
@@ -43,7 +47,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        //GET:      api/v1.0/users/n
+        //GET:      api/v1.0/user/n
         [HttpGet("{id}", Name ="GetUser")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -61,8 +65,8 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-        
-        [HttpGet("{id}")]
+        //GET:      api/v1.0/users3/n
+        [HttpGet("{id}", Name ="GetUserByHobby")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByHobby(int id)
         {
             try
@@ -75,8 +79,8 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-       
-        [HttpGet("{id}")]
+       //GET:      api/v1.0/users2/n
+        [HttpGet("{id}", Name = "GetUserTeacherByHobby")]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTeacherByHobby(int id)
         {
             try
@@ -166,6 +170,19 @@ namespace FriendFinderAPI.Controllers
             Rel = "self",
             Href = Url.Link("DeleteUser", new {id = user.UserID})
             }
+            };
+            return links;
+        }
+        private IEnumerable<Link> CreateLinksGetAllUsers(User user)
+        {
+            var links = new[]
+            {
+            new Link{
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetUser",new {id = user.UserID} ).ToLower()
+            },
+          
             };
             return links;
         }
