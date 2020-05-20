@@ -118,15 +118,17 @@ namespace FriendFinderAPI.Controllers
 
         //DELETE:       api/v1.0/cities/n
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CityDto>> DeleteCity(CityDto cityDto)
+        public async Task<ActionResult> DeleteCity(int cityID)
         {
             try
             {
-                var mappedEntity = _mapper.Map<CityDto>(cityDto);
-                _cityRepository.Delete(mappedEntity);
+                var city = await _cityRepository.GetCity(cityID);
+                if(city == null)
+                    return NotFound($"Could not find the city with id: {cityID} ");
 
+                _cityRepository.Delete(city);
                 if(await _cityRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.CityID}", _mapper.Map<CityDto>(mappedEntity));
+                    return NoContent();
             }
             catch (Exception e)
             {

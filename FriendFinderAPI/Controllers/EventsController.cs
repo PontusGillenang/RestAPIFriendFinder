@@ -145,15 +145,17 @@ namespace FriendFinderAPI.Controllers
 
         //DELETE:       api/v1.0/events/n
         [HttpDelete("{id}")]
-        public async Task<ActionResult<EventDto>> DeleteEvent(EventDto eventDto)
+        public async Task<ActionResult> DeleteEvent(int eventID)
         {
             try
             {
-                var mappedEntity = _mapper.Map<EventDto>(eventDto);
-                _eventRepository.Delete(mappedEntity);
-
+                var eventToRemove = await _eventRepository.GetEvent(eventID);
+                if(eventToRemove == null)
+                    return NotFound($"Could not find an event with the id: {eventID}");
+                
+                _eventRepository.Delete(eventToRemove);
                 if(await _eventRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+                    return NoContent();
             }
             catch (Exception e)
             {
