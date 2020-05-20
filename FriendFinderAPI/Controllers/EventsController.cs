@@ -122,15 +122,19 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/events/n
         [HttpPut("{id}")]
-        public async Task<ActionResult<EventDto>> PutEvent(EventDto eventDto)
+        public async Task<ActionResult<EventDto>> PutEvent(int eventID, EventDto eventDto)
         {
             try
             {
-                var mappedEntity =_mapper.Map<EventDto>(eventDto);
-                _eventRepository.Update(mappedEntity);
+                var oldEvent = await _eventRepository.GetEvent(eventID);
+                if(oldEvent == null)
+                    return NotFound($"Could not find the event with id {eventID}");
+                
+                var newEvent =_mapper.Map(eventDto, oldEvent);
+                _eventRepository.Update(newEvent);
 
                 if(await _eventRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+                    return NoContent();
             }
             catch (Exception e)
             {

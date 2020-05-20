@@ -111,15 +111,19 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/hobbies/n
         [HttpPut("{id}")]
-        public async Task<ActionResult<HobbyDto>> PutHobby(HobbyDto hobbyDto)
+        public async Task<ActionResult<HobbyDto>> PutHobby(int hobbyID, HobbyDto hobbyDto)
         {
             try
             {
-                var mappedEntity = _mapper.Map<HobbyDto>(hobbyDto);
-                _hobbyRepository.Update(mappedEntity);
+                var oldHobby = await _hobbyRepository.GetHobby(hobbyID);
+                if(oldHobby == null)
+                    return NotFound($"There's no hobby with that id: {hobbyID}");
+
+                var newHobby = _mapper.Map(hobbyDto, oldHobby);
+                _hobbyRepository.Update(newHobby);
 
                 if(await _hobbyRepository.Save())
-                     return Created($"api/v1.0/cities/{mappedEntity.HobbyID}", _mapper.Map<HobbyDto>(mappedEntity));
+                     return NoContent();
 
             }
             catch (Exception e)
