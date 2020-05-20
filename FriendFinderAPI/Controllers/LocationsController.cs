@@ -27,12 +27,16 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/locations
-        [HttpGet]
+        [HttpGet(Name ="GetLocations")]
         public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
         {
             try
             {
                 var results = await _locationRepository.GetLocations();
+                for(int i = 0; i<results.Length;i++)
+                {
+                    results[i].LocationLinks = CreateLinksGetAllLocations(results[i]);
+                };
                 return Ok(results);
             }
             catch(Exception e)
@@ -48,6 +52,7 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _locationRepository.GetLocation(id);
+                result.LocationLinks = CreateLinksGetLocation(result);
                 if(result == null)
                     return NotFound();
                 
@@ -91,7 +96,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //POST:      api/v1.0/locations
-        [HttpPost]
+        [HttpPost (Name = "PostLocation")]
         public async Task<ActionResult<LocationDto>> PostLocation(LocationDto locationDto)
         {
             try
@@ -110,7 +115,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/locations/n
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "PutLocation")]
         public async Task<ActionResult<LocationDto>> PutLocation(int locationID, LocationDto locationDto)
         {
             try
@@ -133,7 +138,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/v1.0/locations/n
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "Deletelocation")]
         public async Task<ActionResult> DeleteLocation(int locationID)
         {
             try
@@ -152,6 +157,47 @@ namespace FriendFinderAPI.Controllers
             }
             return BadRequest();
         }
+
+        private IEnumerable<Link> CreateLinksGetAllLocations(Location location)
+        {
+            var links = new[]
+            {
+            new Link{
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetLocation",new {id = location.LocationID} ).ToLower()
+            },
+          
+            };
+            return links;
+        }
+        private IEnumerable<Link> CreateLinksGetLocation(Location location)
+        {
+            var links = new[]
+            {
+            new Link
+            {
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("Getlocation", new {id = location.LocationID})
+            },
+            new Link
+            {
+            Method = "DELETE",
+            Rel = "self",
+            Href = Url.Link("Deletelocation", new {id = location.LocationID})
+            },
+            new Link
+            {
+                Method = "PUT",
+                Rel = "self",
+                Href = Url.Link("PutLocation", new {id = location.LocationID})
+            }
+            };
+            return links;
+        }
+
+
         
     }
 }

@@ -65,7 +65,7 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-        //GET:      api/v1.0/users3/n
+        
         [HttpGet("{id}", Name ="GetUserByHobby")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByHobby(int id)
         {
@@ -79,7 +79,7 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-       //GET:      api/v1.0/users2/n
+       
         [HttpGet("{id}", Name = "GetUserTeacherByHobby")]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTeacherByHobby(int id)
         {
@@ -95,7 +95,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //POST:     api/v1.0/users
-        [HttpPost]
+        [HttpPost (Name= "PostUser")]
         public async Task<ActionResult<UserDto>> PostUser(UserDto userDto)
         {
             try
@@ -113,7 +113,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/users/n
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name= "PutUser")]
         public async Task<ActionResult<UserDto>> PutUser(int userID, UserDto userDto)
         {
             try
@@ -136,7 +136,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE        api/v1.0/users/n
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name= "DeleteUser")]
         public async Task<ActionResult> DeleteUser(int userID)
         {
             try
@@ -160,15 +160,23 @@ namespace FriendFinderAPI.Controllers
         {
             var links = new[]
             {
-            new Link{
+            new Link
+            {
             Method = "GET",
             Rel = "self",
             Href = Url.Link("GetUser", new {id = user.UserID})
             },
-            new Link{
+            new Link
+            {
             Method = "DELETE",
             Rel = "self",
             Href = Url.Link("DeleteUser", new {id = user.UserID})
+            },
+            new Link
+            {
+            Method = "Put",
+            Rel = "self",
+            Href = Url.Link("PutUser", new {id = user.UserID})
             }
             };
             return links;
@@ -177,7 +185,8 @@ namespace FriendFinderAPI.Controllers
         {
             var links = new[]
             {
-            new Link{
+            new Link
+            {
             Method = "GET",
             Rel = "self",
             Href = Url.Link("GetUser",new {id = user.UserID} ).ToLower()

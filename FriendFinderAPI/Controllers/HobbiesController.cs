@@ -27,12 +27,17 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/hobbies
-        [HttpGet]
+        [HttpGet(Name = "GetHobbies")]
         public async Task<ActionResult<IEnumerable<Hobby>>> GetHobbies()
         {
             try
             {
+                 
                 var results = await _hobbyRepository.GetHobbies();
+                for(int i = 0; i<results.Length;i++)
+                {
+                    results[i].HobbyLinks =CreateLinksGetAllHobbys(results[i]);
+                }
                 return Ok(results);
             }
             catch(Exception e)
@@ -42,12 +47,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/hobbies/n
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name ="GetHobby")]
         public async Task<ActionResult<Hobby>> GetHobby(int id)
         {
             try
             {
                 var result = await _hobbyRepository.GetHobby(id);
+                result.HobbyLinks = CreateLinksGetHobby(result);
                 if(result == null)
                     return NotFound();
 
@@ -110,7 +116,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/hobbies/n
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name= "PutHobby")]
         public async Task<ActionResult<HobbyDto>> PutHobby(int hobbyID, HobbyDto hobbyDto)
         {
             try
@@ -134,7 +140,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/hobbies/n
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name ="DeleteHobby")]
         public async Task<ActionResult> DeleteHobby(int hobbyID)
         {
             try
@@ -152,6 +158,45 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
             }
             return BadRequest();
+        }
+
+         private IEnumerable<Link> CreateLinksGetAllHobbys(Hobby hobby)
+        {
+            var links = new[]
+            {
+            new Link{
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetHobby",new {id = hobby.HobbyID} ).ToLower()
+            },
+          
+            };
+            return links;
+        }
+         private IEnumerable<Link> CreateLinksGetHobby(Hobby hobby)
+        {
+            var links = new[]
+            {
+            new Link
+            {
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetHobby", new {id = hobby.HobbyID})
+            },
+            new Link
+            {
+            Method = "DELETE",
+            Rel = "self",
+            Href = Url.Link("DeleteHobby", new {id = hobby.HobbyID})
+            },
+            new Link
+            {
+                Method = "PUT",
+                Rel = "self",
+                Href = Url.Link("PutHobby", new {id = hobby.HobbyID})
+            }
+            };
+            return links;
         }
     }
 }
