@@ -8,6 +8,7 @@ using FriendFinderAPI.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.EntityFrameworkCore;
+using static FriendFinderAPI.Enums.Enums;
 
 namespace FriendFinderAPI.Tests
 {
@@ -57,13 +58,13 @@ namespace FriendFinderAPI.Tests
         {
          new Hobby
             {
-           HobbyActivationLevel = HobbyActivationLevel.Skilled,
+           HobbyActivationLevel = HobbyActivationLevel.High,
              HobbyID = 1,
              HobbyName = "Badminton",
 
             },
             new Hobby{
-            HobbyActivationLevel = HobbyActivationLevel.Expert,
+            HobbyActivationLevel = HobbyActivationLevel.Moderate,
              HobbyID = 2,
              HobbyName = "Curling"
             
