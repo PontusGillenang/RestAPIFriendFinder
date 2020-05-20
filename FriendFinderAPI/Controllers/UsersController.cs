@@ -9,6 +9,7 @@ using FriendFinderAPI.Services;
 using System.Collections.Generic;
 using FriendFinderAPI.Dtos;
 using AutoMapper;
+using Microsoft.AspNetCore.Routing;
 
 namespace FriendFinderAPI.Controllers
 {
@@ -19,10 +20,12 @@ namespace FriendFinderAPI.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public UsersController(IUserRepository userRepository, IMapper mapper) 
+        private LinkGenerator _linkGenerator;
+        public UsersController(IUserRepository userRepository, IMapper mapper, LinkGenerator linkGenerator) 
         {
             _userRepository = userRepository; 
             _mapper = mapper;
+            _linkGenerator = linkGenerator;
         }    
 
         //GET:      api/v1.0/users
@@ -41,12 +44,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/users/n
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name ="GetUser")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             try
             {
                 var result = await _userRepository.GetUser(id);
+                result.UserLinks = CreateLinksGetUser(result);
                 if(result == null)
                     return NotFound();
 
@@ -57,7 +61,7 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByHobby(int id)
         {
@@ -71,7 +75,7 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-
+       
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTeacherByHobby(int id)
         {
@@ -125,7 +129,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE        api/v1.0/users/n
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteUser")]
         public async Task<ActionResult<UserDto>> DeleteUser(UserDto userDto)
         {
             try
@@ -134,7 +138,7 @@ namespace FriendFinderAPI.Controllers
                 _userRepository.Delete(mappedEntity);
                 
                 if(await _userRepository.Save())
-                    return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
+                return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity) );
             }
             catch (Exception e)
             {
@@ -143,6 +147,22 @@ namespace FriendFinderAPI.Controllers
 
             return BadRequest();
         }
-        
+        private IEnumerable<Link> CreateLinksGetUser(User user)
+        {
+            var links = new[]
+            {
+            new Link{
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetUser", new {id = user.UserID})
+            },
+            new Link{
+            Method = "DELETE",
+            Rel = "self",
+            Href = Url.Link("DeleteUser", new {id = user.UserID})
+            }
+            };
+            return links;
+        }
     }
 }
