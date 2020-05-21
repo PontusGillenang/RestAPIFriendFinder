@@ -28,12 +28,13 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/cities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetCities()
         {
             try
             {
                 var results = await _cityRepository.GetCities();
-                return Ok(results);
+                var mappedResults = _mapper.Map<IEnumerable<CityDto>>(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -43,15 +44,19 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/cities/n
         [HttpGet("{id}")]
-        public async Task<ActionResult<City>> GetCity(int id)
+        public async Task<ActionResult<CityDto>> GetCity(int id)
         {
             try
             {
                 var result = await _cityRepository.GetCity(id);
-                if(result == null)
-                    return NotFound();
 
-                return Ok(result);
+                if(result == null)
+                {
+                    return NotFound();
+                }
+
+                var mappedResults = _mapper.Map<CityDto>(result);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -59,7 +64,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
         
-        [HttpGet("{id}")]
+        [HttpGet("hobby")]
         public async Task<ActionResult<IEnumerable<City>>> GetCitiesByHobby(int id)
         {
             try
