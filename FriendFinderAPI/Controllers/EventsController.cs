@@ -26,12 +26,16 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/events
-        [HttpGet]
+        [HttpGet( Name = "GetEvents")]
         public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
         {
             try
             {
                 var results = await _eventRepository.GetEvents();
+                 for(int i = 0; i<results.Length;i++)
+                 {
+                        results[i].EventLink = CreateLinksGetAllLocations(results[i]);
+                 }
                 return Ok(results);
             }
             catch (Exception e)
@@ -42,12 +46,13 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/events/n
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}",  Name = "GetEvent")]
         public async Task<ActionResult<Event>> GetEvent(int id)
         {
             try
             {
                 var result = await _eventRepository.GetEvent(id);
+                result.EventLink = CreateLinksGetLocation(result);
                 if (result == null)
                     return NotFound();
 
@@ -59,7 +64,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("hobby/{id}",  Name = "GetEventsByHobby")]
         public async Task<ActionResult<IEnumerable<Event>>> GetEventsByHobby(int id)
         {
             try
@@ -73,7 +78,9 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("{hobbyid}, {cityid}")]
+        [HttpGet("hobby/{hobbyid}/city/{cityid}", Name = "GetEventsByHobbyCity")]
+       
+        
         public async Task<ActionResult<IEnumerable<Event>>> GetEventsByHobbyCity(int hobbyid, int cityid)
         {
             try
@@ -87,7 +94,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("city{id}", Name = "GetEventsByCity")]
         public async Task<ActionResult<IEnumerable<Event>>> GetEventsByCity(int id)
         {
             try
@@ -102,7 +109,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //POST:      api/v1.0/events
-        [HttpPost]
+        [HttpPost(Name = "PostEvent")]
         public async Task<ActionResult<EventDto>> PostEvents(EventDto eventDto)
         {
             try
@@ -121,7 +128,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/events/n
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "PutEvent")]
         public async Task<ActionResult<EventDto>> PutEvent(int eventID, EventDto eventDto)
         {
             try
@@ -144,7 +151,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/v1.0/events/n
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteEvent")]
         public async Task<ActionResult> DeleteEvent(int eventID)
         {
             try
@@ -162,6 +169,43 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
             }
             return BadRequest();
+        }
+        private IEnumerable<Link> CreateLinksGetAllLocations(Event events)
+        {
+            var links = new[]
+            {
+            new Link{
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetEvent",new {id = events.EventID} ).ToLower()
+            }
+            };
+            return links;
+        }
+        private IEnumerable<Link> CreateLinksGetLocation(Event events)
+        {
+            var links = new[]
+            {
+            new Link
+            {
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetEvent", new {id = events.EventID}).ToLower()
+            },
+            new Link
+            {
+            Method = "DELETE",
+            Rel = "self",
+            Href = Url.Link("DeleteEventn", new {id = events.EventID}).ToLower()
+            },
+            new Link
+            {
+                Method = "PUT",
+                Rel = "self",
+                Href = Url.Link("PutEvent", new {id = events.EventID}).ToLower()
+            }
+            };
+            return links;
         }
 
     }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using FriendFinderAPI.Dtos;
 using AutoMapper;
 using Microsoft.AspNetCore.Routing;
+using System.Linq;
 
 namespace FriendFinderAPI.Controllers
 {
@@ -66,7 +67,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
         
-        [HttpGet("{id}", Name ="GetUserByHobby")]
+        [HttpGet("hobby/{id}", Name ="GetUserByHobby")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByHobby(int id)
         {
             try
@@ -80,7 +81,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
        
-        [HttpGet("{id}", Name = "GetUserTeacherByHobby")]
+        [HttpGet("teacher/hobby/{id}", Name = "GetUserTeacherByHobby")]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTeacherByHobby(int id)
         {
             try
@@ -177,6 +178,18 @@ namespace FriendFinderAPI.Controllers
             Method = "Put",
             Rel = "self",
             Href = Url.Link("PutUser", new {id = user.UserID})
+            },
+              new Link
+            {
+            Method = "GET",
+            Rel ="CityUser",
+            Href = Url.Link("GetCity", new {id = user.UserCityID})           
+            }, 
+            new Link
+            {
+                Method = "GET",
+                Rel ="UserHobbies",
+                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
             }
             };
             return links;
@@ -191,6 +204,18 @@ namespace FriendFinderAPI.Controllers
             Rel = "self",
             Href = Url.Link("GetUser",new {id = user.UserID} ).ToLower()
             },
+            new Link
+            {
+                Method = "GET",
+                Rel ="CityUser",
+                Href = Url.Link("GetCity", new {id = user.UserCityID}).ToLower()           
+            },
+            new Link
+            {
+                Method = "GET",
+                Rel ="UserHobbies",
+                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
+            }
           
             };
             return links;

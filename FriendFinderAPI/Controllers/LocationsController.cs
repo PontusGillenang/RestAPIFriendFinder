@@ -64,7 +64,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("hobby/{id}")]
         public async Task<ActionResult<IEnumerable<Location>>> GetLocationsByHobby(int id)
         {
             try
@@ -78,7 +78,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("{locationid, hobbyid}")]
+        [HttpGet("{locationid}/hobby/{hobbyid}")]
         public async Task<ActionResult<Location>> GetLocationByHobby(int locationid, int hobbyid)
         {
             try
@@ -138,7 +138,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/v1.0/locations/n
-        [HttpDelete("{id}", Name = "Deletelocation")]
+        [HttpDelete("{id}", Name = "DeleteLocation")]
         public async Task<ActionResult> DeleteLocation(int locationID)
         {
             try
@@ -179,19 +179,19 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("Getlocation", new {id = location.LocationID})
+            Href = Url.Link("Getlocation", new {id = location.LocationID}).ToLower()
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("Deletelocation", new {id = location.LocationID})
+            Href = Url.Link("DeleteLocation", new {id = location.LocationID}).ToLower()
             },
             new Link
             {
                 Method = "PUT",
                 Rel = "self",
-                Href = Url.Link("PutLocation", new {id = location.LocationID})
+                Href = Url.Link("PutLocation", new {id = location.LocationID}).ToLower()
             }
             };
             return links;

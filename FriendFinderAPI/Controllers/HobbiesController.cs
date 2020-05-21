@@ -65,7 +65,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("hobbyid, cityid")]
+        [HttpGet("hobby/{hobbyid}/city/{cityid}", Name ="GetHobbyByCity")]
         public async Task<ActionResult<Hobby>> GetHobbyByCity(int hobbyid, int cityid)
         {
             try
@@ -81,7 +81,7 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-        [HttpGet("id")]
+        [HttpGet("city/{id}", Name="GetHobbiesByCity")]
         public async Task<ActionResult<IEnumerable<Hobby>>> GetHobbiesByCity(int id)
         {
             try
@@ -95,8 +95,22 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
+        [HttpGet("user/{id}", Name ="GetHobbiesByUser")]
+        public async Task<ActionResult<IEnumerable<Hobby>>> GetHobbiesByUser(int id)
+        {
+                try
+                {
+                        var result = await _hobbyRepository.GetHobbiesByUser(id);
+                        return Ok(result);
+                }
+                catch(Exception e)
+                {
+                    return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                }
+        }
+
         //POST: api/v1.0/hobbies
-        [HttpPost]
+        [HttpPost(Name = "PostHobby")]
         public async Task<ActionResult<HobbyDto>> PostHobby(HobbyDto hobbyDto)
         {
             try
