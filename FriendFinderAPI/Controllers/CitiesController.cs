@@ -27,7 +27,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/cities
-        [HttpGet]
+        [HttpGet(Name = "GetLocationsByID")]
         public async Task<ActionResult<IEnumerable<City>>> GetCities()
         {
             try
@@ -42,7 +42,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/cities/n
-        [HttpGet("{id}")]
+        [HttpGet("getcitybyID/{id}", Name = "GetLocationByID")]
         public async Task<ActionResult<City>> GetCity(int id)
         {
             try
@@ -135,6 +135,19 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
             }
             return BadRequest();
+        }
+         private IEnumerable<Link> CreateLinksGetAllCity(City city)
+        {
+            var links = new[]
+            {
+            new Link{
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetCity",new {id = city.CityID} ).ToLower()
+            },
+          
+            };
+            return links;
         }
         
     }
