@@ -28,6 +28,7 @@ namespace FriendFinderAPI.Services
         {
             _logger.LogInformation("Getting Users");
             IQueryable<User> query = _context.Users;
+            
 
             return await query.ToArrayAsync();
         }

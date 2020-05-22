@@ -33,9 +33,9 @@ namespace FriendFinderAPI.Controllers
             {
                 var results = await _eventRepository.GetEvents();
                 var mappedResults = _mapper.Map<EventDto[]>(results);
-                 for(int i = 0; i<results.Length;i++)
+                 for(int i = 0; i<mappedResults.Length;i++)
                  {
-                    results[i].EventLink = CreateLinksGetAllLocations(results[i]);
+                    mappedResults[i].Links = CreateLinksGetAllEvents(mappedResults[i]);
                  }
                 return Ok(mappedResults);
             }
@@ -47,18 +47,20 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/events/n
 
-        [HttpGet("{id}",  Name = "GetEvent")]
-        public async Task<ActionResult<EventDto>> GetEvent(int id)
+        [HttpGet("{eventid}",  Name = "GetEvent")]
+        public async Task<ActionResult<EventDto>> GetEvent(int eventid)
         {
             try
             {
-                var result = await _eventRepository.GetEvent(id);
+                var result = await _eventRepository.GetEvent(eventid);
                 // result.EventLink = CreateLinksGetLocation(result);
                 if (result == null)
                 {
                     return NotFound();
                 }
                 var mappedResult = _mapper.Map<EventDto>(result);
+                mappedResult.Links = CreateLinksGetAllEvents(mappedResult);
+                
                 return Ok(mappedResult);
             }
             catch (Exception e)
@@ -67,12 +69,12 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("hobby/{id}",  Name = "GetEventsByHobby")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEventsByHobby(int id)
+        [HttpGet("hobby/{hobbyid}",  Name = "GetEventsByHobby")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetEventsByHobby(int hobbyid)
         {
             try
             {
-                var results = await _eventRepository.GetEventsByHobby(id);
+                var results = await _eventRepository.GetEventsByHobby(hobbyid);
                 var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
                 return Ok(mappedResults);
             }
@@ -97,12 +99,12 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("city{id}", Name = "GetEventsByCity")]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByCity(int id)
+        [HttpGet("city{cityid}", Name = "GetEventsByCity")]
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByCity(int cityid)
         {
             try
             {
-                var results = await _eventRepository.GetEventsByCity(id);
+                var results = await _eventRepository.GetEventsByCity(cityid);
                 var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
                 return Ok(mappedResults);
             }
@@ -175,7 +177,7 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
         
-        private IEnumerable<Link> CreateLinksGetAllEvents(Event events)
+        private IEnumerable<Link> CreateLinksGetAllEvents(EventDto events)
         {
             var links = new[]
             {
@@ -183,33 +185,20 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("GetEvent", new {id = events.EventID}).ToLower()
+            Href = Url.Link("GetEvent", new {eventid = events.EventID}).ToLower()
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteEvent", new {id = events.EventID}).ToLower()
+            Href = Url.Link("DeleteEvent", new {eventID = events.EventID}).ToLower()
             },
             new Link
             {
             Method = "PUT",
             Rel = "self",
-            Href = Url.Link("PutEvent", new {id = events.EventID}).ToLower()
+            Href = Url.Link("PutEvent", new {eventID = events.EventID}).ToLower()
             },
-            new Link
-            {
-            Method = "GET",
-            Rel = "EventCity",
-            Href = Url.Link("GetCity", new {id = events.EventCityID}).ToLower()
-            },
-            new Link
-            {
-            Method = "GET",
-            Rel = "EventHobby",
-            Href = Url.Link("GetCity", new {id = events.EventHobbyID}).ToLower()
-            }
-
             };
             return links;
         }
