@@ -64,7 +64,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
         
-        [HttpGet("hobby{id}", Name = "GetCitiesByHobby")]
+        [HttpGet("hobby/{id}", Name = "GetCitiesByHobby")]
         public async Task<ActionResult<IEnumerable<City>>> GetCitiesByHobby(int id)
         {
             try
