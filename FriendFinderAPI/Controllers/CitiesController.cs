@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AutoMapper;
-using FriendFinderAPI.Context;
+using FriendFinderAPI.Dtos;
 using FriendFinderAPI.Models;
+using System.Threading.Tasks;
+using FriendFinderAPI.Context;
+using Microsoft.AspNetCore.Mvc;
 using FriendFinderAPI.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using FriendFinderAPI.Dtos;
 
 
 namespace FriendFinderAPI.Controllers
@@ -21,23 +21,23 @@ namespace FriendFinderAPI.Controllers
         private readonly IMapper _mapper;
         public CitiesController(ICityRepository cityRepository, IMapper mapper)
         {
-            
             _cityRepository = cityRepository;
             _mapper = mapper;
         }
 
         //GET:      api/v1.0/cities
         [HttpGet(Name = "GetCities")]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetCities()
         {
             try
             {
                 var results = await _cityRepository.GetCities();
+                var mappedResults = _mapper.Map<IEnumerable<CityDto>>(results);
                   for(int i = 0; i<results.Length;i++)
                   {
                       results[i].Links = CreateLinksGetAllCity(results[i]);
                   }
-                return Ok(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -47,16 +47,19 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/cities/n
         [HttpGet("{id}", Name = "GetCity")]
-        public async Task<ActionResult<City>> GetCity(int id)
+        public async Task<ActionResult<CityDto>> GetCity(int id)
         {
             try
             {
                 var result = await _cityRepository.GetCity(id);
                 result.Links = CreateLinksGetAllCity(result);
                 if(result == null)
+                {
                     return NotFound();
+                }
 
-                return Ok(result);
+                var mappedResult = _mapper.Map<CityDto>(result);
+                return Ok(mappedResult);
             }
             catch(Exception e)
             {
@@ -65,17 +68,14 @@ namespace FriendFinderAPI.Controllers
         }
         
         [HttpGet("hobby/{id}", Name = "GetCitiesByHobby")]
-        public async Task<ActionResult<IEnumerable<City>>> GetCitiesByHobby(int id)
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetCitiesByHobby(int id)
         {
             try
             {
                 var results = await _cityRepository.GetCitiesByHobby(id);
-                for(int i =0;i < results.Length; i++ )
-                {
-                    results[i].Links = CreateLinksGetAllCity(results[i]);
-                }
-                return Ok(results);
-            }
+                var mappedResults = _mapper.Map<IEnumerable<CityDto>>(results);
+                return Ok(mappedResults);
+            }   
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -88,11 +88,13 @@ namespace FriendFinderAPI.Controllers
         {
             try
             {
-                var mappedEntity = _mapper.Map<CityDto>(cityDto);
-                _cityRepository.Add(mappedEntity);
+                var mappedEntity = _mapper.Map<City>(cityDto);
 
+                _cityRepository.Add(mappedEntity);
                 if(await _cityRepository.Save())
+                {
                     return Created($"api/v1.0/cities/{mappedEntity.CityID}", _mapper.Map<CityDto>(mappedEntity));
+                }
             }
             catch (Exception e)
             {
@@ -103,20 +105,24 @@ namespace FriendFinderAPI.Controllers
         
 
         //PUT:      api/v1.0/cities/n
-        [HttpPut("{id}", Name ="PutCity")]
-        public async Task<ActionResult<CityDto>> PutCity(int cityID, CityDto cityDto)
+        [HttpPut("{cityId}", Name ="PutCity")]
+        public async Task<ActionResult<CityDto>> PutCity(int cityId, CityDto cityDto)
         {
             try
             {
-                var oldCity = await _cityRepository.GetCity(cityID);
+                var oldCity = await _cityRepository.GetCity(cityId);
                 if(oldCity == null)
-                    return NotFound($"We could not find the city your looking for id: {cityID}");
+                {
+                    return NotFound($"We could not find the city your looking for id: {cityId}");
+                }
 
                 var newCity = _mapper.Map(cityDto, oldCity);
                 _cityRepository.Update(newCity);
 
                 if(await _cityRepository.Save())
+                {
                     return NoContent();
+                }
             }
             catch (Exception e)
             {
@@ -126,18 +132,22 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/v1.0/cities/n
-        [HttpDelete("{id}", Name = "DeleteCity")]
-        public async Task<ActionResult> DeleteCity(int cityID)
+        [HttpDelete("{cityId}", Name = "DeleteCity")]
+        public async Task<ActionResult> DeleteCity(int cityId)
         {
             try
             {
-                var city = await _cityRepository.GetCity(cityID);
+                var city = await _cityRepository.GetCity(cityId);
                 if(city == null)
-                    return NotFound($"Could not find the city with id: {cityID} ");
+                {
+                    return NotFound($"Could not find the city with id: {cityId} ");
+                }
 
                 _cityRepository.Delete(city);
                 if(await _cityRepository.Save())
+                {
                     return NoContent();
+                }
             }
             catch (Exception e)
             {

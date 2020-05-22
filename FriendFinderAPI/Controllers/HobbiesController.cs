@@ -28,17 +28,18 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/hobbies
         [HttpGet(Name = "GetHobbies")]
-        public async Task<ActionResult<IEnumerable<Hobby>>> GetHobbies()
+        public async Task<ActionResult<IEnumerable<HobbyDto>>> GetHobbies()
         {
             try
             {
                  
                 var results = await _hobbyRepository.GetHobbies();
+                var mappedResults = _mapper.Map<IEnumerable<HobbyDto>>(results);
                 for(int i = 0; i<results.Length;i++)
                 {
                     results[i].Links =CreateLinksGetAllHobbys(results[i]);
                 }
-                return Ok(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -48,7 +49,7 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/hobbies/n
         [HttpGet("{id}", Name ="GetHobby")]
-        public async Task<ActionResult<Hobby>> GetHobby(int id)
+        public async Task<ActionResult<HobbyDto>> GetHobby(int id)
         {
             try
             {
@@ -57,7 +58,8 @@ namespace FriendFinderAPI.Controllers
                 if(result == null)
                     return NotFound();
 
-                return Ok(result);
+                var mappedResult = _mapper.Map<HobbyDto>(result);
+                return Ok(mappedResult);
             }
             catch(Exception e)
             {
@@ -66,7 +68,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("hobby/{hobbyid}/city/{cityid}", Name ="GetHobbyByCity")]
-        public async Task<ActionResult<Hobby>> GetHobbyByCity(int hobbyid, int cityid)
+        public async Task<ActionResult<HobbyDto>> GetHobbyByCity(int hobbyid, int cityid)
         {
             try
             {
@@ -74,25 +76,21 @@ namespace FriendFinderAPI.Controllers
                 if (result == null)
                     return NotFound();
 
-                result.Links = CreateLinksGetAllHobbys(result);
-                return Ok(result);
-            }
+                var mappedResult = _mapper.Map<HobbyDto>(result);
+                return Ok(mappedResult);            }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
         [HttpGet("city/{id}", Name="GetHobbiesByCity")]
-        public async Task<ActionResult<IEnumerable<Hobby>>> GetHobbiesByCity(int id)
+        public async Task<ActionResult<IEnumerable<HobbyDto>>> GetHobbiesByCity(int id)
         {
             try
             {
                 var result = await _hobbyRepository.GetHobbiesByCity(id);
-                 for(int i = 0; i<result.Length;i++)
-                {
-                    result[i].Links =CreateLinksGetAllHobbys(result[i]);
-                }
-                return Ok(result);
+                var mappedResult = _mapper.Map<IEnumerable<HobbyDto>>(result);
+                return Ok(mappedResult);           
             }
             catch(Exception e)
             {
@@ -101,16 +99,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("user/{id}", Name ="GetHobbiesByUser")]
-        public async Task<ActionResult<IEnumerable<Hobby>>> GetHobbiesByUser(int id)
+        public async Task<ActionResult<IEnumerable<HobbyDto>>> GetHobbiesByUser(int id)
         {
                 try
                 {
-                        var result = await _hobbyRepository.GetHobbiesByUser(id);
-                        for(int i = 0; i<result.Length;i++)
-                        {
-                        result[i].Links =CreateLinksGetAllHobbys(result[i]);
-                        }
-                        return Ok(result);
+                    var result = await _hobbyRepository.GetHobbiesByUser(id);
+                    var mappedResult = _mapper.Map<IEnumerable<HobbyDto>>(result);
+                    return Ok(mappedResult); 
                 }
                 catch(Exception e)
                 {

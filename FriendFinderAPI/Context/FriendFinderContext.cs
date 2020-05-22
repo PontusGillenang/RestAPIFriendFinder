@@ -26,6 +26,10 @@ namespace FriendFinderAPI.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                                                            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                                                            .AddJsonFile("appsettings.json")
+                                                            .Build();
             optionsBuilder.UseSqlServer(_configuration.GetConnectionString("FriendFinderAPIConnection"));
         }
 
@@ -59,7 +63,7 @@ namespace FriendFinderAPI.Context
             .HasForeignKey(hl => hl.LocationID);
 
             modelBuilder.Entity<EventUser>()
-            .HasKey(bc => new { bc.EventID, bc.UserID });  
+            .HasKey(bc => new { bc.EventID, bc.UserID });
             modelBuilder.Entity<EventUser>()
             .HasOne(bc => bc.Event)
             .WithMany(b => b.EventUsers)
@@ -99,7 +103,7 @@ namespace FriendFinderAPI.Context
                 };
                 tempCities.Add(city);
                 modelBuilder.Entity<City>().HasData(city);
-                
+
             }
 
             modelBuilder.Entity<User>()
@@ -139,13 +143,13 @@ namespace FriendFinderAPI.Context
             {
                 LocationID = 1,
                 LocationName = "Fjäderborgen",
-                LocationCityID= 2,
+                LocationCityID = 2,
             }
             , new
             {
-                LocationID=2,
+                LocationID = 2,
                 LocationName = "The Castle With Zero Books...",
-                LocationCityID= 1,
+                LocationCityID = 1,
             });
 
             modelBuilder.Entity<Event>()
@@ -157,7 +161,7 @@ namespace FriendFinderAPI.Context
                 EventHobbyID = 2,
                 EventResposibleUserID = 1,
                 EventCityID = 1,
-            }    
+            }
             , new
             {
                 EventID = 2,

@@ -27,16 +27,17 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/events
         [HttpGet( Name = "GetEvents")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEvents()
+        public async Task<ActionResult<EventDto[]>> GetEvents()
         {
             try
             {
                 var results = await _eventRepository.GetEvents();
+                var mappedResults = _mapper.Map<EventDto[]>(results);
                  for(int i = 0; i<results.Length;i++)
                  {
-                        results[i].Links = CreateLinksGetAllEvents(results[i]);
+                    results[i].EventLink = CreateLinksGetAllLocations(results[i]);
                  }
-                return Ok(results);
+                return Ok(mappedResults);
             }
             catch (Exception e)
             {
@@ -47,17 +48,18 @@ namespace FriendFinderAPI.Controllers
         //GET:      api/v1.0/events/n
 
         [HttpGet("{id}",  Name = "GetEvent")]
-        public async Task<ActionResult<Event>> GetEvent(int id)
+        public async Task<ActionResult<EventDto>> GetEvent(int id)
         {
             try
             {
                 var result = await _eventRepository.GetEvent(id);
-                result.Links = CreateLinksGetAllEvents(result);
-               
+                // result.EventLink = CreateLinksGetLocation(result);
                 if (result == null)
+                {
                     return NotFound();
-
-                return result;
+                }
+                var mappedResult = _mapper.Map<EventDto>(result);
+                return Ok(mappedResult);
             }
             catch (Exception e)
             {
@@ -71,11 +73,8 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var results = await _eventRepository.GetEventsByHobby(id);
-                  for(int i = 0; i<results.Length;i++)
-                 {
-                    results[i].Links = CreateLinksGetAllEvents(results[i]);
-                 }
-                return results;
+                var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -84,18 +83,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("hobby/{hobbyid}/city/{cityid}", Name = "GetEventsByHobbyCity")]
-       
-        
-        public async Task<ActionResult<IEnumerable<Event>>> GetEventsByHobbyCity(int hobbyid, int cityid)
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByHobbyCity(int hobbyid, int cityid)
         {
             try
             {
                 var results = await _eventRepository.GetEventsByHobbyCity(hobbyid, cityid);
-                for(int i = 0; i<results.Length;i++)
-                 {
-                     results[i].Links = CreateLinksGetAllEvents(results[i]);
-                 }
-                return results;
+                var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -104,16 +98,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("city{id}", Name = "GetEventsByCity")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEventsByCity(int id)
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByCity(int id)
         {
             try
             {
                 var results = await _eventRepository.GetEventsByCity(id);
-                 for(int i = 0; i<results.Length;i++)
-                 {
-                     results[i].Links = CreateLinksGetAllEvents(results[i]);
-                 }
-                return results;
+                var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -127,11 +118,11 @@ namespace FriendFinderAPI.Controllers
         {
             try
             {
-                var mappedEntity = _mapper.Map<EventDto>(eventDto);
+                var mappedEntity = _mapper.Map<Event>(eventDto);
                 _eventRepository.Add(mappedEntity);
 
                 if(await _eventRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+                return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
             }
             catch (Exception e)
             {
@@ -141,7 +132,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/events/n
-        [HttpPut("{id}", Name = "PutEvent")]
+        [HttpPut("{eventID}", Name = "PutEvent")]
         public async Task<ActionResult<EventDto>> PutEvent(int eventID, EventDto eventDto)
         {
             try
@@ -164,7 +155,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/v1.0/events/n
-        [HttpDelete("{id}", Name = "DeleteEvent")]
+        [HttpDelete("{eventID}", Name = "DeleteEvent")]
         public async Task<ActionResult> DeleteEvent(int eventID)
         {
             try

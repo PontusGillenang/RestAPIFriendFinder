@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FriendFinderAPI.Dtos;
-using System.Linq;
 using AutoMapper;
 
 namespace FriendFinderAPI.Controllers
@@ -29,16 +28,17 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/locations
         [HttpGet(Name ="GetLocations")]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
+        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocations()
         {
             try
             {
                 var results = await _locationRepository.GetLocations();
+                var mappedResults = _mapper.Map<IEnumerable<LocationDto>>(results);
                 for(int i = 0; i<results.Length;i++)
                 {
-                    results[i].Links = CreateLinksGetAllLocations(results[i]);
+                    results[i].LocationLinks = CreateLinksGetAllLocations(results[i]);
                 };
-                return Ok(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -48,17 +48,17 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/locations/n
         [HttpGet("{id}")]
-        public async Task<ActionResult<Location>> GetLocation(int id)
+        public async Task<ActionResult<LocationDto>> GetLocation(int id)
         {
             try
             {
                 var result = await _locationRepository.GetLocation(id);
-                result.Links = CreateLinksGetAllLocations(result);
+                result.LocationLinks = CreateLinksGetLocation(result);
                 if(result == null)
                     return NotFound();
                 
-                return result;
-            }
+                var mappedResult = _mapper.Map<LocationDto>(result);
+                return Ok(mappedResult);            }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -66,17 +66,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("hobby/{id}")]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocationsByHobby(int id)
+        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocationsByHobby(int id)
         {
             try
             {
                 var results = await _locationRepository.GetLocationsByHobby(id);
-                 for(int i = 0; i<results.Length;i++)
-                {
-                    results[i].Links = CreateLinksGetAllLocations(results[i]);
-                };
-                return Ok(results);
-            }
+                var mappedResults = _mapper.Map<IEnumerable<LocationDto>>(results);
+                return Ok(mappedResults);            }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -84,17 +80,16 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("{locationid}/hobby/{hobbyid}")]
-        public async Task<ActionResult<Location>> GetLocationByHobby(int locationid, int hobbyid)
+        public async Task<ActionResult<LocationDto>> GetLocationByHobby(int locationid, int hobbyid)
         {
             try
             {
                 var result = await _locationRepository.GetLocationByHobby(locationid, hobbyid);
-                result.Links = CreateLinksGetAllLocations(result);
                 if (result == null)
                     return NotFound();
 
-                return result;
-            }
+                var mappedResult = _mapper.Map<LocationDto>(result);
+                return Ok(mappedResult);              }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -107,7 +102,7 @@ namespace FriendFinderAPI.Controllers
         {
             try
             {
-                var mappedEntity = _mapper.Map<LocationDto>(locationDto);
+                var mappedEntity = _mapper.Map<Location>(locationDto);
                 _locationRepository.Add(mappedEntity);
 
                 if(await _locationRepository.Save())
@@ -173,12 +168,7 @@ namespace FriendFinderAPI.Controllers
             Rel = "self",
             Href = Url.Link("GetLocation",new {id = location.LocationID} ).ToLower()
             },
-            new Link
-            {
-                Method = "GET", 
-                Rel="LocationCity",
-                Href = Url.Link("GetCity", new {id = location.LocationCityID}).ToLower()
-            }
+          
             };
             return links;
         }
@@ -200,16 +190,10 @@ namespace FriendFinderAPI.Controllers
             },
             new Link
             {
-             Method = "PUT",
-            Rel = "self",
-            Href = Url.Link("PutLocation", new {id = location.LocationID}).ToLower()
-            },
-             new Link
-            {
-            Method = "GET", 
-            Rel="LocationCity",
-            Href = Url.Link("GetCity", new {id = location.LocationCityID}).ToLower()
-            },
+                Method = "PUT",
+                Rel = "self",
+                Href = Url.Link("PutLocation", new {id = location.LocationID}).ToLower()
+            }
             };
             return links;
         }
