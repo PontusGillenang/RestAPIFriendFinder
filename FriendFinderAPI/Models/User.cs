@@ -1,7 +1,9 @@
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace FriendFinderAPI.Models
 {
@@ -17,5 +19,7 @@ namespace FriendFinderAPI.Models
         public int UserCityID { get; set; }
         public ICollection<HobbyUser> HobbyUsers { get; set; }
         public ICollection<EventUser> EventUsers { get; set; }
+
+        public IEnumerable<Link> UserLinks {get;set;}
     }
 }

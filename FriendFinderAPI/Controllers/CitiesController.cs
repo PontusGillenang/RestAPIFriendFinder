@@ -27,12 +27,16 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/cities
-        [HttpGet]
+        [HttpGet(Name = "GetLocationsByID")]
         public async Task<ActionResult<IEnumerable<City>>> GetCities()
         {
             try
             {
                 var results = await _cityRepository.GetCities();
+                  for(int i = 0; i<results.Length;i++)
+                  {
+                      results[i].CityLinks = CreateLinksGetAllCity(results[i]);
+                  }
                 return Ok(results);
             }
             catch(Exception e)
@@ -42,12 +46,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/cities/n
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetCity")]
         public async Task<ActionResult<City>> GetCity(int id)
         {
             try
             {
                 var result = await _cityRepository.GetCity(id);
+                result.CityLinks = CreateLinksGetCity(result);
                 if(result == null)
                     return NotFound();
 
@@ -59,7 +64,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
         
-        [HttpGet("{id}")]
+        [HttpGet("hobby{id}", Name = "GetCitiesByHobby")]
         public async Task<ActionResult<IEnumerable<City>>> GetCitiesByHobby(int id)
         {
             try
@@ -74,7 +79,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //POST:      api/v1.0/cities
-        [HttpPost]
+        [HttpPost (Name ="PostCity")]
         public async Task<ActionResult<CityDto>> PostCity(CityDto cityDto)
         {
             try
@@ -94,7 +99,7 @@ namespace FriendFinderAPI.Controllers
         
 
         //PUT:      api/v1.0/cities/n
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name ="PutCity")]
         public async Task<ActionResult<CityDto>> PutCity(int cityID, CityDto cityDto)
         {
             try
@@ -117,7 +122,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/v1.0/cities/n
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteCity")]
         public async Task<ActionResult> DeleteCity(int cityID)
         {
             try
@@ -135,6 +140,44 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
             }
             return BadRequest();
+        }
+         private IEnumerable<Link> CreateLinksGetAllCity(City city)
+        {
+            var links = new[]
+            {
+            new Link{
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetCity",new {id = city.CityID} ).ToLower()
+            },
+          
+            };
+            return links;
+        }
+         private IEnumerable<Link> CreateLinksGetCity(City city)
+        {
+            var links = new[]
+            {
+            new Link
+            {
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetCity", new {id = city.CityID})
+            },
+            new Link
+            {
+            Method = "DELETE",
+            Rel = "self",
+            Href = Url.Link("DeleteCity", new {id = city.CityID})
+            },
+            new Link
+            {
+                Method = "PUT",
+                Rel = "self",
+                Href = Url.Link("PutCity", new {id = city.CityID})
+            }
+            };
+            return links;
         }
         
     }

@@ -9,6 +9,8 @@ using FriendFinderAPI.Services;
 using System.Collections.Generic;
 using FriendFinderAPI.Dtos;
 using AutoMapper;
+using Microsoft.AspNetCore.Routing;
+using System.Linq;
 
 namespace FriendFinderAPI.Controllers
 {
@@ -19,19 +21,25 @@ namespace FriendFinderAPI.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public UsersController(IUserRepository userRepository, IMapper mapper) 
+        private LinkGenerator _linkGenerator;
+        public UsersController(IUserRepository userRepository, IMapper mapper, LinkGenerator linkGenerator) 
         {
             _userRepository = userRepository; 
             _mapper = mapper;
+            _linkGenerator = linkGenerator;
         }    
 
         //GET:      api/v1.0/users
-        [HttpGet]
+        [HttpGet(Name= "GetAllUsers")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             try
             {
                 var results = await _userRepository.GetUsers();
+                for(int i =0; i< results.Length; i++)
+                {
+                    results[i].UserLinks = CreateLinksGetAllUsers(results[i]);
+                }
                 return Ok(results);
             }
             catch(Exception e)
@@ -40,13 +48,14 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        //GET:      api/v1.0/users/n
-        [HttpGet("{id}")]
+        //GET:      api/v1.0/user/n
+        [HttpGet("{id}", Name ="GetUser")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             try
             {
                 var result = await _userRepository.GetUser(id);
+                result.UserLinks = CreateLinksGetUser(result);
                 if(result == null)
                     return NotFound();
 
@@ -57,8 +66,8 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-
-        [HttpGet("{id}")]
+        
+        [HttpGet("hobby/{id}", Name ="GetUserByHobby")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsersByHobby(int id)
         {
             try
@@ -71,8 +80,8 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-
-        [HttpGet("{id}")]
+       
+        [HttpGet("teacher/hobby/{id}", Name = "GetUserTeacherByHobby")]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTeacherByHobby(int id)
         {
             try
@@ -87,7 +96,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //POST:     api/v1.0/users
-        [HttpPost]
+        [HttpPost (Name= "PostUser")]
         public async Task<ActionResult<UserDto>> PostUser(UserDto userDto)
         {
             try
@@ -105,7 +114,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/users/n
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name= "PutUser")]
         public async Task<ActionResult<UserDto>> PutUser(int userID, UserDto userDto)
         {
             try
@@ -128,7 +137,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE        api/v1.0/users/n
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name= "DeleteUser")]
         public async Task<ActionResult> DeleteUser(int userID)
         {
             try
@@ -148,6 +157,68 @@ namespace FriendFinderAPI.Controllers
 
             return BadRequest();
         }
-        
+        private IEnumerable<Link> CreateLinksGetUser(User user)
+        {
+            var links = new[]
+            {
+            new Link
+            {
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetUser", new {id = user.UserID})
+            },
+            new Link
+            {
+            Method = "DELETE",
+            Rel = "self",
+            Href = Url.Link("DeleteUser", new {id = user.UserID})
+            },
+            new Link
+            {
+            Method = "Put",
+            Rel = "self",
+            Href = Url.Link("PutUser", new {id = user.UserID})
+            },
+              new Link
+            {
+            Method = "GET",
+            Rel ="CityUser",
+            Href = Url.Link("GetCity", new {id = user.UserCityID})           
+            }, 
+            new Link
+            {
+                Method = "GET",
+                Rel ="UserHobbies",
+                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
+            }
+            };
+            return links;
+        }
+        private IEnumerable<Link> CreateLinksGetAllUsers(User user)
+        {
+            var links = new[]
+            {
+            new Link
+            {
+            Method = "GET",
+            Rel = "self",
+            Href = Url.Link("GetUser",new {id = user.UserID} ).ToLower()
+            },
+            new Link
+            {
+                Method = "GET",
+                Rel ="CityUser",
+                Href = Url.Link("GetCity", new {id = user.UserCityID}).ToLower()           
+            },
+            new Link
+            {
+                Method = "GET",
+                Rel ="UserHobbies",
+                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
+            }
+          
+            };
+            return links;
+        }
     }
 }
