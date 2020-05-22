@@ -31,16 +31,17 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/users
         [HttpGet(Name= "GetAllUsers")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
             try
             {
                 var results = await _userRepository.GetUsers();
+                var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
                 for(int i =0; i< results.Length; i++)
                 {
                     results[i].UserLinks = CreateLinksGetAllUsers(results[i]);
                 }
-                return Ok(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -50,16 +51,17 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/user/n
         [HttpGet("{id}", Name ="GetUser")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<UserDto>> GetUser(int id)
         {
             try
             {
                 var result = await _userRepository.GetUser(id);
-                result.UserLinks = CreateLinksGetUser(result);
                 if(result == null)
                     return NotFound();
 
-                return Ok(result);
+                result.UserLinks = CreateLinksGetUser(result);
+                var mappedResult = _mapper.Map<UserDto>(result);
+                return Ok(mappedResult);
             }
             catch(Exception e)
             {
@@ -68,13 +70,13 @@ namespace FriendFinderAPI.Controllers
         }
         
         [HttpGet("hobby/{id}", Name ="GetUserByHobby")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsersByHobby(int id)
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByHobby(int id)
         {
             try
             {
                 var results = await _userRepository.GetUsersByHobby(id);
-                return Ok(results);
-            }
+                var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
+                return Ok(mappedResults);            }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -82,12 +84,13 @@ namespace FriendFinderAPI.Controllers
         }
        
         [HttpGet("teacher/hobby/{id}", Name = "GetUserTeacherByHobby")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUserTeacherByHobby(int id)
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUserTeacherByHobby(int id)
         {
             try
             {
                 var results = await _userRepository.GetUserTeacherByHobby(id);
-                return Ok(results);
+                var mappedResults = _mapper.Map<IEnumerable<UserDto>>(results);
+                return Ok(mappedResults);    
             }
             catch(Exception e)
             {
@@ -114,7 +117,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/users/n
-        [HttpPut("{id}", Name= "PutUser")]
+        [HttpPut("{userID}", Name= "PutUser")]
         public async Task<ActionResult<UserDto>> PutUser(int userID, UserDto userDto)
         {
             try
