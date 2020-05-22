@@ -97,7 +97,7 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("city{id}", Name = "GetEventsByCity")]
+        [HttpGet("city/{id}", Name = "GetEventsByCity")]
         public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByCity(int id)
         {
             try
