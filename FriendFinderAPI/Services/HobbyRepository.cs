@@ -41,6 +41,15 @@ namespace FriendFinderAPI.Services
 
             return await query.ToArrayAsync();
         }
+
+        public async Task<Hobby[]> GetHobbiesByUser(int userID)
+        {
+            _logger.LogInformation($"Getting Hobbies in city with id{userID}");
+            IQueryable<Hobby> query = _context.Hobbies.Where(h=>h.HobbyUsers.Any(u=>u.UserID == userID));
+
+            return await query.ToArrayAsync();
+
+        }
         
     }
 }

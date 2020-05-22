@@ -35,6 +35,7 @@ namespace FriendFinderAPI.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore<Link>();
             modelBuilder.Entity<HobbyUser>()
             .HasKey(hu => new { hu.HobbyID, hu.UserID });
 
@@ -72,6 +73,9 @@ namespace FriendFinderAPI.Context
             .WithMany(c => c.EventUsers)
             .HasForeignKey(bc => bc.UserID)
             .OnDelete(DeleteBehavior.NoAction);
+            
+            
+            
 
             // modelBuilder.Entity<City>()
             // .HasMany<User>(c=> c.CityUsers)
