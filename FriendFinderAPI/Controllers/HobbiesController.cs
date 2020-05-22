@@ -36,7 +36,7 @@ namespace FriendFinderAPI.Controllers
                 var results = await _hobbyRepository.GetHobbies();
                 for(int i = 0; i<results.Length;i++)
                 {
-                    results[i].HobbyLinks =CreateLinksGetAllHobbys(results[i]);
+                    results[i].Links =CreateLinksGetAllHobbys(results[i]);
                 }
                 return Ok(results);
             }
@@ -53,7 +53,7 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _hobbyRepository.GetHobby(id);
-                result.HobbyLinks = CreateLinksGetHobby(result);
+                result.Links = CreateLinksGetAllHobbys(result);
                 if(result == null)
                     return NotFound();
 
@@ -74,6 +74,7 @@ namespace FriendFinderAPI.Controllers
                 if (result == null)
                     return NotFound();
 
+                result.Links = CreateLinksGetAllHobbys(result);
                 return Ok(result);
             }
             catch(Exception e)
@@ -87,6 +88,10 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _hobbyRepository.GetHobbiesByCity(id);
+                 for(int i = 0; i<result.Length;i++)
+                {
+                    result[i].Links =CreateLinksGetAllHobbys(result[i]);
+                }
                 return Ok(result);
             }
             catch(Exception e)
@@ -101,6 +106,10 @@ namespace FriendFinderAPI.Controllers
                 try
                 {
                         var result = await _hobbyRepository.GetHobbiesByUser(id);
+                        for(int i = 0; i<result.Length;i++)
+                        {
+                        result[i].Links =CreateLinksGetAllHobbys(result[i]);
+                        }
                         return Ok(result);
                 }
                 catch(Exception e)
@@ -174,20 +183,8 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
+        
          private IEnumerable<Link> CreateLinksGetAllHobbys(Hobby hobby)
-        {
-            var links = new[]
-            {
-            new Link{
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetHobby",new {id = hobby.HobbyID} ).ToLower()
-            },
-          
-            };
-            return links;
-        }
-         private IEnumerable<Link> CreateLinksGetHobby(Hobby hobby)
         {
             var links = new[]
             {

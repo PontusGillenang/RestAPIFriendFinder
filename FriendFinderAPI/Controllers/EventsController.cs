@@ -34,7 +34,7 @@ namespace FriendFinderAPI.Controllers
                 var results = await _eventRepository.GetEvents();
                  for(int i = 0; i<results.Length;i++)
                  {
-                        results[i].EventLink = CreateLinksGetAllLocations(results[i]);
+                        results[i].Links = CreateLinksGetAllEvents(results[i]);
                  }
                 return Ok(results);
             }
@@ -52,7 +52,8 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _eventRepository.GetEvent(id);
-                result.EventLink = CreateLinksGetLocation(result);
+                result.Links = CreateLinksGetAllEvents(result);
+               
                 if (result == null)
                     return NotFound();
 
@@ -70,6 +71,10 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var results = await _eventRepository.GetEventsByHobby(id);
+                  for(int i = 0; i<results.Length;i++)
+                 {
+                    results[i].Links = CreateLinksGetAllEvents(results[i]);
+                 }
                 return results;
             }
             catch(Exception e)
@@ -86,6 +91,10 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var results = await _eventRepository.GetEventsByHobbyCity(hobbyid, cityid);
+                for(int i = 0; i<results.Length;i++)
+                 {
+                     results[i].Links = CreateLinksGetAllEvents(results[i]);
+                 }
                 return results;
             }
             catch(Exception e)
@@ -100,6 +109,10 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var results = await _eventRepository.GetEventsByCity(id);
+                 for(int i = 0; i<results.Length;i++)
+                 {
+                     results[i].Links = CreateLinksGetAllEvents(results[i]);
+                 }
                 return results;
             }
             catch(Exception e)
@@ -170,19 +183,8 @@ namespace FriendFinderAPI.Controllers
             }
             return BadRequest();
         }
-        private IEnumerable<Link> CreateLinksGetAllLocations(Event events)
-        {
-            var links = new[]
-            {
-            new Link{
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetEvent",new {id = events.EventID} ).ToLower()
-            }
-            };
-            return links;
-        }
-        private IEnumerable<Link> CreateLinksGetLocation(Event events)
+        
+        private IEnumerable<Link> CreateLinksGetAllEvents(Event events)
         {
             var links = new[]
             {
@@ -196,14 +198,27 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteEventn", new {id = events.EventID}).ToLower()
+            Href = Url.Link("DeleteEvent", new {id = events.EventID}).ToLower()
             },
             new Link
             {
-                Method = "PUT",
-                Rel = "self",
-                Href = Url.Link("PutEvent", new {id = events.EventID}).ToLower()
+            Method = "PUT",
+            Rel = "self",
+            Href = Url.Link("PutEvent", new {id = events.EventID}).ToLower()
+            },
+            new Link
+            {
+            Method = "GET",
+            Rel = "EventCity",
+            Href = Url.Link("GetCity", new {id = events.EventCityID}).ToLower()
+            },
+            new Link
+            {
+            Method = "GET",
+            Rel = "EventHobby",
+            Href = Url.Link("GetCity", new {id = events.EventHobbyID}).ToLower()
             }
+
             };
             return links;
         }

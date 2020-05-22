@@ -27,7 +27,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/cities
-        [HttpGet(Name = "GetLocationsByID")]
+        [HttpGet(Name = "GetCities")]
         public async Task<ActionResult<IEnumerable<City>>> GetCities()
         {
             try
@@ -35,7 +35,7 @@ namespace FriendFinderAPI.Controllers
                 var results = await _cityRepository.GetCities();
                   for(int i = 0; i<results.Length;i++)
                   {
-                      results[i].CityLinks = CreateLinksGetAllCity(results[i]);
+                      results[i].Links = CreateLinksGetAllCity(results[i]);
                   }
                 return Ok(results);
             }
@@ -52,7 +52,7 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _cityRepository.GetCity(id);
-                result.CityLinks = CreateLinksGetCity(result);
+                result.Links = CreateLinksGetAllCity(result);
                 if(result == null)
                     return NotFound();
 
@@ -64,12 +64,16 @@ namespace FriendFinderAPI.Controllers
             }
         }
         
-        [HttpGet("hobby{id}", Name = "GetCitiesByHobby")]
+        [HttpGet("hobby/{id}", Name = "GetCitiesByHobby")]
         public async Task<ActionResult<IEnumerable<City>>> GetCitiesByHobby(int id)
         {
             try
             {
                 var results = await _cityRepository.GetCitiesByHobby(id);
+                for(int i =0;i < results.Length; i++ )
+                {
+                    results[i].Links = CreateLinksGetAllCity(results[i]);
+                }
                 return Ok(results);
             }
             catch(Exception e)
@@ -141,20 +145,8 @@ namespace FriendFinderAPI.Controllers
             }
             return BadRequest();
         }
+         
          private IEnumerable<Link> CreateLinksGetAllCity(City city)
-        {
-            var links = new[]
-            {
-            new Link{
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetCity",new {id = city.CityID} ).ToLower()
-            },
-          
-            };
-            return links;
-        }
-         private IEnumerable<Link> CreateLinksGetCity(City city)
         {
             var links = new[]
             {

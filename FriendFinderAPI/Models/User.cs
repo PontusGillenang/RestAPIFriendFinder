@@ -20,6 +20,6 @@ namespace FriendFinderAPI.Models
         public ICollection<HobbyUser> HobbyUsers { get; set; }
         public ICollection<EventUser> EventUsers { get; set; }
 
-        public IEnumerable<Link> UserLinks {get;set;}
+        public IEnumerable<Link> Links {get;set;}
     }
 }

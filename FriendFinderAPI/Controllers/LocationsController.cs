@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FriendFinderAPI.Dtos;
+using System.Linq;
 using AutoMapper;
 
 namespace FriendFinderAPI.Controllers
@@ -35,7 +36,7 @@ namespace FriendFinderAPI.Controllers
                 var results = await _locationRepository.GetLocations();
                 for(int i = 0; i<results.Length;i++)
                 {
-                    results[i].LocationLinks = CreateLinksGetAllLocations(results[i]);
+                    results[i].Links = CreateLinksGetAllLocations(results[i]);
                 };
                 return Ok(results);
             }
@@ -52,7 +53,7 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _locationRepository.GetLocation(id);
-                result.LocationLinks = CreateLinksGetLocation(result);
+                result.Links = CreateLinksGetAllLocations(result);
                 if(result == null)
                     return NotFound();
                 
@@ -70,6 +71,10 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var results = await _locationRepository.GetLocationsByHobby(id);
+                 for(int i = 0; i<results.Length;i++)
+                {
+                    results[i].Links = CreateLinksGetAllLocations(results[i]);
+                };
                 return Ok(results);
             }
             catch(Exception e)
@@ -84,6 +89,7 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _locationRepository.GetLocationByHobby(locationid, hobbyid);
+                result.Links = CreateLinksGetAllLocations(result);
                 if (result == null)
                     return NotFound();
 
@@ -167,7 +173,12 @@ namespace FriendFinderAPI.Controllers
             Rel = "self",
             Href = Url.Link("GetLocation",new {id = location.LocationID} ).ToLower()
             },
-          
+            new Link
+            {
+                Method = "GET", 
+                Rel="LocationCity",
+                Href = Url.Link("GetCity", new {id = location.LocationCityID}).ToLower()
+            }
             };
             return links;
         }
@@ -189,10 +200,16 @@ namespace FriendFinderAPI.Controllers
             },
             new Link
             {
-                Method = "PUT",
-                Rel = "self",
-                Href = Url.Link("PutLocation", new {id = location.LocationID}).ToLower()
-            }
+             Method = "PUT",
+            Rel = "self",
+            Href = Url.Link("PutLocation", new {id = location.LocationID}).ToLower()
+            },
+             new Link
+            {
+            Method = "GET", 
+            Rel="LocationCity",
+            Href = Url.Link("GetCity", new {id = location.LocationCityID}).ToLower()
+            },
             };
             return links;
         }

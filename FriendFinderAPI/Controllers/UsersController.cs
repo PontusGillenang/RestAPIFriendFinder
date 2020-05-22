@@ -38,7 +38,7 @@ namespace FriendFinderAPI.Controllers
                 var results = await _userRepository.GetUsers();
                 for(int i =0; i< results.Length; i++)
                 {
-                    results[i].UserLinks = CreateLinksGetAllUsers(results[i]);
+                    results[i].Links = CreateLinksGetAllUsers(results[i]);
                 }
                 return Ok(results);
             }
@@ -55,7 +55,7 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var result = await _userRepository.GetUser(id);
-                result.UserLinks = CreateLinksGetUser(result);
+                result.Links = CreateLinksGetAllUsers(result);
                 if(result == null)
                     return NotFound();
 
@@ -157,7 +157,7 @@ namespace FriendFinderAPI.Controllers
 
             return BadRequest();
         }
-        private IEnumerable<Link> CreateLinksGetUser(User user)
+        private IEnumerable<Link> CreateLinksGetAllUsers(User user)
         {
             var links = new[]
             {
@@ -187,38 +187,13 @@ namespace FriendFinderAPI.Controllers
             }, 
             new Link
             {
-                Method = "GET",
-                Rel ="UserHobbies",
-                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
-            }
-            };
-            return links;
-        }
-        private IEnumerable<Link> CreateLinksGetAllUsers(User user)
-        {
-            var links = new[]
-            {
-            new Link
-            {
             Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetUser",new {id = user.UserID} ).ToLower()
-            },
-            new Link
-            {
-                Method = "GET",
-                Rel ="CityUser",
-                Href = Url.Link("GetCity", new {id = user.UserCityID}).ToLower()           
-            },
-            new Link
-            {
-                Method = "GET",
-                Rel ="UserHobbies",
-                Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
+            Rel ="UserHobbies",
+            Href = Url.Link("GetHobbiesByUser", new {id = user.UserID}).ToLower()           
             }
-          
             };
             return links;
         }
+     
     }
 }
