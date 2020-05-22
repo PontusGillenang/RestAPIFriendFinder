@@ -16,9 +16,9 @@ namespace FriendFinderAPI.Services
       public async Task<Event> GetEvent(int eventID)
       {
           _logger.LogInformation($"Getting Event with id: {eventID}");
-          IQueryable<Event> query = _context.Events.Where(e=>e.EventID == eventID);
+          Event query = await _context.Events.Where(e=>e.EventID == eventID).FirstOrDefaultAsync();
 
-          return await query.FirstOrDefaultAsync();
+          return query;
       }  
 
       public async Task<Event[]> GetEvents()

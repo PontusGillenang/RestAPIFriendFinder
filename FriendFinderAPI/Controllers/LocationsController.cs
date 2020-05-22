@@ -28,16 +28,17 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/locations
         [HttpGet(Name ="GetLocations")]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocations()
+        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocations()
         {
             try
             {
                 var results = await _locationRepository.GetLocations();
+                var mappedResults = _mapper.Map<IEnumerable<LocationDto>>(results);
                 for(int i = 0; i<results.Length;i++)
                 {
                     results[i].LocationLinks = CreateLinksGetAllLocations(results[i]);
                 };
-                return Ok(results);
+                return Ok(mappedResults);
             }
             catch(Exception e)
             {
@@ -47,7 +48,7 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/locations/n
         [HttpGet("{id}")]
-        public async Task<ActionResult<Location>> GetLocation(int id)
+        public async Task<ActionResult<LocationDto>> GetLocation(int id)
         {
             try
             {
@@ -56,8 +57,8 @@ namespace FriendFinderAPI.Controllers
                 if(result == null)
                     return NotFound();
                 
-                return result;
-            }
+                var mappedResult = _mapper.Map<LocationDto>(result);
+                return Ok(mappedResult);            }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -65,13 +66,13 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("hobby/{id}")]
-        public async Task<ActionResult<IEnumerable<Location>>> GetLocationsByHobby(int id)
+        public async Task<ActionResult<IEnumerable<LocationDto>>> GetLocationsByHobby(int id)
         {
             try
             {
                 var results = await _locationRepository.GetLocationsByHobby(id);
-                return Ok(results);
-            }
+                var mappedResults = _mapper.Map<IEnumerable<LocationDto>>(results);
+                return Ok(mappedResults);            }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -79,7 +80,7 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("{locationid}/hobby/{hobbyid}")]
-        public async Task<ActionResult<Location>> GetLocationByHobby(int locationid, int hobbyid)
+        public async Task<ActionResult<LocationDto>> GetLocationByHobby(int locationid, int hobbyid)
         {
             try
             {
@@ -87,8 +88,8 @@ namespace FriendFinderAPI.Controllers
                 if (result == null)
                     return NotFound();
 
-                return result;
-            }
+                var mappedResult = _mapper.Map<LocationDto>(result);
+                return Ok(mappedResult);              }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -101,7 +102,7 @@ namespace FriendFinderAPI.Controllers
         {
             try
             {
-                var mappedEntity = _mapper.Map<LocationDto>(locationDto);
+                var mappedEntity = _mapper.Map<Location>(locationDto);
                 _locationRepository.Add(mappedEntity);
 
                 if(await _locationRepository.Save())
