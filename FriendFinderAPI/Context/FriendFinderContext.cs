@@ -101,8 +101,7 @@ namespace FriendFinderAPI.Context
                 UserAdress = "Drottninggatan",
                 UserPhoneNumber = "+46XXXXXXX",
                 UserAge = 20,
-                UserIsTeacher = true,
-                UserCityID = 2
+                CityId = 2
             }
             , new
             {
@@ -111,8 +110,7 @@ namespace FriendFinderAPI.Context
                 UserAdress = "Kungsgatan",
                 UserPhoneNumber = "+46XXXXXXX2",
                 UserAge = 22,
-                UserIsTeacher = false,
-                UserCityID = 1
+                CityId = 1
             }
             , new
             {
@@ -121,8 +119,7 @@ namespace FriendFinderAPI.Context
                 UserAdress = "MorTest",
                 UserPhoneNumber = "+46XXXXXXX3",
                 UserAge = 28,
-                UserIsTeacher = true,
-                UserCityID = 1
+                CityId = 1
             });
 
             modelBuilder.Entity<Location>()
@@ -130,13 +127,13 @@ namespace FriendFinderAPI.Context
             {
                 LocationId = 1,
                 LocationName = "Fjäderborgen",
-                LocationCityID = 2,
+                CityId = 2,
             }
             , new
             {
                 LocationId = 2,
                 LocationName = "The Castle With Zero Books...",
-                LocationCityID = 1,
+                CityId = 1,
             });
 
             modelBuilder.Entity<Event>()
@@ -145,18 +142,16 @@ namespace FriendFinderAPI.Context
                 EventId = 1,
                 EventName = "Lets Do some Awsome Curling",
                 //EventHobbyId = 297,
-                EventHobbyId = 2,
-                EventResposibleUserID = 1,
-                EventCityID = 1,
+                HobbyId = 2,
+                CityID = 1,
             }
             , new
             {
                 EventId = 2,
                 EventName = "BookClub All About The Books",
                 //EventHobbyId = 922,
-                EventHobbyId = 1,
-                EventResposibleUserID = 3,
-                EventCityID = 2,
+                HobbyId = 1,
+                CityID = 2,
             });
 
             modelBuilder.Entity<HobbyLocation>()
