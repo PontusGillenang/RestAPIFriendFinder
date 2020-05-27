@@ -5,7 +5,7 @@ namespace FriendFinderAPI.Services
 {
     public interface IEventRepository : IRespository
     {
-        Task<Event> GetEvent(int EventId);
+         Task<Event> GetEvent(int eventId);
 
         Task<Event[]> GetEvents(bool includeUsers);
 

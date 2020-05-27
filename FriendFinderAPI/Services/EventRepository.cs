@@ -14,9 +14,9 @@ namespace FriendFinderAPI.Services
 
         public async Task<Event> GetEvent(int eventId)
         {
-            _logger.LogInformation($"Getting Event with id: {eventId}");
+            _logger.LogInformation($"Getting event with id: {eventId}");
             IQueryable<Event> query = _context.Events
-                                            .Where(events => events.EventID == eventId);
+                                            .Where(events => events.EventId == eventId);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -25,11 +25,11 @@ namespace FriendFinderAPI.Services
         {
             _logger.LogInformation("Getting all events");
             IQueryable<Event> query = _context.Events
-                                            .OrderBy(events => events.EventID);
+                                            .OrderBy(events => events.EventId);
             if (includeUsers)
             {
                 _logger.LogInformation("Getting all events with users included");
-                query = query.Include(eventUsers => eventUsers.EventUsers)
+                query = query.Include(eventUsers => eventUsers.Users)
                             .ThenInclude(users => users.User);
             }
 
@@ -40,9 +40,9 @@ namespace FriendFinderAPI.Services
         {
             _logger.LogInformation($"Getting events with hobby: {hobbyName}");
             IQueryable<Event> query = _context.Events
-                                            .Include(eventHobby => eventHobby.EventHobby)
-                                            .Where(eventHobby => eventHobby.EventHobby.HobbyName.Contains(hobbyName))
-                                            .OrderBy(events => events.EventID);
+                                            .Include(eventHobby => eventHobby.Hobby)
+                                            .Where(eventHobby => eventHobby.Hobby.HobbyName.Contains(hobbyName))
+                                            .OrderBy(events => events.EventId);
 
             return await query.ToArrayAsync();
         }
@@ -51,9 +51,9 @@ namespace FriendFinderAPI.Services
         {
             _logger.LogInformation($"Getting events in city: {cityName}");
             IQueryable<Event> query = _context.Events
-                                            .Include(eventCity => eventCity.EventCity)
-                                            .Where(location => location.EventCity.CityName.Contains(cityName))
-                                            .OrderBy(events => events.EventID);
+                                            .Include(eventCity => eventCity.City)
+                                            .Where(location => location.City.CityName.Contains(cityName))
+                                            .OrderBy(events => events.EventId);
 
             return await query.ToArrayAsync();
         }

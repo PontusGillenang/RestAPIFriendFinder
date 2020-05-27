@@ -47,12 +47,12 @@ namespace FriendFinderAPI.Controllers
 
         //GET:      api/v1.0/events/n
 
-        [HttpGet("{eventid}",  Name = "GetEvent")]
-        public async Task<ActionResult<EventDto>> GetEvent(int eventid)
+        [HttpGet("{eventId}",  Name = "GetEvent")]
+        public async Task<ActionResult<EventDto>> GetEvent(int eventId)
         {
             try
             {
-                var result = await _eventRepository.GetEvent(eventid);
+                var result = await _eventRepository.GetEvent(eventId);
                 // result.EventLink = CreateLinksGetLocation(result);
                 if (result == null)
                 {
@@ -109,7 +109,7 @@ namespace FriendFinderAPI.Controllers
                 _eventRepository.Add(mappedEntity);
 
                 if(await _eventRepository.Save())
-                return Created($"api/v1.0/cities/{mappedEntity.EventID}", _mapper.Map<EventDto>(mappedEntity));
+                return Created($"api/v1.0/cities/{mappedEntity.EventId}", _mapper.Map<EventDto>(mappedEntity));
             }
             catch (Exception e)
             {
@@ -119,14 +119,14 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/events/n
-        [HttpPut("{eventID}", Name = "PutEvent")]
-        public async Task<ActionResult<EventDto>> PutEvent(int eventID, EventDto eventDto)
+        [HttpPut("{eventId}", Name = "PutEvent")]
+        public async Task<ActionResult<EventDto>> PutEvent(int eventId, EventDto eventDto)
         {
             try
             {
-                var oldEvent = await _eventRepository.GetEvent(eventID);
+                var oldEvent = await _eventRepository.GetEvent(eventId);
                 if(oldEvent == null)
-                    return NotFound($"Could not find the event with id {eventID}");
+                    return NotFound($"Could not find the event with id {eventId}");
                 
                 var newEvent =_mapper.Map(eventDto, oldEvent);
                 _eventRepository.Update(newEvent);
@@ -142,14 +142,14 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE:       api/v1.0/events/n
-        [HttpDelete("{eventID}", Name = "DeleteEvent")]
-        public async Task<ActionResult> DeleteEvent(int eventID)
+        [HttpDelete("{eventId}", Name = "DeleteEvent")]
+        public async Task<ActionResult> DeleteEvent(int eventId)
         {
             try
             {
-                var eventToRemove = await _eventRepository.GetEvent(eventID);
+                var eventToRemove = await _eventRepository.GetEvent(eventId);
                 if(eventToRemove == null)
-                    return NotFound($"Could not find an event with the id: {eventID}");
+                    return NotFound($"Could not find an event with the id: {eventId}");
                 
                 _eventRepository.Delete(eventToRemove);
                 if(await _eventRepository.Save())
@@ -170,19 +170,19 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("GetEvent", new {eventid = events.EventID}).ToLower()
+            Href = Url.Link("GetEvent", new {eventId = events.EventId}).ToLower()
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteEvent", new {eventID = events.EventID}).ToLower()
+            Href = Url.Link("DeleteEvent", new {eventId = events.EventId}).ToLower()
             },
             new Link
             {
             Method = "PUT",
             Rel = "self",
-            Href = Url.Link("PutEvent", new {eventID = events.EventID}).ToLower()
+            Href = Url.Link("PutEvent", new {eventId = events.EventId}).ToLower()
             },
             };
             return links;

@@ -16,10 +16,10 @@ namespace FriendFinderAPI.Services
         }
        
 
-        public async Task<User> GetUser(int userID)
+        public async Task<User> GetUser(int userId)
         {
-            _logger.LogInformation($"Getting user with id: {userID}");
-            IQueryable<User> query = _context.Users.Where(u => u.UserID == userID);
+            _logger.LogInformation($"Getting user with id: {userId}");
+            IQueryable<User> query = _context.Users.Where(u => u.UserId == userId);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -36,20 +36,9 @@ namespace FriendFinderAPI.Services
         public async Task<User[]> GetUsersByHobby(int hobbyID)
         {
             _logger.LogInformation($"Getting Users for hobby with ID:{hobbyID}");
-            IQueryable<User> query = _context.Users.Where(h=>h.HobbyUsers.Any(u=>u.Hobby.HobbyID == hobbyID));
+            IQueryable<User> query = _context.Users.Where(h=>h.HobbyUsers.Any(u=>u.Hobby.HobbyId == hobbyID));
 
             return await query.ToArrayAsync();      
-        }
-
-        public async Task<User[]> GetUserTeacherByHobby(int hobbyID)
-        {
-          
-                _logger.LogInformation($"Getting Teachers for hobby with ID:{hobbyID}");
-                IQueryable<User> query = _context.Users.Where(u=>u.HobbyUsers.Any(h=>h.Hobby.HobbyID == hobbyID) && u.UserIsTeacher == true);
-
-                return await query.ToArrayAsync();
-
-        
         }
     }
 }
