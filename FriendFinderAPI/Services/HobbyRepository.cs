@@ -16,7 +16,7 @@ namespace FriendFinderAPI.Services
         {
             _logger.LogInformation($"Getting Hobby with id: {hobbyId}");
             IQueryable<Hobby> query = _context.Hobbies
-                                        .Where(u => u.hobbyId == hobbyId);
+                                        .Where(u => u.HobbyId == hobbyId);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -32,7 +32,7 @@ namespace FriendFinderAPI.Services
              _logger.LogInformation($"Getting Hobby in city with id: {cityId}");
              IQueryable<Hobby> query = _context.Hobbies
                                         .Where(h=>h.HobbyLocations
-                                        .Any(l=>l.Location.LocationCity.CityId == cityId) && h.HobbyId ==hobbyId);
+                                        .Any(l=>l.Location.City.CityId == cityId) && h.HobbyId ==hobbyId);
 
              return await query.FirstOrDefaultAsync();
         }
@@ -42,7 +42,7 @@ namespace FriendFinderAPI.Services
             _logger.LogInformation($"Getting Hobbies in city with id: {cityId}");
             IQueryable<Hobby> query = _context.Hobbies
                                         .Where(h=>h.HobbyLocations
-                                        .Any(l=>l.Location.LocationCity.CityId == cityId));
+                                        .Any(l=>l.Location.City.CityId == cityId));
 
             return await query.ToArrayAsync();
         }
