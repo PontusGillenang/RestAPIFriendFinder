@@ -16,6 +16,7 @@ The goals of this sprint are:
 - Bug and errorfix
 - More hateoas links
 - Tie up all loose ends and make the project as complete as it can be
+- API documentation (Swagger)
 
 ### Start date: 2020-05-25 
 
