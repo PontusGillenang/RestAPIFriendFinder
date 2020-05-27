@@ -58,13 +58,11 @@ namespace FriendFinderAPI.Tests
         {
          new Hobby
             {
-           HobbyActivationLevel = HobbyActivationLevel.High,
              HobbyID = 1,
              HobbyName = "Badminton",
 
             },
             new Hobby{
-            HobbyActivationLevel = HobbyActivationLevel.Moderate,
              HobbyID = 2,
              HobbyName = "Curling"
             
