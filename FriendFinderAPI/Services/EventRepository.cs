@@ -29,7 +29,7 @@ namespace FriendFinderAPI.Services
             if (includeUsers)
             {
                 _logger.LogInformation("Getting all events with users included");
-                query = query.Include(eventUsers => eventUsers.Users)
+                query = query.Include(eventUsers => eventUsers.EventUsers)
                             .ThenInclude(users => users.User);
             }
 
