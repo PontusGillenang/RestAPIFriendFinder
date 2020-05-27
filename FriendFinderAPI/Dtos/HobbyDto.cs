@@ -7,7 +7,7 @@ namespace FriendFinderAPI.Dtos
 {
     public class HobbyDto
     {
-        public int HobbyID { get; set; }
+        public int HobbyId { get; set; }
         public string HobbyName { get; set; }
         public IEnumerable<Link> Links {get; set;}
     }

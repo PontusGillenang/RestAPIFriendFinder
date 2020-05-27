@@ -50,12 +50,12 @@ namespace FriendFinderAPI.Controllers
         }
 
         //GET:      api/v1.0/user/n
-        [HttpGet("{userid}", Name ="GetUser")]
-        public async Task<ActionResult<UserDto>> GetUser(int userid)
+        [HttpGet("{userId}", Name ="GetUser")]
+        public async Task<ActionResult<UserDto>> GetUser(int userId)
         {
             try
             {
-                var result = await _userRepository.GetUser(userid);
+                var result = await _userRepository.GetUser(userId);
                 if(result == null)
                     return NotFound();
 
@@ -69,12 +69,12 @@ namespace FriendFinderAPI.Controllers
             }
         }
         
-        [HttpGet("hobby/{hobbyid}", Name ="GetUserByHobby")]
-        public async Task<ActionResult<UserDto[]>> GetUsersByHobby(int hobbyid)
+        [HttpGet("hobby/{hobbyId}", Name ="GetUserByHobby")]
+        public async Task<ActionResult<UserDto[]>> GetUsersByHobby(int hobbyId)
         {
             try
             {
-                var results = await _userRepository.GetUsersByHobby(hobbyid);
+                var results = await _userRepository.GetUsersByHobby(hobbyId);
                 var mappedResults = _mapper.Map<UserDto[]>(results);
                 for(int i =0; i< mappedResults.Length; i++)
                 {
@@ -82,25 +82,6 @@ namespace FriendFinderAPI.Controllers
                 }
                 return Ok(mappedResults);            
                 }
-            catch(Exception e)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
-            }
-        }
-       
-        [HttpGet("teacher/hobby/{hobbyid}", Name = "GetUserTeacherByHobby")]
-        public async Task<ActionResult<UserDto[]>> GetUserTeacherByHobby(int hobbyid)
-        {
-            try
-            {
-                var results = await _userRepository.GetUserTeacherByHobby(hobbyid);
-                var mappedResults = _mapper.Map<UserDto[]>(results);
-                for(int i =0; i< mappedResults.Length; i++)
-                {
-                    mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
-                }
-                return Ok(mappedResults);    
-            }
             catch(Exception e)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
@@ -116,7 +97,7 @@ namespace FriendFinderAPI.Controllers
                 var mappedEntity = _mapper.Map<User>(userDto);
                 _userRepository.Add(mappedEntity);
                 if(await _userRepository.Save())
-                    return Created($"api/v1.0/users/{mappedEntity.UserID}", _mapper.Map<UserDto>(mappedEntity));
+                    return Created($"api/v1.0/users/{mappedEntity.UserId}", _mapper.Map<UserDto>(mappedEntity));
             }
             catch (Exception e)
             {
@@ -126,14 +107,14 @@ namespace FriendFinderAPI.Controllers
         }
 
         //PUT:      api/v1.0/users/n
-        [HttpPut("{userid}", Name= "PutUser")]
-        public async Task<ActionResult<UserDto>> PutUser(int userid, UserDto userDto)
+        [HttpPut("{userId}", Name= "PutUser")]
+        public async Task<ActionResult<UserDto>> PutUser(int userId, UserDto userDto)
         {
             try
             {
-                var oldUser = await _userRepository.GetUser(userid);
+                var oldUser = await _userRepository.GetUser(userId);
                 if(oldUser == null)
-                    return NotFound($"Can't find any user with that id: {userid}");
+                    return NotFound($"Can't find any user with that id: {userId}");
 
                 var newUser = _mapper.Map(userDto, oldUser);
                 _userRepository.Update(newUser);
@@ -149,14 +130,14 @@ namespace FriendFinderAPI.Controllers
         }
 
         //DELETE        api/v1.0/users/n
-        [HttpDelete("{userid}", Name= "DeleteUser")]
-        public async Task<ActionResult> DeleteUser(int userid)
+        [HttpDelete("{userId}", Name= "DeleteUser")]
+        public async Task<ActionResult> DeleteUser(int userId)
         {
             try
             {
-                var user = await _userRepository.GetUser(userid);
+                var user = await _userRepository.GetUser(userId);
                 if(user == null)
-                    return NotFound($"We could not find a user with that id: {userid}");
+                    return NotFound($"We could not find a user with that id: {userId}");
                 
                 _userRepository.Delete(user);
                 if(await _userRepository.Save())
@@ -177,31 +158,31 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("GetUser", new {userid = user.UserID})
+            Href = Url.Link("GetUser", new {userId = user.UserId})
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteUser", new {userid = user.UserID})
+            Href = Url.Link("DeleteUser", new {userId = user.UserId})
             },
             new Link
             {
             Method = "Put",
             Rel = "self",
-            Href = Url.Link("PutUser", new {userid = user.UserID})
+            Href = Url.Link("PutUser", new {userId = user.UserId})
             },
             //   new Link
             // {
             // Method = "GET",
             // Rel ="CityUser",
-            // Href = Url.Link("GetCity", new {userid = user.UserCityID})           
+            // Href = Url.Link("GetCity", new {userId = user.UserCityID})           
             // }, 
             // new Link
             // {
             //     Method = "GET",
             //     Rel ="UserHobbies",
-            //     Href = Url.Link("GetHobbiesByUser", new {userid = user.UserID}).ToLower()           
+            //     Href = Url.Link("GetHobbiesByUser", new {userId = user.UserId}).ToLower()           
             // }
             };
             return links;
