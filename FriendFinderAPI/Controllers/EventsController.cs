@@ -48,11 +48,11 @@ namespace FriendFinderAPI.Controllers
         //GET:      api/v1.0/events/n
 
         [HttpGet("{eventId}",  Name = "GetEvent")]
-        public async Task<ActionResult<EventDto>> GetEvent(int eventId)
+        public async Task<ActionResult<EventDto>> GetEvent(int eventId, bool includeUsers)
         {
             try
             {
-                var result = await _eventRepository.GetEvent(eventId);
+                var result = await _eventRepository.GetEvent(eventId, includeUsers);
                 // result.EventLink = CreateLinksGetLocation(result);
                 if (result == null)
                 {
@@ -70,11 +70,11 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("searchhobby",  Name = "GetEventsByHobby")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEventsByHobby(string hobbyName)
+        public async Task<ActionResult<IEnumerable<Event>>> GetEventsByHobby(string hobbyName, bool includeUsers)
         {
             try
             {
-                var results = await _eventRepository.GetEventsWithHobby(hobbyName);
+                var results = await _eventRepository.GetEventsByHobby(hobbyName, includeUsers);
                 var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
                 return Ok(mappedResults);
             }
@@ -85,11 +85,11 @@ namespace FriendFinderAPI.Controllers
         }
 
         [HttpGet("searchcity", Name = "GetEventsByCity")]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByCity(string cityName)
+        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByCity(string cityName, bool includeUsers)
         {
             try
             {
-                var results = await _eventRepository.GetEventsInCity(cityName);
+                var results = await _eventRepository.GetEventsByCity(cityName, includeUsers);
                 var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
                 return Ok(mappedResults);
             }
@@ -120,11 +120,11 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/events/n
         [HttpPut("{eventId}", Name = "PutEvent")]
-        public async Task<ActionResult<EventDto>> PutEvent(int eventId, EventDto eventDto)
+        public async Task<ActionResult<EventDto>> PutEvent(int eventId, bool includeUsers, EventDto eventDto)
         {
             try
             {
-                var oldEvent = await _eventRepository.GetEvent(eventId);
+                var oldEvent = await _eventRepository.GetEvent(eventId, includeUsers);
                 if(oldEvent == null)
                     return NotFound($"Could not find the event with id {eventId}");
                 
@@ -143,11 +143,11 @@ namespace FriendFinderAPI.Controllers
 
         //DELETE:       api/v1.0/events/n
         [HttpDelete("{eventId}", Name = "DeleteEvent")]
-        public async Task<ActionResult> DeleteEvent(int eventId)
+        public async Task<ActionResult> DeleteEvent(int eventId, bool includeUsers)
         {
             try
             {
-                var eventToRemove = await _eventRepository.GetEvent(eventId);
+                var eventToRemove = await _eventRepository.GetEvent(eventId, includeUsers);
                 if(eventToRemove == null)
                     return NotFound($"Could not find an event with the id: {eventId}");
                 
