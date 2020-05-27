@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using static FriendFinderAPI.Enums.Enums;
 
 namespace FriendFinderAPI.Models
 {
@@ -11,5 +12,6 @@ namespace FriendFinderAPI.Models
         [ForeignKey("UserID")]
         public int UserID { get; set; }
         public User User { get; set; }
+        public UserSkillLevel SkillLevel { get; set; }
     }
 }
