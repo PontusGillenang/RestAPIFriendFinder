@@ -12,54 +12,48 @@ namespace FriendFinderAPI.Services
         public EventRepository(FriendFinderContext context, ILogger<EventRepository> logger) : base(context, logger)
         {}
 
-        public async Task<Event[]> GetEvents()
+        public async Task<Event> GetEvent(int eventId)
         {
-            _logger.LogInformation("Getting events");
+            _logger.LogInformation($"Getting Event with id: {eventId}");
             IQueryable<Event> query = _context.Events
-                                            .Include(eventUsers => eventUsers.EventUsers)
-                                            .ThenInclude(users => users.User)
-                                            .ThenInclude(hobbyUsers => hobbyUsers.HobbyUsers)
-                                            .ThenInclude(hobbies => hobbies.Hobby)
-                                            .ThenInclude(hobbyLocation => hobbyLocation.HobbyLocations)
-                                            .ThenInclude(location => location.Location)
-                                            .OrderBy(events => events.EventID);
-                                                   
-            return await query.ToArrayAsync();
-        }
-
-        public async Task<Event> GetEvent(int eventID)
-        {
-            _logger.LogInformation($"Getting Event with id: {eventID}");
-            IQueryable<Event> query = _context.Events
-                                            .Where(events => events.EventID == eventID)
-                                            .OrderBy(events => events.EventID);
+                                            .Where(events => events.EventID == eventId);
 
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Event[]> GetEventsByHobby(int hobbyID)
+        public async Task<Event[]> GetEvents(bool includeUsers = false)
         {
-            _logger.LogInformation($"Getting Events for hobby with ID:{hobbyID}");
+            _logger.LogInformation("Getting all events");
+            IQueryable<Event> query = _context.Events
+                                            .OrderBy(events => events.EventID);
+            if (includeUsers)
+            {
+                _logger.LogInformation("Getting all events with users included");
+                query = query.Include(eventUsers => eventUsers.EventUsers)
+                            .ThenInclude(users => users.User);
+            }
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Event[]> GetEventsWithHobby(string hobbyName)
+        {
+            _logger.LogInformation($"Getting events with hobby: {hobbyName}");
             IQueryable<Event> query = _context.Events
                                             .Include(eventHobby => eventHobby.EventHobby)
-                                            .Where(eventHobby => eventHobby.EventHobby.HobbyID == hobbyID)
-                                            .OrderBy(hobby => hobby.EventHobbyID);
+                                            .Where(eventHobby => eventHobby.EventHobby.HobbyName.Contains(hobbyName))
+                                            .OrderBy(events => events.EventID);
 
             return await query.ToArrayAsync();
         }
-
-        public async Task<Event[]> GetEventsByHobbyCity(int hobbyID, int cityID)
+                
+        public async Task<Event[]> GetEventsInCity(string cityName)
         {
-            _logger.LogInformation($"Getting Events for hobby with ID:{hobbyID} and in the location with id: {cityID}");
-            IQueryable<Event> query = _context.Events.Where(h => h.EventHobby.HobbyID == hobbyID && h.EventCity.CityID == cityID);
-
-            return await query.ToArrayAsync();
-        }
-
-        public async Task<Event[]> GetEventsByCity(int cityID)
-        {
-            _logger.LogInformation($"Getting Events in location with location id{cityID}");
-            IQueryable<Event> query = _context.Events.Where(l => l.EventCity.CityID == cityID);
+            _logger.LogInformation($"Getting events in city: {cityName}");
+            IQueryable<Event> query = _context.Events
+                                            .Include(eventCity => eventCity.EventCity)
+                                            .Where(location => location.EventCity.CityName.Contains(cityName))
+                                            .OrderBy(events => events.EventID);
 
             return await query.ToArrayAsync();
         }
