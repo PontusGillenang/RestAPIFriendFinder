@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FriendFinderAPI.Migrations
 {
     [DbContext(typeof(FriendFinderContext))]
-    [Migration("20200522105226_TestMigrationForLinks")]
-    partial class TestMigrationForLinks
+    [Migration("20200528075525_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace FriendFinderAPI.Migrations
 
             modelBuilder.Entity("FriendFinderAPI.Models.City", b =>
                 {
-                    b.Property<int>("CityID")
+                    b.Property<int>("CityId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -36,28 +36,28 @@ namespace FriendFinderAPI.Migrations
                     b.Property<string>("CityName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CityID");
+                    b.HasKey("CityId");
 
                     b.ToTable("Cities");
 
                     b.HasData(
                         new
                         {
-                            CityID = 1,
+                            CityId = 1,
                             CityCountry = "Andorra",
                             CityCounty = "Andorra la Vella",
                             CityName = "Andorra la Vella"
                         },
                         new
                         {
-                            CityID = 2,
+                            CityId = 2,
                             CityCountry = "United Arab Emirates",
                             CityCounty = "Umm al Qaywayn",
                             CityName = "Umm al Qaywayn"
                         },
                         new
                         {
-                            CityID = 3,
+                            CityId = 3,
                             CityCountry = "United Arab Emirates",
                             CityCounty = "Raʼs al Khaymah",
                             CityName = "Ras al-Khaimah"
@@ -66,219 +66,222 @@ namespace FriendFinderAPI.Migrations
 
             modelBuilder.Entity("FriendFinderAPI.Models.Event", b =>
                 {
-                    b.Property<int>("EventID")
+                    b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EventCityID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EventHobbyID")
+                    b.Property<int>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("EventName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("EventID");
+                    b.Property<int>("HobbyId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("EventCityID");
+                    b.HasKey("EventId");
 
-                    b.HasIndex("EventHobbyID");
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("HobbyId");
 
                     b.ToTable("Events");
 
                     b.HasData(
                         new
                         {
-                            EventID = 1,
-                            EventCityID = 1,
-                            EventHobbyID = 2,
-                            EventName = "Lets Do some Awsome Curling"
+                            EventId = 1,
+                            CityId = 1,
+                            EventName = "Lets Do some Awsome Curling",
+                            HobbyId = 2
                         },
                         new
                         {
-                            EventID = 2,
-                            EventCityID = 2,
-                            EventHobbyID = 1,
-                            EventName = "BookClub All About The Books"
+                            EventId = 2,
+                            CityId = 2,
+                            EventName = "BookClub All About The Books",
+                            HobbyId = 1
                         });
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.EventUser", b =>
                 {
-                    b.Property<int>("EventID")
+                    b.Property<int>("EventId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EventUserID")
+                    b.Property<int>("EventUserId")
                         .HasColumnType("int");
 
                     b.Property<bool>("UserIsResponsible")
                         .HasColumnType("bit");
 
-                    b.HasKey("EventID", "UserID");
+                    b.HasKey("EventId", "UserId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("EventUsers");
 
                     b.HasData(
                         new
                         {
-                            EventID = 1,
-                            UserID = 2,
-                            EventUserID = 1,
+                            EventId = 1,
+                            UserId = 2,
+                            EventUserId = 1,
                             UserIsResponsible = true
                         },
                         new
                         {
-                            EventID = 1,
-                            UserID = 1,
-                            EventUserID = 2,
+                            EventId = 1,
+                            UserId = 1,
+                            EventUserId = 2,
                             UserIsResponsible = false
                         });
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.Hobby", b =>
                 {
-                    b.Property<int>("HobbyID")
+                    b.Property<int>("HobbyId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("HobbyActivationLevel")
-                        .HasColumnType("int");
-
                     b.Property<string>("HobbyName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("HobbyID");
+                    b.HasKey("HobbyId");
 
                     b.ToTable("Hobbies");
 
                     b.HasData(
                         new
                         {
-                            HobbyID = 1,
-                            HobbyActivationLevel = 0,
+                            HobbyId = 1,
                             HobbyName = "Abseiling"
                         },
                         new
                         {
-                            HobbyID = 2,
-                            HobbyActivationLevel = 0,
+                            HobbyId = 2,
                             HobbyName = "Acting"
                         },
                         new
                         {
-                            HobbyID = 3,
-                            HobbyActivationLevel = 0,
+                            HobbyId = 3,
                             HobbyName = "Action figure"
                         });
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.HobbyLocation", b =>
                 {
-                    b.Property<int>("HobbyID")
+                    b.Property<int>("HobbyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LocationID")
+                    b.Property<int>("LocationId")
                         .HasColumnType("int");
 
-                    b.HasKey("HobbyID", "LocationID");
+                    b.HasKey("HobbyId", "LocationId");
 
-                    b.HasIndex("LocationID");
+                    b.HasIndex("LocationId");
 
                     b.ToTable("HobbyLocations");
 
                     b.HasData(
                         new
                         {
-                            HobbyID = 1,
-                            LocationID = 1
+                            HobbyId = 1,
+                            LocationId = 1
                         },
                         new
                         {
-                            HobbyID = 2,
-                            LocationID = 2
+                            HobbyId = 2,
+                            LocationId = 2
                         });
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.HobbyUser", b =>
                 {
-                    b.Property<int>("HobbyID")
+                    b.Property<int>("HobbyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("HobbyID", "UserID");
+                    b.Property<int>("SkillLevel")
+                        .HasColumnType("int");
 
-                    b.HasIndex("UserID");
+                    b.HasKey("HobbyId", "UserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("HobbyUsers");
 
                     b.HasData(
                         new
                         {
-                            HobbyID = 1,
-                            UserID = 1
+                            HobbyId = 1,
+                            UserId = 1,
+                            SkillLevel = 0
                         },
                         new
                         {
-                            HobbyID = 2,
-                            UserID = 2
+                            HobbyId = 2,
+                            UserId = 2,
+                            SkillLevel = 1
                         },
                         new
                         {
-                            HobbyID = 3,
-                            UserID = 3
+                            HobbyId = 3,
+                            UserId = 3,
+                            SkillLevel = 3
                         });
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.Location", b =>
                 {
-                    b.Property<int>("LocationID")
+                    b.Property<int>("LocationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("LocationCityID")
+                    b.Property<int>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("LocationName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("LocationID");
+                    b.HasKey("LocationId");
 
-                    b.HasIndex("LocationCityID");
+                    b.HasIndex("CityId");
 
                     b.ToTable("Locations");
 
                     b.HasData(
                         new
                         {
-                            LocationID = 1,
-                            LocationCityID = 2,
+                            LocationId = 1,
+                            CityId = 2,
                             LocationName = "Fjäderborgen"
                         },
                         new
                         {
-                            LocationID = 2,
-                            LocationCityID = 1,
+                            LocationId = 2,
+                            CityId = 1,
                             LocationName = "The Castle With Zero Books..."
                         });
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.User", b =>
                 {
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserAdress")
                         .HasColumnType("nvarchar(max)");
@@ -286,52 +289,43 @@ namespace FriendFinderAPI.Migrations
                     b.Property<int>("UserAge")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserCityID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("UserIsTeacher")
-                        .HasColumnType("bit");
-
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserPhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserID");
+                    b.HasKey("UserId");
 
-                    b.HasIndex("UserCityID");
+                    b.HasIndex("CityId");
 
                     b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            UserID = 1,
+                            UserId = 1,
+                            CityId = 2,
                             UserAdress = "Drottninggatan",
                             UserAge = 20,
-                            UserCityID = 2,
-                            UserIsTeacher = true,
                             UserName = "Sebbe",
                             UserPhoneNumber = "+46XXXXXXX"
                         },
                         new
                         {
-                            UserID = 2,
+                            UserId = 2,
+                            CityId = 1,
                             UserAdress = "Kungsgatan",
                             UserAge = 22,
-                            UserCityID = 1,
-                            UserIsTeacher = false,
                             UserName = "Oskar",
                             UserPhoneNumber = "+46XXXXXXX2"
                         },
                         new
                         {
-                            UserID = 3,
+                            UserId = 3,
+                            CityId = 1,
                             UserAdress = "MorTest",
                             UserAge = 28,
-                            UserCityID = 1,
-                            UserIsTeacher = true,
                             UserName = "William",
                             UserPhoneNumber = "+46XXXXXXX3"
                         });
@@ -339,15 +333,15 @@ namespace FriendFinderAPI.Migrations
 
             modelBuilder.Entity("FriendFinderAPI.Models.Event", b =>
                 {
-                    b.HasOne("FriendFinderAPI.Models.City", "EventCity")
+                    b.HasOne("FriendFinderAPI.Models.City", "City")
                         .WithMany()
-                        .HasForeignKey("EventCityID")
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FriendFinderAPI.Models.Hobby", "EventHobby")
+                    b.HasOne("FriendFinderAPI.Models.Hobby", "Hobby")
                         .WithMany()
-                        .HasForeignKey("EventHobbyID")
+                        .HasForeignKey("HobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -356,13 +350,13 @@ namespace FriendFinderAPI.Migrations
                 {
                     b.HasOne("FriendFinderAPI.Models.Event", "Event")
                         .WithMany("EventUsers")
-                        .HasForeignKey("EventID")
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FriendFinderAPI.Models.User", "User")
                         .WithMany("EventUsers")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
@@ -371,13 +365,13 @@ namespace FriendFinderAPI.Migrations
                 {
                     b.HasOne("FriendFinderAPI.Models.Hobby", "Hobby")
                         .WithMany("HobbyLocations")
-                        .HasForeignKey("HobbyID")
+                        .HasForeignKey("HobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FriendFinderAPI.Models.Location", "Location")
                         .WithMany("HobbyLocations")
-                        .HasForeignKey("LocationID")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -386,31 +380,31 @@ namespace FriendFinderAPI.Migrations
                 {
                     b.HasOne("FriendFinderAPI.Models.Hobby", "Hobby")
                         .WithMany("HobbyUsers")
-                        .HasForeignKey("HobbyID")
+                        .HasForeignKey("HobbyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FriendFinderAPI.Models.User", "User")
                         .WithMany("HobbyUsers")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.Location", b =>
                 {
-                    b.HasOne("FriendFinderAPI.Models.City", "LocationCity")
-                        .WithMany("CityLocations")
-                        .HasForeignKey("LocationCityID")
+                    b.HasOne("FriendFinderAPI.Models.City", "City")
+                        .WithMany("Locations")
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("FriendFinderAPI.Models.User", b =>
                 {
-                    b.HasOne("FriendFinderAPI.Models.City", "UserCity")
-                        .WithMany("CityUsers")
-                        .HasForeignKey("UserCityID")
+                    b.HasOne("FriendFinderAPI.Models.City", "City")
+                        .WithMany("Users")
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
