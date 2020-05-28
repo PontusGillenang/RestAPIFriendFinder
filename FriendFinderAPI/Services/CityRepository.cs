@@ -54,10 +54,10 @@ namespace FriendFinderAPI.Services
         //-----------------------------------------------------------------------------
         // getAllLocsBelongingToCity
         //-----------------------------------------------------------------------------							
-        public async Task<Location[]> getAllLocsBelongingToCity(int iCityID)
+        public async Task<City[]> GetLocationsForCity(int cityId)
         {
-            _logger.LogInformation($"Getting all locations part of town {iCityID}");
-            IQueryable<Location> query = _context.Locations.Where(l => l.CityId == iCityID);
+            _logger.LogInformation($"Getting all locations part of town {cityId}");
+            IQueryable<City> query = _context.Cities.Where(l => l.CityId == cityId).Include(l => l.Locations);
 
             // SELECT*
             // FROM[Cities] JOIN Locations

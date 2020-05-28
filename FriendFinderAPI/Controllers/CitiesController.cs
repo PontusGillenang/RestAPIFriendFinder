@@ -214,16 +214,16 @@ namespace FriendFinderAPI.Controllers
         // getLocsForCity
         //-----------------------------------------------------------------------------			
         //public async Task<Location[]> getLocsForCity(int iCityID)
-        [HttpGet("getLocsForCity")]
-        public async Task<ActionResult<LocationDto[]>> getLocsForCity([FromQuery]int iCityID)
+        [HttpGet("getLocationsForCityID")]
+        public async Task<ActionResult<CityDto[]>> GetLocationsForCity([FromQuery]int cityId)
         {
             try
             {
-                var results = await _cityRepository.getAllLocsBelongingToCity(iCityID);
+                var results = await _cityRepository.GetLocationsForCity(cityId);
 
 
 
-                var mappedResults = _mapper.Map<LocationDto[]>(results);
+                var mappedResults = _mapper.Map<CityDto[]>(results);
                 //for (int i = 0; i != mappedResults.Length; i++)
                 //{
                 //    mappedResults[i].Links = CreateLinksGetAllCities(mappedResults[i]);
