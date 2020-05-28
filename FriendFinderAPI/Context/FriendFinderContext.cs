@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using FriendFinderAPI.Models;
 using System.Collections.Generic;
+using static FriendFinderAPI.Enums.Enums;
 
 namespace FriendFinderAPI.Context
 {
@@ -143,7 +144,7 @@ namespace FriendFinderAPI.Context
                 EventName = "Lets Do some Awsome Curling",
                 //EventHobbyId = 297,
                 HobbyId = 2,
-                CityID = 1,
+                CityId = 1,
             }
             , new
             {
@@ -151,7 +152,7 @@ namespace FriendFinderAPI.Context
                 EventName = "BookClub All About The Books",
                 //EventHobbyId = 922,
                 HobbyId = 1,
-                CityID = 2,
+                CityId = 2,
             });
 
             modelBuilder.Entity<HobbyLocation>()
@@ -169,14 +170,14 @@ namespace FriendFinderAPI.Context
             modelBuilder.Entity<EventUser>()
             .HasData(new
             {
-                EventUserID = 1,
+                EventUserId = 1,
                 EventId = 1,
                 UserId = 2,
                 UserIsResponsible = true
             }
             , new
             {
-                EventUserID = 2,
+                EventUserId = 2,
                 EventId = 1,
                 UserId = 1,
                 UserIsResponsible = false
@@ -187,16 +188,19 @@ namespace FriendFinderAPI.Context
             {
                 UserId = 1,
                 HobbyId = 1,
+                SkillLevel = UserSkillLevel.Beginner
             }
             , new
             {
                 UserId = 2,
                 HobbyId = 2,
+                SkillLevel = UserSkillLevel.Intermediate
             }
             , new
             {
                 UserId = 3,
                 HobbyId = 3,
+                SkillLevel = UserSkillLevel.Master
             });
 
 
