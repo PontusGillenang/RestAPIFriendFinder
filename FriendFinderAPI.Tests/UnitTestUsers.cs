@@ -53,33 +53,28 @@ namespace FriendFinderAPI.Tests
             Assert.Equal("Sebbe", result.UserName );
         }
 
-    private static IList<User> GenerateUsers()
-    {
-        return new List<User>
+        private static IList<User> GenerateUsers()
         {
-            new User
+            return new List<User>
             {
-            UserId = 1,
-            UserName = "Sebbe",
-            UserAdress = "Drottninggatan",
-            UserPhoneNumber = "+46XXXXXXX",
-            UserAge = 20,
-            UserIsTeacher = false
-            },
-            new User{
-            UserId = 2,
-            UserName = "Oskar",
-            UserAdress = "Kungsgatan",
-            UserPhoneNumber = "+47XXXXXXX",
-            UserAge = 23,
-            UserIsTeacher = false
-            
-            }
-
-        };
+                new User
+                {
+                UserId = 1,
+                UserName = "Sebbe",
+                UserAdress = "Drottninggatan",
+                UserPhoneNumber = "+46XXXXXXX",
+                UserAge = 20
+                },
+                new User{
+                UserId = 2,
+                UserName = "Oskar",
+                UserAdress = "Kungsgatan",
+                UserPhoneNumber = "+47XXXXXXX",
+                UserAge = 23
+                }
+            };
+        }
     }
-}
-
 }
 
 
