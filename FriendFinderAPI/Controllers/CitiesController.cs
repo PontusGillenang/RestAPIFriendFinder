@@ -25,6 +25,9 @@ namespace FriendFinderAPI.Controllers
             _mapper = mapper;
         }
 
+        //-----------------------------------------------------------------------------
+        // GetCities
+        //-----------------------------------------------------------------------------							
         //GET:      api/v1.0/cities
         [HttpGet(Name = "GetCities")]
         public async Task<ActionResult<CityDto[]>> GetCities()
@@ -45,6 +48,9 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------
+        // GetCity
+        //-----------------------------------------------------------------------------							
         //GET:      api/v1.0/cities/n
         [HttpGet("{cityid}", Name = "GetCity")]
         public async Task<ActionResult<CityDto>> GetCity(int cityid)
@@ -67,7 +73,10 @@ namespace FriendFinderAPI.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
         }
-        
+
+        //-----------------------------------------------------------------------------
+        // GetCitiesByHobby
+        //-----------------------------------------------------------------------------							
         [HttpGet("hobby/{hobbyid}", Name = "GetCitiesByHobby")]
         public async Task<ActionResult<CityDto[]>> GetCitiesByHobby(int hobbyid)
         {
@@ -87,6 +96,9 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------
+        // PostCity
+        //-----------------------------------------------------------------------------							
         //POST:      api/v1.0/cities
         [HttpPost (Name ="PostCity")]
         public async Task<ActionResult<CityDto>> PostCity(CityDto cityDto)
@@ -107,8 +119,11 @@ namespace FriendFinderAPI.Controllers
             }
             return BadRequest();
         }
-        
 
+
+        //-----------------------------------------------------------------------------
+        // PutCity
+        //-----------------------------------------------------------------------------							
         //PUT:      api/v1.0/cities/n
         [HttpPut("{cityId}", Name ="PutCity")]
         public async Task<ActionResult<CityDto>> PutCity(int cityId, CityDto cityDto)
@@ -136,6 +151,9 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
+        //-----------------------------------------------------------------------------
+        // DeleteCity
+        //-----------------------------------------------------------------------------							
         //DELETE:       api/v1.0/cities/n
         [HttpDelete("{cityId}", Name = "DeleteCity")]
         public async Task<ActionResult> DeleteCity(int cityId)
@@ -160,8 +178,11 @@ namespace FriendFinderAPI.Controllers
             }
             return BadRequest();
         }
-         
-         private IEnumerable<Link> CreateLinksGetAllCities(CityDto city)
+
+        //-----------------------------------------------------------------------------
+        // CreateLinksGetAllCities
+        //-----------------------------------------------------------------------------							
+        private IEnumerable<Link> CreateLinksGetAllCities(CityDto city)
         {
             var links = new[]
             {
@@ -186,6 +207,46 @@ namespace FriendFinderAPI.Controllers
             };
             return links;
         }
-        
+
+
+
+        //-----------------------------------------------------------------------------
+        // getLocsForCity
+        //-----------------------------------------------------------------------------			
+        //public async Task<Location[]> getLocsForCity(int iCityID)
+        [HttpGet("getLocsForCity")]
+        public async Task<ActionResult<LocationDto[]>> getLocsForCity([FromQuery]int iCityID)
+        {
+            try
+            {
+                var results = await _cityRepository.getAllLocsBelongingToCity(iCityID);
+
+
+
+                var mappedResults = _mapper.Map<LocationDto[]>(results);
+                //for (int i = 0; i != mappedResults.Length; i++)
+                //{
+                //    mappedResults[i].Links = CreateLinksGetAllCities(mappedResults[i]);
+                //}
+
+
+
+
+
+
+
+                return Ok(mappedResults);
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+            }
+        }
+
+
+
+
+
+
     }
 }

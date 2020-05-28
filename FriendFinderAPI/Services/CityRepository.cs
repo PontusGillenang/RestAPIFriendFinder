@@ -12,6 +12,10 @@ namespace FriendFinderAPI.Services
         public CityRepository(FriendFinderContext context, ILogger<CityRepository> logger) : base(context, logger)
         {
         }
+
+        //-----------------------------------------------------------------------------
+        // GetCity
+        //-----------------------------------------------------------------------------							
         public async Task<City> GetCity(int cityId)
         {
             _logger.LogInformation($"Getting City with id: {cityId}");
@@ -19,6 +23,10 @@ namespace FriendFinderAPI.Services
 
             return await query.FirstOrDefaultAsync();
         }
+
+        //-----------------------------------------------------------------------------
+        // GetCities
+        //-----------------------------------------------------------------------------							
         public async Task<City[]> GetCities()
         {
             _logger.LogInformation("Getting Cities");
@@ -26,16 +34,42 @@ namespace FriendFinderAPI.Services
             return await query.ToArrayAsync();
         }
 
+
+        //-----------------------------------------------------------------------------
+        // GetCitiesByHobby
+        //-----------------------------------------------------------------------------							
         public async Task<City[]> GetCitiesByHobby(int hobbyId)
         {
-            _logger.LogInformation($"Getting Cities Where hobby with id {hobbyId} exists");
-             IQueryable<City> query = _context.Cities
-                                        .Where(city=>city.Locations
-                                        .Any(i=>i.HobbyLocations
-                                        .Any(h=>h.Hobby.HobbyId == hobbyId)));
+            _logger.LogInformation($"Getting Cities Where hobby with id {hobbyId} exists");       
+             IQueryable<City> query = _context.Cities                                             
+                                        .Where(city=>city.Locations                               
+                                        .Any(i=>i.HobbyLocations                                  
+                                        .Any(h=>h.Hobby.HobbyId == hobbyId)));                    
 
              return await query.ToArrayAsync();
 
         }
+
+
+        //-----------------------------------------------------------------------------
+        // getAllLocsBelongingToCity
+        //-----------------------------------------------------------------------------							
+        public async Task<Location[]> getAllLocsBelongingToCity(int iCityID)
+        {
+            _logger.LogInformation($"Getting all locations part of town {iCityID}");
+            IQueryable<Location> query = _context.Locations.Where(l => l.CityId == iCityID);
+
+            // SELECT*
+            // FROM[Cities] JOIN Locations
+            // ON[Cities].CityID = Locations.LocationCityID
+            // where[Cities].CityID = 1
+
+
+            return await query.ToArrayAsync();
+
+        }
+
+
+
     }
 }
