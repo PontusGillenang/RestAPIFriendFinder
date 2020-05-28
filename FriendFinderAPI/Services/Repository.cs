@@ -9,7 +9,7 @@ namespace FriendFinderAPI.Services
         protected readonly FriendFinderContext _context;
         protected readonly ILogger<Repository> _logger;
 
-        protected Repository(FriendFinderContext context, ILogger<Repository> logger)
+        public Repository(FriendFinderContext context, ILogger<Repository> logger)
         {
             _context = context;
             _logger = logger;
