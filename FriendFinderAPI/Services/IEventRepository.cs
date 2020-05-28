@@ -5,14 +5,12 @@ namespace FriendFinderAPI.Services
 {
     public interface IEventRepository : IRespository
     {
-         Task<Event> GetEvent(int eventId);
+        Task<Event> GetEvent(int eventId, bool includeUsers);
 
-         Task<Event[]> GetEvents();
+        Task<Event[]> GetEvents(bool includeUsers);
 
-         Task<Event[]> GetEventsByHobby(int hobbyId);
+        Task<Event[]> GetEventsByHobby(string hobbyName, bool includeUsers);
 
-         Task<Event[]> GetEventsByHobbyCity(int hobbyId, int cityId);
-
-         Task<Event[]> GetEventsByCity(int cityId);
+        Task<Event[]> GetEventsByCity(string cityName, bool includeUsers);
     }
 }
