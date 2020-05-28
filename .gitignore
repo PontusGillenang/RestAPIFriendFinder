@@ -32,3 +32,4 @@ msbuild.wrn
 .vs/
 FakeAPI/appsettings.json
 FriendFinderAPI/appsettings.json
+FriendFinderAPI/appsettings.Development.json
