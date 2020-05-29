@@ -1,8 +1,8 @@
 using System;
+using System.IO;
+using FriendFinderAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using FriendFinderAPI.Models;
-using System.Collections.Generic;
 using static FriendFinderAPI.Enums.Enums;
 
 namespace FriendFinderAPI.Context
@@ -38,6 +38,8 @@ namespace FriendFinderAPI.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Ignore<Link>();
+
+
             modelBuilder.Entity<HobbyUser>()
             .HasKey(hu => new { hu.HobbyId, hu.UserId });
 
@@ -50,6 +52,7 @@ namespace FriendFinderAPI.Context
             .HasOne(hu => hu.User)
             .WithMany(h => h.HobbyUsers)
             .HasForeignKey(hu => hu.UserId);
+
 
             modelBuilder.Entity<HobbyLocation>()
             .HasKey(hl => new { hl.HobbyId, hl.LocationId });
@@ -64,12 +67,15 @@ namespace FriendFinderAPI.Context
             .WithMany(h => h.HobbyLocations)
             .HasForeignKey(hl => hl.LocationId);
 
+
             modelBuilder.Entity<EventUser>()
             .HasKey(bc => new { bc.EventId, bc.UserId });
+
             modelBuilder.Entity<EventUser>()
             .HasOne(bc => bc.Event)
             .WithMany(b => b.EventUsers)
             .HasForeignKey(bc => bc.EventId);
+
             modelBuilder.Entity<EventUser>()
             .HasOne(bc => bc.User)
             .WithMany(c => c.EventUsers)
@@ -78,8 +84,7 @@ namespace FriendFinderAPI.Context
             
 
             string citiesPath = @"../Documentation/DataSets/world-cities.txt";
-            string[] lines = System.IO.File.ReadAllLines(citiesPath);
-            List<City> tempCities = new List<City>();
+            string[] lines = File.ReadAllLines(citiesPath);
             for (int i = 1; i < 4; i++)
             {
                 string[] split = lines[i].Split(',');
@@ -90,9 +95,7 @@ namespace FriendFinderAPI.Context
                     CityCountry = split[1],
                     CityCounty = split[2],
                 };
-                tempCities.Add(city);
                 modelBuilder.Entity<City>().HasData(city);
-
             }
 
             modelBuilder.Entity<User>()
@@ -143,7 +146,6 @@ namespace FriendFinderAPI.Context
             {
                 EventId = 1,
                 EventName = "Lets Do some Awsome Curling",
-                //EventHobbyId = 297,
                 HobbyId = 2,
                 CityId = 1,
             }
@@ -151,7 +153,6 @@ namespace FriendFinderAPI.Context
             {
                 EventId = 2,
                 EventName = "BookClub All About The Books",
-                //EventHobbyId = 922,
                 HobbyId = 1,
                 CityId = 2,
             });
@@ -204,10 +205,8 @@ namespace FriendFinderAPI.Context
                 SkillLevel = UserSkillLevel.Master
             });
 
-
             string hobbiesPath = @"../Documentation/DataSets/HobbiesList.txt";
-            string[] hobbies = System.IO.File.ReadAllLines(hobbiesPath);
-
+            string[] hobbies = File.ReadAllLines(hobbiesPath);
             for (int i = 1; i < 4; i++)
             {
                 Hobby hobby = new Hobby

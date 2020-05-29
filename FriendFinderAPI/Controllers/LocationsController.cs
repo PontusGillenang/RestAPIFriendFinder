@@ -85,24 +85,6 @@ namespace FriendFinderAPI.Controllers
             }
         }
 
-        [HttpGet("{locationid}/hobby/{hobbyid}", Name ="GetLocationByHobby")]
-        public async Task<ActionResult<LocationDto>> GetLocationByHobby(int locationid, int hobbyid)
-        {
-            try
-            {
-                var result = await _locationRepository.GetLocationByHobby(locationid, hobbyid);
-                if (result == null)
-                    return NotFound();
-
-                var mappedResult = _mapper.Map<LocationDto>(result);
-                mappedResult.Links = CreateLinksGetAllLocations(mappedResult);
-                return Ok(mappedResult);              }
-            catch(Exception e)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
-            }
-        }
-
         //POST:      api/v1.0/locations
         [HttpPost (Name = "PostLocation")]
         public async Task<ActionResult<LocationDto>> PostLocation(LocationDto locationDto)
@@ -124,13 +106,13 @@ namespace FriendFinderAPI.Controllers
 
         //PUT:      api/v1.0/locations/n
         [HttpPut("{id}", Name = "PutLocation")]
-        public async Task<ActionResult<LocationDto>> PutLocation(int locationID, LocationDto locationDto)
+        public async Task<ActionResult<LocationDto>> PutLocation(int locationId, LocationDto locationDto)
         {
             try
             {
-                var oldLocation = await _locationRepository.GetLocation(locationID);
+                var oldLocation = await _locationRepository.GetLocation(locationId);
                 if(oldLocation == null)
-                    return NotFound($"We could not find a location with that id: {locationID}");
+                    return NotFound($"We could not find a location with that id: {locationId}");
 
                 var newLocation = _mapper.Map(locationDto, oldLocation);
                 _locationRepository.Update(newLocation);
@@ -147,13 +129,13 @@ namespace FriendFinderAPI.Controllers
 
         //DELETE:       api/v1.0/locations/n
         [HttpDelete("{id}", Name = "DeleteLocation")]
-        public async Task<ActionResult> DeleteLocation(int locationID)
+        public async Task<ActionResult> DeleteLocation(int locationId)
         {
             try
             {
-                var location = await _locationRepository.GetLocation(locationID);
+                var location = await _locationRepository.GetLocation(locationId);
                 if(location == null)
-                    return NotFound($"We could not find a location with that id: {locationID}");
+                    return NotFound($"We could not find a location with that id: {locationId}");
                 
                 _locationRepository.Delete(location);
                 if(await _locationRepository.Save())

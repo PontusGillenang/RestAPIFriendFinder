@@ -1,14 +1,13 @@
+using AutoMapper;
+using Castle.Core.Internal;
+using FriendFinderAPI.Dtos;
+using FriendFinderAPI.Models;
+using FriendFinderAPI.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FriendFinderAPI.Context;
-using FriendFinderAPI.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FriendFinderAPI.Services;
-using FriendFinderAPI.Dtos;
-using AutoMapper;
 
 namespace FriendFinderAPI.Controllers
 {
@@ -25,81 +24,97 @@ namespace FriendFinderAPI.Controllers
             _mapper = mapper;
         }
 
-        //GET:      api/v1.0/events
-        [HttpGet( Name = "GetEvents")]
+        [HttpGet(Name = "GetEvents")]
         public async Task<ActionResult<EventDto[]>> GetEvents(bool includeUsers)
         {
             try
             {
                 var results = await _eventRepository.GetEvents(includeUsers);
                 var mappedResults = _mapper.Map<EventDto[]>(results);
-                 for(int i = 0; i<mappedResults.Length;i++)
-                 {
+
+                if (mappedResults.IsNullOrEmpty())
+                {
+                    return NotFound();
+                }
+
+                for (int i = 0; i < mappedResults.Length; i++)
+                {
                     mappedResults[i].Links = CreateLinksGetAllEvents(mappedResults[i]);
-                 }
+                }
+
                 return Ok(mappedResults);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
         }
 
-        //GET:      api/v1.0/events/n
-
-        [HttpGet("{eventId}",  Name = "GetEvent")]
+        [HttpGet("{eventId}", Name = "GetEvent")]
         public async Task<ActionResult<EventDto>> GetEvent(int eventId, bool includeUsers)
         {
             try
             {
                 var result = await _eventRepository.GetEvent(eventId, includeUsers);
-                // result.EventLink = CreateLinksGetLocation(result);
-                if (result == null)
+                var mappedResult = _mapper.Map<EventDto>(result);
+
+                if (mappedResult == null)
                 {
                     return NotFound();
                 }
-                var mappedResult = _mapper.Map<EventDto>(result);
+
                 mappedResult.Links = CreateLinksGetAllEvents(mappedResult);
-                
+
                 return Ok(mappedResult);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
         }
 
-        [HttpGet("searchhobby",  Name = "GetEventsByHobby")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetEventsByHobby(string hobbyName, bool includeUsers)
+        [HttpGet("searchhobby", Name = "GetEventsByHobby")]
+        public async Task<ActionResult<EventDto[]>> GetEventsByHobby(string hobbyName, bool includeUsers)
         {
             try
             {
                 var results = await _eventRepository.GetEventsByHobby(hobbyName, includeUsers);
-                var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
+                var mappedResults = _mapper.Map<EventDto[]>(results);
+
+                if (mappedResults.IsNullOrEmpty())
+                {
+                    return NotFound();
+                }
+
                 return Ok(mappedResults);
             }
-            catch(Exception e)
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
         }
 
         [HttpGet("searchcity", Name = "GetEventsByCity")]
-        public async Task<ActionResult<IEnumerable<EventDto>>> GetEventsByCity(string cityName, bool includeUsers)
+        public async Task<ActionResult<EventDto[]>> GetEventsByCity(string cityName, bool includeUsers)
         {
             try
             {
                 var results = await _eventRepository.GetEventsByCity(cityName, includeUsers);
-                var mappedResults = _mapper.Map<IEnumerable<EventDto>>(results);
+                var mappedResults = _mapper.Map<EventDto[]>(results);
+
+                if (mappedResults.IsNullOrEmpty())
+                {
+                    return NotFound();
+                }
+                                
                 return Ok(mappedResults);
             }
-            catch(Exception e)
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
         }
 
-        //POST:      api/v1.0/events
         [HttpPost(Name = "PostEvent")]
         public async Task<ActionResult<EventDto>> PostEvents(EventDto eventDto)
         {
@@ -108,60 +123,71 @@ namespace FriendFinderAPI.Controllers
                 var mappedEntity = _mapper.Map<Event>(eventDto);
                 _eventRepository.Add(mappedEntity);
 
-                if(await _eventRepository.Save())
-                return Created($"api/v1.0/cities/{mappedEntity.EventId}", _mapper.Map<EventDto>(mappedEntity));
+                if (await _eventRepository.Save())
+                {
+                    return Created($"/api/v1.0/events/{mappedEntity.EventId}", _mapper.Map<EventDto>(mappedEntity));
+                }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
             return BadRequest();
         }
 
-        //PUT:      api/v1.0/events/n
         [HttpPut("{eventId}", Name = "PutEvent")]
         public async Task<ActionResult<EventDto>> PutEvent(int eventId, bool includeUsers, EventDto eventDto)
         {
             try
             {
-                var oldEvent = await _eventRepository.GetEvent(eventId, includeUsers);
-                if(oldEvent == null)
+                var existingEvent = await _eventRepository.GetEvent(eventId, includeUsers);
+
+                if (existingEvent == null)
+                {
                     return NotFound($"Could not find the event with id {eventId}");
-                
-                var newEvent =_mapper.Map(eventDto, oldEvent);
+                }
+
+                var newEvent = _mapper.Map(eventDto, existingEvent);
                 _eventRepository.Update(newEvent);
 
-                if(await _eventRepository.Save())
+                if (await _eventRepository.Save())
+                {
                     return NoContent();
+                }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
             return BadRequest();
         }
 
-        //DELETE:       api/v1.0/events/n
         [HttpDelete("{eventId}", Name = "DeleteEvent")]
         public async Task<ActionResult> DeleteEvent(int eventId, bool includeUsers)
         {
             try
             {
                 var eventToRemove = await _eventRepository.GetEvent(eventId, includeUsers);
-                if(eventToRemove == null)
-                    return NotFound($"Could not find an event with the id: {eventId}");
                 
+                if (eventToRemove == null)
+                {
+                    return NotFound($"Could not find an event with the id: {eventId}");
+                }
+
                 _eventRepository.Delete(eventToRemove);
-                if(await _eventRepository.Save())
+                
+                if (await _eventRepository.Save())
+                {
                     return NoContent();
+                }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
             return BadRequest();
         }
-        
+
         private IEnumerable<Link> CreateLinksGetAllEvents(EventDto events)
         {
             var links = new[]
@@ -187,6 +213,5 @@ namespace FriendFinderAPI.Controllers
             };
             return links;
         }
-
     }
 }
