@@ -85,12 +85,12 @@ namespace FriendFinderAPI.Context
 
             string citiesPath = @"../Documentation/DataSets/cities.txt";
             string[] lines = File.ReadAllLines(citiesPath);
-            for (int i = 1; i < 5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 string[] split = lines[i].Split(',');
                 City city = new City
                 {
-                    CityId = i,
+                    CityId = i+1,
                     CityName = split[0],
                     CityCountry = split[1],
                     CityCounty = split[2],
@@ -454,11 +454,11 @@ namespace FriendFinderAPI.Context
 
             string hobbiesPath = @"../Documentation/DataSets/HobbiesList.txt";
             string[] hobbies = File.ReadAllLines(hobbiesPath);
-            for (int i = 1; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Hobby hobby = new Hobby
                 {
-                    HobbyId = i,
+                    HobbyId = i+1,
                     HobbyName = hobbies[i],
                 };
                 modelBuilder.Entity<Hobby>().HasData(hobby);
