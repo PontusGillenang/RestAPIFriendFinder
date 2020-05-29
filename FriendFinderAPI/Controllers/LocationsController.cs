@@ -185,7 +185,7 @@ namespace FriendFinderAPI.Controllers
 
 
 
-        #region TODO
+     
 
         //-----------------------------------------------------------------------------
         // PostLocation
@@ -216,7 +216,7 @@ namespace FriendFinderAPI.Controllers
         // PutLocation
         //-----------------------------------------------------------------------------							
         //PUT:      api/v1.0/locations/n
-        [HttpPut("{id}", Name = "PutLocation")]
+        [HttpPut("{locationId}", Name = "PutLocation")]
         public async Task<ActionResult<LocationDto>> PutLocation(int locationId, LocationDto locationDto)
         {
             try
@@ -246,7 +246,7 @@ namespace FriendFinderAPI.Controllers
         // DeleteLocation
         //-----------------------------------------------------------------------------							
         //DELETE:       api/v1.0/locations/n
-        [HttpDelete("{id}", Name = "DeleteLocation")]
+        [HttpDelete("{locationId}", Name = "DeleteLocation")]
         public async Task<ActionResult> DeleteLocation(int locationId)
         {
             try
@@ -299,7 +299,7 @@ namespace FriendFinderAPI.Controllers
             return links;
         }
 
-        #endregion
+       
 
     }
 }
