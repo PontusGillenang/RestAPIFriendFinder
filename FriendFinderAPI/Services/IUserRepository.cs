@@ -5,8 +5,10 @@ namespace FriendFinderAPI.Services
 {
     public interface IUserRepository : IRespository
     {
-        Task<User[]> GetUsers();
-         Task<User> GetUser(int userId);
-         Task<User[]> GetUsersByHobby(int hobbyId);
+        Task<User[]> GetUsers(bool includeHobbies, bool includeEvents);
+        Task<User> GetUser(int userId, bool includeHobbies, bool includeEvents);
+        Task<User[]> GetUsersByHobby(int hobbyId);
+        Task<User[]> GetUsersByEvent(int eventId);
+        Task<User[]> GetUsersByCity(int cityId, bool includeHobbies , bool includeEvents);
     }
 }
