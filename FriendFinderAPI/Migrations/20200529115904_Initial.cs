@@ -159,7 +159,6 @@ namespace FriendFinderAPI.Migrations
                 {
                     EventId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    EventUserId = table.Column<int>(nullable: false),
                     UserIsResponsible = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -183,9 +182,11 @@ namespace FriendFinderAPI.Migrations
                 columns: new[] { "CityId", "CityCountry", "CityCounty", "CityName" },
                 values: new object[,]
                 {
-                    { 1, "Andorra", "Andorra la Vella", "Andorra la Vella" },
-                    { 2, "United Arab Emirates", "Umm al Qaywayn", "Umm al Qaywayn" },
-                    { 3, "United Arab Emirates", "Raʼs al Khaymah", "Ras al-Khaimah" }
+                    { 1, "Sverige", "Västra Götaland", "Göteborg" },
+                    { 2, "Sverige", "Stockholm", "Stockholm" },
+                    { 3, "Sverige", "Skåne", "Malmö" },
+                    { 4, "Norge", "Oslo", "Oslo" },
+                    { 5, "Danmark", "Köpenhamn", "Köpenhamn" }
                 });
 
             migrationBuilder.InsertData(
@@ -193,9 +194,16 @@ namespace FriendFinderAPI.Migrations
                 columns: new[] { "HobbyId", "HobbyName" },
                 values: new object[,]
                 {
-                    { 1, "Abseiling" },
+                    { 1, "3D printing" },
                     { 2, "Acting" },
-                    { 3, "Action figure" }
+                    { 3, "Adventure racing" },
+                    { 4, "Airsoft" },
+                    { 5, "Alpine skiing" },
+                    { 6, "Amateur Astronomy" },
+                    { 7, "Beer Pong" },
+                    { 8, "Biathlon" },
+                    { 9, "Bird watching" },
+                    { 10, "Brännboll" }
                 });
 
             migrationBuilder.InsertData(
@@ -203,8 +211,12 @@ namespace FriendFinderAPI.Migrations
                 columns: new[] { "EventId", "CityId", "EventName", "HobbyId" },
                 values: new object[,]
                 {
-                    { 2, 2, "BookClub All About The Books", 1 },
-                    { 1, 1, "Lets Do some Awsome Curling", 2 }
+                    { 4, 3, "Malmö for Biathlon in the World", 8 },
+                    { 5, 4, "Nightime in Oslo with The Stars", 6 },
+                    { 3, 2, "Amatuer Airsoft Mayhem", 4 },
+                    { 2, 1, "Beginners Acting Club", 2 },
+                    { 1, 1, "3D Print Workshop", 1 },
+                    { 6, 5, "Danske Ølefest me Beer Pong", 7 }
                 });
 
             migrationBuilder.InsertData(
@@ -212,8 +224,16 @@ namespace FriendFinderAPI.Migrations
                 columns: new[] { "LocationId", "CityId", "LocationName" },
                 values: new object[,]
                 {
-                    { 2, 1, "The Castle With Zero Books..." },
-                    { 1, 2, "Fjäderborgen" }
+                    { 10, 5, "Nytorv" },
+                    { 9, 5, "Nyhavn" },
+                    { 8, 4, "Domkirke" },
+                    { 7, 4, "Kampen" },
+                    { 5, 3, "Stora Torget" },
+                    { 4, 2, "Södermalm" },
+                    { 3, 2, "Skansen" },
+                    { 2, 1, "Haga Teatern" },
+                    { 6, 3, "Triangeln" },
+                    { 1, 1, "Chalmers Tekniska Högskola" }
                 });
 
             migrationBuilder.InsertData(
@@ -221,18 +241,33 @@ namespace FriendFinderAPI.Migrations
                 columns: new[] { "UserId", "CityId", "UserAdress", "UserAge", "UserName", "UserPhoneNumber" },
                 values: new object[,]
                 {
-                    { 2, 1, "Kungsgatan", 22, "Oskar", "+46XXXXXXX2" },
-                    { 3, 1, "MorTest", 28, "William", "+46XXXXXXX3" },
-                    { 1, 2, "Drottninggatan", 20, "Sebbe", "+46XXXXXXX" }
+                    { 3, 3, "Karl Andersgatan 6", 24, "Petra Levinman", "+46XXXXXXX2" },
+                    { 10, 3, "Opalgatan 54", 28, "William Morberg", "+46XXXXXXX9" },
+                    { 9, 2, "Vättlegatan 2", 27, "Ina Pålström", "+46XXXXXXX8" },
+                    { 4, 4, "Beringsväg 10", 25, "Pontus Bergman", "+47XXXXXXX3" },
+                    { 5, 4, "Kongasnåret 1", 43, "Olle Kvist", "+47XXXXXXX4" },
+                    { 8, 2, "Djurgårdsvägen 21", 26, "Pelle Plutter", "+46XXXXXXX7" },
+                    { 2, 5, "Knudsgate 15", 22, "Peder Åborg", "+45XXXXXXX1" },
+                    { 6, 5, "Gregorstande 6", 32, "Christina Kerlpalm", "+45XXXXXXX5" },
+                    { 7, 1, "Kungsportsavenyn 3", 34, "Osborn Börjesson", "+46XXXXXXX6" },
+                    { 1, 1, "Drottninggatan 2", 20, "Sebbe Persson", "+46XXXXXXX" }
                 });
 
             migrationBuilder.InsertData(
                 table: "EventUsers",
-                columns: new[] { "EventId", "UserId", "EventUserId", "UserIsResponsible" },
+                columns: new[] { "EventId", "UserId", "UserIsResponsible" },
                 values: new object[,]
                 {
-                    { 1, 2, 1, true },
-                    { 1, 1, 2, false }
+                    { 4, 6, false },
+                    { 6, 10, false },
+                    { 6, 9, true },
+                    { 5, 8, false },
+                    { 5, 7, true },
+                    { 3, 4, false },
+                    { 3, 3, true },
+                    { 1, 2, false },
+                    { 1, 1, true },
+                    { 4, 5, true }
                 });
 
             migrationBuilder.InsertData(
@@ -240,8 +275,12 @@ namespace FriendFinderAPI.Migrations
                 columns: new[] { "HobbyId", "LocationId" },
                 values: new object[,]
                 {
-                    { 2, 2 },
-                    { 1, 1 }
+                    { 7, 9 },
+                    { 1, 1 },
+                    { 8, 6 },
+                    { 6, 6 },
+                    { 4, 3 },
+                    { 2, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -249,9 +288,16 @@ namespace FriendFinderAPI.Migrations
                 columns: new[] { "HobbyId", "UserId", "SkillLevel" },
                 values: new object[,]
                 {
-                    { 2, 2, 1 },
-                    { 3, 3, 3 },
-                    { 1, 1, 0 }
+                    { 7, 10, 1 },
+                    { 3, 3, 2 },
+                    { 1, 2, 1 },
+                    { 8, 6, 0 },
+                    { 7, 9, 2 },
+                    { 6, 8, 2 },
+                    { 6, 7, 0 },
+                    { 1, 1, 3 },
+                    { 3, 4, 0 },
+                    { 8, 5, 1 }
                 });
 
             migrationBuilder.CreateIndex(

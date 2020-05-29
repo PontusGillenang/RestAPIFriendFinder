@@ -1,0 +1,5 @@
+Göteborg,Sverige,Västra Götaland
+Stockholm,Sverige,Stockholm
+Malmö,Sverige,Skåne
+Oslo,Norge,Oslo
+Köpenhamn,Danmark,Köpenhamn

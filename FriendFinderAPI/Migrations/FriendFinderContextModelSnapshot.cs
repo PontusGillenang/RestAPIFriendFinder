@@ -42,23 +42,37 @@ namespace FriendFinderAPI.Migrations
                         new
                         {
                             CityId = 1,
-                            CityCountry = "Andorra",
-                            CityCounty = "Andorra la Vella",
-                            CityName = "Andorra la Vella"
+                            CityCountry = "Sverige",
+                            CityCounty = "Västra Götaland",
+                            CityName = "Göteborg"
                         },
                         new
                         {
                             CityId = 2,
-                            CityCountry = "United Arab Emirates",
-                            CityCounty = "Umm al Qaywayn",
-                            CityName = "Umm al Qaywayn"
+                            CityCountry = "Sverige",
+                            CityCounty = "Stockholm",
+                            CityName = "Stockholm"
                         },
                         new
                         {
                             CityId = 3,
-                            CityCountry = "United Arab Emirates",
-                            CityCounty = "Raʼs al Khaymah",
-                            CityName = "Ras al-Khaimah"
+                            CityCountry = "Sverige",
+                            CityCounty = "Skåne",
+                            CityName = "Malmö"
+                        },
+                        new
+                        {
+                            CityId = 4,
+                            CityCountry = "Norge",
+                            CityCounty = "Oslo",
+                            CityName = "Oslo"
+                        },
+                        new
+                        {
+                            CityId = 5,
+                            CityCountry = "Danmark",
+                            CityCounty = "Köpenhamn",
+                            CityName = "Köpenhamn"
                         });
                 });
 
@@ -91,15 +105,43 @@ namespace FriendFinderAPI.Migrations
                         {
                             EventId = 1,
                             CityId = 1,
-                            EventName = "Lets Do some Awsome Curling",
-                            HobbyId = 2
+                            EventName = "3D Print Workshop",
+                            HobbyId = 1
                         },
                         new
                         {
                             EventId = 2,
+                            CityId = 1,
+                            EventName = "Beginners Acting Club",
+                            HobbyId = 2
+                        },
+                        new
+                        {
+                            EventId = 3,
                             CityId = 2,
-                            EventName = "BookClub All About The Books",
-                            HobbyId = 1
+                            EventName = "Amatuer Airsoft Mayhem",
+                            HobbyId = 4
+                        },
+                        new
+                        {
+                            EventId = 4,
+                            CityId = 3,
+                            EventName = "Malmö for Biathlon in the World",
+                            HobbyId = 8
+                        },
+                        new
+                        {
+                            EventId = 5,
+                            CityId = 4,
+                            EventName = "Nightime in Oslo with The Stars",
+                            HobbyId = 6
+                        },
+                        new
+                        {
+                            EventId = 6,
+                            CityId = 5,
+                            EventName = "Danske Ølefest me Beer Pong",
+                            HobbyId = 7
                         });
                 });
 
@@ -109,9 +151,6 @@ namespace FriendFinderAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EventUserId")
                         .HasColumnType("int");
 
                     b.Property<bool>("UserIsResponsible")
@@ -127,15 +166,61 @@ namespace FriendFinderAPI.Migrations
                         new
                         {
                             EventId = 1,
-                            UserId = 2,
-                            EventUserId = 1,
+                            UserId = 1,
                             UserIsResponsible = true
                         },
                         new
                         {
                             EventId = 1,
-                            UserId = 1,
-                            EventUserId = 2,
+                            UserId = 2,
+                            UserIsResponsible = false
+                        },
+                        new
+                        {
+                            EventId = 3,
+                            UserId = 3,
+                            UserIsResponsible = true
+                        },
+                        new
+                        {
+                            EventId = 3,
+                            UserId = 4,
+                            UserIsResponsible = false
+                        },
+                        new
+                        {
+                            EventId = 4,
+                            UserId = 5,
+                            UserIsResponsible = true
+                        },
+                        new
+                        {
+                            EventId = 4,
+                            UserId = 6,
+                            UserIsResponsible = false
+                        },
+                        new
+                        {
+                            EventId = 5,
+                            UserId = 7,
+                            UserIsResponsible = true
+                        },
+                        new
+                        {
+                            EventId = 5,
+                            UserId = 8,
+                            UserIsResponsible = false
+                        },
+                        new
+                        {
+                            EventId = 6,
+                            UserId = 9,
+                            UserIsResponsible = true
+                        },
+                        new
+                        {
+                            EventId = 6,
+                            UserId = 10,
                             UserIsResponsible = false
                         });
                 });
@@ -158,7 +243,7 @@ namespace FriendFinderAPI.Migrations
                         new
                         {
                             HobbyId = 1,
-                            HobbyName = "Abseiling"
+                            HobbyName = "3D printing"
                         },
                         new
                         {
@@ -168,7 +253,42 @@ namespace FriendFinderAPI.Migrations
                         new
                         {
                             HobbyId = 3,
-                            HobbyName = "Action figure"
+                            HobbyName = "Adventure racing"
+                        },
+                        new
+                        {
+                            HobbyId = 4,
+                            HobbyName = "Airsoft"
+                        },
+                        new
+                        {
+                            HobbyId = 5,
+                            HobbyName = "Alpine skiing"
+                        },
+                        new
+                        {
+                            HobbyId = 6,
+                            HobbyName = "Amateur Astronomy"
+                        },
+                        new
+                        {
+                            HobbyId = 7,
+                            HobbyName = "Beer Pong"
+                        },
+                        new
+                        {
+                            HobbyId = 8,
+                            HobbyName = "Biathlon"
+                        },
+                        new
+                        {
+                            HobbyId = 9,
+                            HobbyName = "Bird watching"
+                        },
+                        new
+                        {
+                            HobbyId = 10,
+                            HobbyName = "Brännboll"
                         });
                 });
 
@@ -196,6 +316,26 @@ namespace FriendFinderAPI.Migrations
                         {
                             HobbyId = 2,
                             LocationId = 2
+                        },
+                        new
+                        {
+                            HobbyId = 4,
+                            LocationId = 3
+                        },
+                        new
+                        {
+                            HobbyId = 6,
+                            LocationId = 6
+                        },
+                        new
+                        {
+                            HobbyId = 7,
+                            LocationId = 9
+                        },
+                        new
+                        {
+                            HobbyId = 8,
+                            LocationId = 6
                         });
                 });
 
@@ -221,11 +361,11 @@ namespace FriendFinderAPI.Migrations
                         {
                             HobbyId = 1,
                             UserId = 1,
-                            SkillLevel = 0
+                            SkillLevel = 3
                         },
                         new
                         {
-                            HobbyId = 2,
+                            HobbyId = 1,
                             UserId = 2,
                             SkillLevel = 1
                         },
@@ -233,7 +373,49 @@ namespace FriendFinderAPI.Migrations
                         {
                             HobbyId = 3,
                             UserId = 3,
-                            SkillLevel = 3
+                            SkillLevel = 2
+                        },
+                        new
+                        {
+                            HobbyId = 3,
+                            UserId = 4,
+                            SkillLevel = 0
+                        },
+                        new
+                        {
+                            HobbyId = 8,
+                            UserId = 5,
+                            SkillLevel = 1
+                        },
+                        new
+                        {
+                            HobbyId = 8,
+                            UserId = 6,
+                            SkillLevel = 0
+                        },
+                        new
+                        {
+                            HobbyId = 6,
+                            UserId = 7,
+                            SkillLevel = 0
+                        },
+                        new
+                        {
+                            HobbyId = 6,
+                            UserId = 8,
+                            SkillLevel = 2
+                        },
+                        new
+                        {
+                            HobbyId = 7,
+                            UserId = 9,
+                            SkillLevel = 2
+                        },
+                        new
+                        {
+                            HobbyId = 7,
+                            UserId = 10,
+                            SkillLevel = 1
                         });
                 });
 
@@ -260,14 +442,62 @@ namespace FriendFinderAPI.Migrations
                         new
                         {
                             LocationId = 1,
-                            CityId = 2,
-                            LocationName = "Fjäderborgen"
+                            CityId = 1,
+                            LocationName = "Chalmers Tekniska Högskola"
                         },
                         new
                         {
                             LocationId = 2,
                             CityId = 1,
-                            LocationName = "The Castle With Zero Books..."
+                            LocationName = "Haga Teatern"
+                        },
+                        new
+                        {
+                            LocationId = 3,
+                            CityId = 2,
+                            LocationName = "Skansen"
+                        },
+                        new
+                        {
+                            LocationId = 4,
+                            CityId = 2,
+                            LocationName = "Södermalm"
+                        },
+                        new
+                        {
+                            LocationId = 5,
+                            CityId = 3,
+                            LocationName = "Stora Torget"
+                        },
+                        new
+                        {
+                            LocationId = 6,
+                            CityId = 3,
+                            LocationName = "Triangeln"
+                        },
+                        new
+                        {
+                            LocationId = 7,
+                            CityId = 4,
+                            LocationName = "Kampen"
+                        },
+                        new
+                        {
+                            LocationId = 8,
+                            CityId = 4,
+                            LocationName = "Domkirke"
+                        },
+                        new
+                        {
+                            LocationId = 9,
+                            CityId = 5,
+                            LocationName = "Nyhavn"
+                        },
+                        new
+                        {
+                            LocationId = 10,
+                            CityId = 5,
+                            LocationName = "Nytorv"
                         });
                 });
 
@@ -303,29 +533,92 @@ namespace FriendFinderAPI.Migrations
                         new
                         {
                             UserId = 1,
-                            CityId = 2,
-                            UserAdress = "Drottninggatan",
+                            CityId = 1,
+                            UserAdress = "Drottninggatan 2",
                             UserAge = 20,
-                            UserName = "Sebbe",
+                            UserName = "Sebbe Persson",
                             UserPhoneNumber = "+46XXXXXXX"
                         },
                         new
                         {
                             UserId = 2,
-                            CityId = 1,
-                            UserAdress = "Kungsgatan",
+                            CityId = 5,
+                            UserAdress = "Knudsgate 15",
                             UserAge = 22,
-                            UserName = "Oskar",
-                            UserPhoneNumber = "+46XXXXXXX2"
+                            UserName = "Peder Åborg",
+                            UserPhoneNumber = "+45XXXXXXX1"
                         },
                         new
                         {
                             UserId = 3,
+                            CityId = 3,
+                            UserAdress = "Karl Andersgatan 6",
+                            UserAge = 24,
+                            UserName = "Petra Levinman",
+                            UserPhoneNumber = "+46XXXXXXX2"
+                        },
+                        new
+                        {
+                            UserId = 4,
+                            CityId = 4,
+                            UserAdress = "Beringsväg 10",
+                            UserAge = 25,
+                            UserName = "Pontus Bergman",
+                            UserPhoneNumber = "+47XXXXXXX3"
+                        },
+                        new
+                        {
+                            UserId = 5,
+                            CityId = 4,
+                            UserAdress = "Kongasnåret 1",
+                            UserAge = 43,
+                            UserName = "Olle Kvist",
+                            UserPhoneNumber = "+47XXXXXXX4"
+                        },
+                        new
+                        {
+                            UserId = 6,
+                            CityId = 5,
+                            UserAdress = "Gregorstande 6",
+                            UserAge = 32,
+                            UserName = "Christina Kerlpalm",
+                            UserPhoneNumber = "+45XXXXXXX5"
+                        },
+                        new
+                        {
+                            UserId = 7,
                             CityId = 1,
-                            UserAdress = "MorTest",
+                            UserAdress = "Kungsportsavenyn 3",
+                            UserAge = 34,
+                            UserName = "Osborn Börjesson",
+                            UserPhoneNumber = "+46XXXXXXX6"
+                        },
+                        new
+                        {
+                            UserId = 8,
+                            CityId = 2,
+                            UserAdress = "Djurgårdsvägen 21",
+                            UserAge = 26,
+                            UserName = "Pelle Plutter",
+                            UserPhoneNumber = "+46XXXXXXX7"
+                        },
+                        new
+                        {
+                            UserId = 9,
+                            CityId = 2,
+                            UserAdress = "Vättlegatan 2",
+                            UserAge = 27,
+                            UserName = "Ina Pålström",
+                            UserPhoneNumber = "+46XXXXXXX8"
+                        },
+                        new
+                        {
+                            UserId = 10,
+                            CityId = 3,
+                            UserAdress = "Opalgatan 54",
                             UserAge = 28,
-                            UserName = "William",
-                            UserPhoneNumber = "+46XXXXXXX3"
+                            UserName = "William Morberg",
+                            UserPhoneNumber = "+46XXXXXXX9"
                         });
                 });
 
