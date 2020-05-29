@@ -4,8 +4,6 @@ namespace FriendFinderAPI.Dtos
 {
     public class EventUserDto
     {
-        public int EventUserId { get; set; }
-
         [ForeignKey("EventId")]
         public int EventId { get; set; }
         public EventDto Event { get; set; }
