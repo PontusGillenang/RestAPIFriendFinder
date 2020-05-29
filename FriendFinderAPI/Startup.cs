@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using FriendFinderAPI.Context;
+using FriendFinderAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.EntityFrameworkCore;
-using FriendFinderAPI.Services;
-using AutoMapper;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc.Formatters.Json;
-using FriendFinderAPI.Context;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.OpenApi.Models;
 
 namespace FriendFinderAPI
 {
@@ -36,6 +31,11 @@ namespace FriendFinderAPI
                                         .CompatibilityVersion
                                         .Version_3_0);
 
+            services.AddSwaggerGen(configure =>
+            {
+                configure.SwaggerDoc("v1", new OpenApiInfo { Title = "FriendFinderAPI", Version = "v1" });
+            });
+
                 services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
@@ -49,6 +49,14 @@ namespace FriendFinderAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(configure =>
+            {
+                configure.SwaggerEndpoint("/swagger/v1/swagger.json", "FriendFinderAPI v1");
+            });
+
             app.UseMvc();
         }
     }
