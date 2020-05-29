@@ -1,41 +1,61 @@
 using FriendFinderAPI.Context;
-using System.Linq;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using FriendFinderAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FriendFinderAPI.Services
 {
     public class CityRepository : Repository, ICityRepository
     {
         public CityRepository(FriendFinderContext context, ILogger<CityRepository> logger) : base(context, logger)
-        {
-        }
+        {}
+
         public async Task<City> GetCity(int cityId)
         {
-            _logger.LogInformation($"Getting City with id: {cityId}");
-            IQueryable<City> query = _context.Cities.Where(u => u.CityId == cityId);
+            _logger.LogInformation($"Getting city with id: {cityId}");
+            IQueryable<City> query = _context.Cities
+                                                .Include(location => location.Locations)
+                                                .ThenInclude(hobbyLocation => hobbyLocation.HobbyLocations)
+                                                .ThenInclude(hobbies => hobbies.Hobby)
+                                                .Where(city => city.CityId == cityId);
 
             return await query.FirstOrDefaultAsync();
         }
+        
         public async Task<City[]> GetCities()
         {
-            _logger.LogInformation("Getting Cities");
-            IQueryable<City> query = _context.Cities;
+            _logger.LogInformation("Getting cities");
+            IQueryable<City> query = _context.Cities
+                                                .Include(location => location.Locations)
+                                                .ThenInclude(hobbyLocation => hobbyLocation.HobbyLocations)
+                                                .ThenInclude(hobbies => hobbies.Hobby)
+                                                .OrderBy(city => city.CityId);
+
             return await query.ToArrayAsync();
         }
 
-        public async Task<City[]> GetCitiesByHobby(int hobbyId)
+        public async Task<City[]> GetCitiesByHobby(string hobbyName)
         {
-            _logger.LogInformation($"Getting Cities Where hobby with id {hobbyId} exists");
-             IQueryable<City> query = _context.Cities
-                                        .Where(city=>city.Locations
-                                        .Any(i=>i.HobbyLocations
-                                        .Any(h=>h.Hobby.HobbyId == hobbyId)));
+            _logger.LogInformation($"Getting cities were the hobby {hobbyName} exists");
+            IQueryable<City> query = _context.Cities
+                                               .Include(location => location.Locations)
+                                               .ThenInclude(hobbyLocation => hobbyLocation.HobbyLocations)
+                                               .ThenInclude(hobbies => hobbies.Hobby)
+                                               .Where(location=>location.Locations.Any(hobbyLocation=>hobbyLocation.HobbyLocations.Any(hobbies => hobbies.Hobby.HobbyName.Contains(hobbyName))));
 
              return await query.ToArrayAsync();
+        }
 
+        public async Task<City[]> GetCitiesWithLocation(string locationName)
+        {
+            _logger.LogInformation($"Getting cities with locations named: {locationName}");
+            IQueryable<City> query = _context.Cities
+                                               .Include(location => location.Locations)
+                                               .Where(l => l.Locations.Any(l => l.LocationName.Contains(locationName)));
+
+             return await query.ToArrayAsync();
         }
     }
 }
