@@ -57,27 +57,5 @@ namespace FriendFinderAPI.Services
 
              return await query.ToArrayAsync();
         }
-
-
-        //-----------------------------------------------------------------------------
-        // getAllLocsBelongingToCity
-        //-----------------------------------------------------------------------------							
-        public async Task<City[]> GetLocationsForCity(int cityId)
-        {
-            _logger.LogInformation($"Getting all locations part of town {cityId}");
-            IQueryable<City> query = _context.Cities.Where(l => l.CityId == cityId).Include(l => l.Locations);
-
-            // SELECT*
-            // FROM[Cities] JOIN Locations
-            // ON[Cities].CityID = Locations.LocationCityID
-            // where[Cities].CityID = 1
-
-
-            return await query.ToArrayAsync();
-
-        }
-
-
-
     }
 }
