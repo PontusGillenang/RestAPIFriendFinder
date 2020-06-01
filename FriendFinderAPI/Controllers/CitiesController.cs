@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FriendFinderAPI.FilterAuthentication;
 
 
 namespace FriendFinderAPI.Controllers
-{
+{   
+    [ApiKeyAuth]    
     [Route("api/v1.0/[controller]")]
     [ApiController]
     public class CitiesController : ControllerBase
