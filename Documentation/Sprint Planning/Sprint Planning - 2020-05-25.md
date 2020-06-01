@@ -1,6 +1,6 @@
 # <u>Sprint Planning</u>
 
-
+**Secretary: Samuel B**
 
 ## Name of Sprint: Sprint 4 v.22
 
