@@ -1,6 +1,7 @@
 using AutoMapper;
 using Castle.Core.Internal;
 using FriendFinderAPI.Dtos;
+using FriendFinderAPI.FilterAuthentication;
 using FriendFinderAPI.Models;
 using FriendFinderAPI.Services;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace FriendFinderAPI.Controllers
 {
+    [ApiKeyAuth]  
     [Route("api/v1.0/[controller]")]
     [ApiController]
     public class EventsController : ControllerBase

@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FriendFinderAPI.Dtos;
 using AutoMapper;
+using FriendFinderAPI.FilterAuthentication;
 
 namespace FriendFinderAPI.Controllers
 {
+    [ApiKeyAuth]  
     [Route("api/v1.0/[controller]")]
     [ApiController]
     public class HobbiesController : ControllerBase
