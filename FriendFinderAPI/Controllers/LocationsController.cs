@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FriendFinderAPI.Controllers
 {
-
+    [ApiKeyAuth]  
     [Route("api/v1.0/[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase
