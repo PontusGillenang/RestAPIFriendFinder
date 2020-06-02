@@ -1,22 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FriendFinderAPI.Context;
+using AutoMapper;
+using Castle.Core.Internal;
+using FriendFinderAPI.Dtos;
 using FriendFinderAPI.Models;
 using FriendFinderAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FriendFinderAPI.Dtos;
-using AutoMapper;
-using Castle.Core.Internal;
-
-
-
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FriendFinderAPI.Controllers
 {
-   
+
     [Route("api/v1.0/[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase
@@ -34,7 +29,6 @@ namespace FriendFinderAPI.Controllers
         //-----------------------------------------------------------------------------
         // GetLocations
         //-----------------------------------------------------------------------------					
-        //[HttpGet(Name = "GetLocations")]
         [HttpGet(Name = "GetLocations")]
         public async Task<ActionResult<LocationDto[]>> GetLocations()
         {
@@ -90,7 +84,7 @@ namespace FriendFinderAPI.Controllers
         //-----------------------------------------------------------------------------
         // GetLocation
         //-----------------------------------------------------------------------------							
-        [HttpGet("{LocationtId}", Name = "GetLocation")]
+        [HttpGet("{locationtId}", Name = "GetLocation")]
         public async Task<ActionResult<LocationDto>> GetLocation(int locationId)
         {
             try
@@ -142,19 +136,20 @@ namespace FriendFinderAPI.Controllers
         //-----------------------------------------------------------------------------
         // GetLocationByHobby
         //-----------------------------------------------------------------------------							
-        [HttpGet("searchhobby", Name = "GetLocationByHobby")]
-        public async Task<ActionResult<LocationDto[]>> GetLocationByHobby(string hobbyName)
+        [HttpGet("searchhobby", Name = "GetLocationsByHobby")]
+        public async Task<ActionResult<LocationDto[]>> GetLocationsByHobby(string hobbyName)
         {
             try
             {
-                var results = await _locationRepository.GetLocationByHobby(hobbyName);
+                var results = await _locationRepository.GetLocationsByHobby(hobbyName);
+                var mappedResults = _mapper.Map<LocationDto[]>(results);
 
-                if (results == null)
+                if (mappedResults.IsNullOrEmpty())
                 {
                     return NotFound();
                 }
 
-                return Ok(results);
+                return Ok(mappedResults);
             }
             catch (Exception exception)
             {
@@ -200,7 +195,7 @@ namespace FriendFinderAPI.Controllers
                 _locationRepository.Add(mappedEntity);
 
                 if(await _locationRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.LocationId}", _mapper.Map<LocationDto>(mappedEntity));
+                    return Created($"/api/v1.0/cities/{mappedEntity.LocationId}", _mapper.Map<LocationDto>(mappedEntity));
             }
             catch (Exception e)
             {

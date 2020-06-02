@@ -7,7 +7,6 @@ namespace FriendFinderAPI.Services
     {
          Task<Location[]> GetLocations();
          Task<Location> GetLocation(int locationId);
-         Task<Location[]> GetLocationsByHobby(int hobbyId);
-        Task<Location> GetLocationByHobby(/*int locationId , */ string hobbyId);
+         Task<Location[]> GetLocationsByHobby(string hobbyName);
     }
 }
