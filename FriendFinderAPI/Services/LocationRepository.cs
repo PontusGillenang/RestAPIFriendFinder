@@ -1,9 +1,9 @@
 using FriendFinderAPI.Context;
-using System.Linq;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 using FriendFinderAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FriendFinderAPI.Services
 {
@@ -13,41 +13,58 @@ namespace FriendFinderAPI.Services
         {
         }
 
+        //-----------------------------------------------------------------------------
+        // GetLocation
+        //-----------------------------------------------------------------------------			
         public async Task<Location> GetLocation(int locationId)
         {
-            _logger.LogInformation($"Getting Location with ID: {locationId}");
-            IQueryable<Location> query = _context.Locations.Where(l=> l.LocationId == locationId);
+            _logger.LogInformation($"Getting event with id: {locationId}");
+            IQueryable<Location> query = _context.Locations
+                                           .Include(cities => cities.City)
+                                            .Include(hobbyLocations => hobbyLocations.HobbyLocations)
+                                            .ThenInclude(hobbies => hobbies.Hobby)
+                                            .Where(location => location.LocationId == locationId);
 
+            #region N/A
+            //if (includeUsers)
+            //{
+            //    _logger.LogInformation($"Getting users for the event with id: {locationId}");
+            //    query = query.Include(eventUsers => eventUsers.EventUsers)
+            //                 .ThenInclude(users => users.User);
+            //}
+            #endregion
             return await query.FirstOrDefaultAsync();
-
         }
 
-        public async Task<Location> GetLocationByHobby(int locationId, int hobbyId)
-        {
-            _logger.LogInformation($" Getting location with id{locationId} if it includes hobby with id {hobbyId}");
-            IQueryable<Location> query = _context.Locations.Where(l=>l.LocationId == locationId)
-            .Include(t=>t.HobbyLocations).Where(h=>h.HobbyLocations.Any(i=>i.HobbyId == hobbyId));
-
-            return await query.FirstOrDefaultAsync();
-        }
+        //-----------------------------------------------------------------------------
+        // GetLocations
+        //-----------------------------------------------------------------------------							
         public async Task<Location[]> GetLocations()
         {
             _logger.LogInformation("Getting Locations");
-            IQueryable<Location> query = _context.Locations;
+
+            IQueryable<Location> query = _context.Locations
+                                          .Include(cities => cities.City)
+                                           .Include(hobbyLocations => hobbyLocations.HobbyLocations)
+                                           .ThenInclude(hobbies => hobbies.Hobby);
+
             return await query.ToArrayAsync();
             
         }
-        public async Task<Location[]> GetLocationsByHobby(int hobbyId)
+
+        //-----------------------------------------------------------------------------
+        // GetLocationByHobby
+        //-----------------------------------------------------------------------------							
+        public async Task<Location[]> GetLocationsByHobby(string hobbyName)
         {
-            _logger.LogInformation($" Getting locations for hobby with id {hobbyId}");
-            IQueryable<Location> query = _context.Locations.Where(l=>l.HobbyLocations.Any(h=>h.Hobby.HobbyId == hobbyId));
+            _logger.LogInformation($"Getting events with hobby: {hobbyName}");
+            IQueryable<Location> query = _context.Locations
+                                            .Include(hobbyLocations => hobbyLocations.HobbyLocations)
+                                            .ThenInclude(hobbies => hobbies.Hobby)
+                                            .Where(hobbyLocations => hobbyLocations.HobbyLocations.Any(hobbies => hobbies.Hobby.HobbyName.Contains(hobbyName)));
 
             return await query.ToArrayAsync();
-
         }
-
-        
-        
-        
+           
     }
 }

@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FriendFinderAPI.Context;
+using AutoMapper;
+using Castle.Core.Internal;
+using FriendFinderAPI.Dtos;
 using FriendFinderAPI.Models;
 using FriendFinderAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FriendFinderAPI.Dtos;
-using AutoMapper;
-using FriendFinderAPI.FilterAuthentication;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FriendFinderAPI.Controllers
 {
@@ -27,65 +25,166 @@ namespace FriendFinderAPI.Controllers
             _mapper = mapper;
         }
 
-        //GET:      api/v1.0/locations
-        [HttpGet(Name ="GetLocations")]
+
+        //-----------------------------------------------------------------------------
+        // GetLocations
+        //-----------------------------------------------------------------------------					
+        [HttpGet(Name = "GetLocations")]
         public async Task<ActionResult<LocationDto[]>> GetLocations()
         {
             try
             {
                 var results = await _locationRepository.GetLocations();
                 var mappedResults = _mapper.Map<LocationDto[]>(results);
-                 for(int i = 0; i<mappedResults.Length;i++)
+
+                if (mappedResults.IsNullOrEmpty())
+                {
+                    return NotFound();
+                }
+
+                for (int i = 0; i < mappedResults.Length; i++)
                 {
                     mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
-                };
+                }
+
                 return Ok(mappedResults);
             }
-            catch(Exception e)
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
         }
+        #region Old Version
 
-        //GET:      api/v1.0/locations/n
-        [HttpGet("{id}", Name ="GetLocation")]
-        public async Task<ActionResult<LocationDto>> GetLocation(int id)
+        // //GET:      api/v1.0/locations
+        // [HttpGet(Name ="GetLocations")]
+        // public async Task<ActionResult<LocationDto[]>> GetLocations()
+        // {
+        //     try
+        //     {
+        //         var results = await _locationRepository.GetLocations();
+        //         var mappedResults = _mapper.Map<LocationDto[]>(results);
+        //          for(int i = 0; i<mappedResults.Length;i++)
+        //         {
+        //             mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
+        //         };
+        //         return Ok(mappedResults);
+        //     }
+        //     catch(Exception e)
+        //     {
+        //         return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+        //     }
+        // }
+
+        #endregion
+
+
+
+
+        //-----------------------------------------------------------------------------
+        // GetLocation
+        //-----------------------------------------------------------------------------							
+        [HttpGet("{locationtId}", Name = "GetLocation")]
+        public async Task<ActionResult<LocationDto>> GetLocation(int locationId)
         {
             try
             {
-                var result = await _locationRepository.GetLocation(id);
-                
-                if(result == null)
-                    return NotFound();
-                
+                var result = await _locationRepository.GetLocation(locationId);
                 var mappedResult = _mapper.Map<LocationDto>(result);
-                mappedResult.Links = CreateLinksGetAllLocations(mappedResult);
-                return Ok(mappedResult);            
+
+                if (mappedResult == null)
+                {
+                    return NotFound();
                 }
-            catch(Exception e)
+
+                mappedResult.Links = CreateLinksGetAllLocations(mappedResult);
+
+                return Ok(mappedResult);
+            }
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
         }
+        #region Old Version
+        //GET:      api/v1.0/locations/n
+        // [HttpGet("{id}", Name ="GetLocation")]
+        // public async Task<ActionResult<LocationDto>> GetLocation(int id)
+        // {
+        //     try
+        //     {
+        //         var result = await _locationRepository.GetLocation(id);
+        //         
+        //         if(result == null)
+        //             return NotFound();
+        //         
+        //         var mappedResult = _mapper.Map<LocationDto>(result);
+        //         mappedResult.Links = CreateLinksGetAllLocations(mappedResult);
+        //         return Ok(mappedResult);            
+        //         }
+        //     catch(Exception e)
+        //     {
+        //         return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+        //     }
+        // }
+        #endregion
 
-        [HttpGet("hobby/{id}", Name ="GetLocationsByHobby")]
-        public async Task<ActionResult<LocationDto[]>> GetLocationsByHobby(int id)
+
+
+
+
+        //-----------------------------------------------------------------------------
+        // GetLocationByHobby
+        //-----------------------------------------------------------------------------							
+        [HttpGet("searchhobby", Name = "GetLocationsByHobby")]
+        public async Task<ActionResult<LocationDto[]>> GetLocationsByHobby(string hobbyName)
         {
             try
             {
-                var results = await _locationRepository.GetLocationsByHobby(id);
+                var results = await _locationRepository.GetLocationsByHobby(hobbyName);
                 var mappedResults = _mapper.Map<LocationDto[]>(results);
-                 for(int i = 0; i<mappedResults.Length;i++)
+
+                if (mappedResults.IsNullOrEmpty())
                 {
-                    mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
-                };
-                return Ok(mappedResults);            }
-            catch(Exception e)
+                    return NotFound();
+                }
+
+                return Ok(mappedResults);
+            }
+            catch (Exception exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {exception.Message}");
             }
         }
+        #region Old
+        // [HttpGet("hobby/{id}", Name ="GetLocationsByHobby")]
+        // public async Task<ActionResult<LocationDto[]>> GetLocationsByHobby(int id)
+        // {
+        //     try
+        //     {
+        //         var results = await _locationRepository.GetLocationsByHobby(id);
+        //         var mappedResults = _mapper.Map<LocationDto[]>(results);
+        //          for(int i = 0; i<mappedResults.Length;i++)
+        //         {
+        //             mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
+        //         };
+        //         return Ok(mappedResults);            }
+        //     catch(Exception e)
+        //     {
+        //         return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
+        //     }
+        // }
+        #endregion
 
+
+
+
+
+     
+
+        //-----------------------------------------------------------------------------
+        // PostLocation
+        //-----------------------------------------------------------------------------							
         //POST:      api/v1.0/locations
         [HttpPost (Name = "PostLocation")]
         public async Task<ActionResult<LocationDto>> PostLocation(LocationDto locationDto)
@@ -96,7 +195,7 @@ namespace FriendFinderAPI.Controllers
                 _locationRepository.Add(mappedEntity);
 
                 if(await _locationRepository.Save())
-                    return Created($"api/v1.0/cities/{mappedEntity.LocationId}", _mapper.Map<LocationDto>(mappedEntity));
+                    return Created($"/api/v1.0/cities/{mappedEntity.LocationId}", _mapper.Map<LocationDto>(mappedEntity));
             }
             catch (Exception e)
             {
@@ -105,8 +204,14 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
+
+
+
+        //-----------------------------------------------------------------------------
+        // PutLocation
+        //-----------------------------------------------------------------------------							
         //PUT:      api/v1.0/locations/n
-        [HttpPut("{id}", Name = "PutLocation")]
+        [HttpPut("{locationId}", Name = "PutLocation")]
         public async Task<ActionResult<LocationDto>> PutLocation(int locationId, LocationDto locationDto)
         {
             try
@@ -128,8 +233,15 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
+
+
+
+
+        //-----------------------------------------------------------------------------
+        // DeleteLocation
+        //-----------------------------------------------------------------------------							
         //DELETE:       api/v1.0/locations/n
-        [HttpDelete("{id}", Name = "DeleteLocation")]
+        [HttpDelete("{locationId}", Name = "DeleteLocation")]
         public async Task<ActionResult> DeleteLocation(int locationId)
         {
             try
@@ -149,7 +261,13 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
-        
+
+
+
+
+        //-----------------------------------------------------------------------------
+        // CreateLinksGetAllLocations
+        //-----------------------------------------------------------------------------							
         private IEnumerable<Link> CreateLinksGetAllLocations(LocationDto location)
         {
             var links = new[]
@@ -176,8 +294,8 @@ namespace FriendFinderAPI.Controllers
             return links;
         }
 
+       
 
-        
     }
 }
 
