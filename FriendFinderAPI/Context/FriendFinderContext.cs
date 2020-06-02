@@ -1,8 +1,8 @@
-using System;
-using System.IO;
 using FriendFinderAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 using static FriendFinderAPI.Enums.Enums;
 
 namespace FriendFinderAPI.Context
@@ -81,7 +81,7 @@ namespace FriendFinderAPI.Context
             .WithMany(c => c.EventUsers)
             .HasForeignKey(bc => bc.UserId)
             .OnDelete(DeleteBehavior.NoAction);
-            
+
 
             string citiesPath = @"../Documentation/DataSets/cities.txt";
             string[] lines = File.ReadAllLines(citiesPath);
@@ -90,7 +90,7 @@ namespace FriendFinderAPI.Context
                 string[] split = lines[i].Split(',');
                 City city = new City
                 {
-                    CityId = i+1,
+                    CityId = i + 1,
                     CityName = split[0],
                     CityCountry = split[1],
                     CityCounty = split[2],
@@ -257,6 +257,8 @@ namespace FriendFinderAPI.Context
             {
                 EventId = 1,
                 EventName = "3D Print Workshop",
+                EventStart = new DateTime(2020, 10, 06, 18, 00, 00),
+                EventEnd = new DateTime(2020, 10, 06, 20, 00, 00),
                 HobbyId = 1,
                 CityId = 1,
             }
@@ -264,6 +266,8 @@ namespace FriendFinderAPI.Context
             {
                 EventId = 2,
                 EventName = "Beginners Acting Club",
+                EventStart = new DateTime(2020, 11, 14, 16, 00, 00),
+                EventEnd = new DateTime(2020, 11, 14, 20, 00, 00),
                 HobbyId = 2,
                 CityId = 1,
             }
@@ -271,6 +275,8 @@ namespace FriendFinderAPI.Context
             {
                 EventId = 3,
                 EventName = "Amatuer Airsoft Mayhem",
+                EventStart = new DateTime(2020, 12, 10, 19, 00, 00),
+                EventEnd = new DateTime(2020, 12, 10, 21, 00, 00),
                 HobbyId = 4,
                 CityId = 2,
             }
@@ -278,6 +284,8 @@ namespace FriendFinderAPI.Context
             {
                 EventId = 4,
                 EventName = "Malmö for Biathlon in the World",
+                EventStart = new DateTime(2020, 07, 09, 14, 00, 00),
+                EventEnd = new DateTime(2020, 07, 09, 17, 00, 00),
                 HobbyId = 8,
                 CityId = 3,
             }
@@ -285,6 +293,8 @@ namespace FriendFinderAPI.Context
             {
                 EventId = 5,
                 EventName = "Nightime in Oslo with The Stars",
+                EventStart = new DateTime(2020, 11, 20, 20, 00, 00),
+                EventEnd = new DateTime(2020, 11, 20, 23, 00, 00),
                 HobbyId = 6,
                 CityId = 4,
             }
@@ -292,6 +302,8 @@ namespace FriendFinderAPI.Context
             {
                 EventId = 6,
                 EventName = "Danske Ølefest me Beer Pong",
+                EventStart = new DateTime(2020, 10, 03, 19, 00, 00),
+                EventEnd = new DateTime(2020, 10, 04, 03, 00, 00),
                 HobbyId = 7,
                 CityId = 5,
             });
@@ -458,7 +470,7 @@ namespace FriendFinderAPI.Context
             {
                 Hobby hobby = new Hobby
                 {
-                    HobbyId = i+1,
+                    HobbyId = i + 1,
                     HobbyName = hobbies[i],
                 };
                 modelBuilder.Entity<Hobby>().HasData(hobby);
