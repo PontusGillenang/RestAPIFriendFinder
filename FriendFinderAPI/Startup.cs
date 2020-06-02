@@ -9,6 +9,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 
 namespace FriendFinderAPI
 {
@@ -34,6 +35,28 @@ namespace FriendFinderAPI
             services.AddSwaggerGen(configure =>
             {
                 configure.SwaggerDoc("v1", new OpenApiInfo { Title = "FriendFinderAPI", Version = "v1" });
+                configure.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+                    {
+                        Description = "Enter a valid key below.",
+                        Name = "ApiKey",
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.ApiKey,
+                        Scheme = "apiKey"
+                    });
+
+                configure.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "ApiKey"
+                            }
+                        }, new List<string>()
+                    }
+                });
             });
 
                 services.AddControllers()
@@ -55,6 +78,7 @@ namespace FriendFinderAPI
             app.UseSwaggerUI(configure =>
             {
                 configure.SwaggerEndpoint("/swagger/v1/swagger.json", "FriendFinderAPI v1");
+ 
             });
 
             app.UseMvc();
