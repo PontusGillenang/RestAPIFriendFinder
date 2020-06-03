@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-
 namespace FriendFinderAPI.Tests
 {
     public class UnitTestEvents
