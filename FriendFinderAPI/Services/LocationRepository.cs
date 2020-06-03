@@ -18,7 +18,7 @@ namespace FriendFinderAPI.Services
         //-----------------------------------------------------------------------------			
         public async Task<Location> GetLocation(int locationId)
         {
-            _logger.LogInformation($"Getting event with id: {locationId}");
+            _logger.LogInformation($"Getting location with id: {locationId}");
             IQueryable<Location> query = _context.Locations
                                            .Include(cities => cities.City)
                                             .Include(hobbyLocations => hobbyLocations.HobbyLocations)
@@ -41,7 +41,7 @@ namespace FriendFinderAPI.Services
         //-----------------------------------------------------------------------------							
         public async Task<Location[]> GetLocations()
         {
-            _logger.LogInformation("Getting Locations");
+            _logger.LogInformation("Getting locations");
 
             IQueryable<Location> query = _context.Locations
                                           .Include(cities => cities.City)
@@ -57,7 +57,7 @@ namespace FriendFinderAPI.Services
         //-----------------------------------------------------------------------------							
         public async Task<Location[]> GetLocationsByHobby(string hobbyName)
         {
-            _logger.LogInformation($"Getting events with hobby: {hobbyName}");
+            _logger.LogInformation($"Getting locations with hobby: {hobbyName}");
             IQueryable<Location> query = _context.Locations
                                             .Include(hobbyLocations => hobbyLocations.HobbyLocations)
                                             .ThenInclude(hobbies => hobbies.Hobby)

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FriendFinderAPI.Controllers
 {
-    [ApiKeyAuth]  
+    [ApiKeyAuth]
     [Route("api/v1.0/[controller]")]
     [ApiController]
     public class LocationsController : ControllerBase
@@ -85,7 +85,7 @@ namespace FriendFinderAPI.Controllers
         //-----------------------------------------------------------------------------
         // GetLocation
         //-----------------------------------------------------------------------------							
-        [HttpGet("{locationtId}", Name = "GetLocation")]
+        [HttpGet("{locationId}", Name = "GetLocation")]
         public async Task<ActionResult<LocationDto>> GetLocation(int locationId)
         {
             try
@@ -150,6 +150,11 @@ namespace FriendFinderAPI.Controllers
                     return NotFound();
                 }
 
+                for (int i = 0; i < mappedResults.Length; i++)
+                {
+                    mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
+                }
+
                 return Ok(mappedResults);
             }
             catch (Exception exception)
@@ -181,13 +186,13 @@ namespace FriendFinderAPI.Controllers
 
 
 
-     
+
 
         //-----------------------------------------------------------------------------
         // PostLocation
         //-----------------------------------------------------------------------------							
         //POST:      api/v1.0/locations
-        [HttpPost (Name = "PostLocation")]
+        [HttpPost(Name = "PostLocation")]
         public async Task<ActionResult<LocationDto>> PostLocation(LocationDto locationDto)
         {
             try
@@ -195,12 +200,12 @@ namespace FriendFinderAPI.Controllers
                 var mappedEntity = _mapper.Map<Location>(locationDto);
                 _locationRepository.Add(mappedEntity);
 
-                if(await _locationRepository.Save())
+                if (await _locationRepository.Save())
                     return Created($"/api/v1.0/cities/{mappedEntity.LocationId}", _mapper.Map<LocationDto>(mappedEntity));
             }
             catch (Exception e)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
             return BadRequest();
         }
@@ -218,18 +223,18 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var oldLocation = await _locationRepository.GetLocation(locationId);
-                if(oldLocation == null)
+                if (oldLocation == null)
                     return NotFound($"We could not find a location with that id: {locationId}");
 
                 var newLocation = _mapper.Map(locationDto, oldLocation);
                 _locationRepository.Update(newLocation);
 
-                if(await _locationRepository.Save())
+                if (await _locationRepository.Save())
                     return NoContent();
             }
             catch (Exception e)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
             return BadRequest();
         }
@@ -248,16 +253,16 @@ namespace FriendFinderAPI.Controllers
             try
             {
                 var location = await _locationRepository.GetLocation(locationId);
-                if(location == null)
+                if (location == null)
                     return NotFound($"We could not find a location with that id: {locationId}");
-                
+
                 _locationRepository.Delete(location);
-                if(await _locationRepository.Save())
+                if (await _locationRepository.Save())
                     return NoContent();
             }
             catch (Exception e)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,$"Database Failure: {e.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: {e.Message}");
             }
             return BadRequest();
         }
@@ -277,26 +282,22 @@ namespace FriendFinderAPI.Controllers
             {
             Method = "GET",
             Rel = "self",
-            Href = Url.Link("Getlocation", new {id = location.LocationId}).ToLower()
+            Href = Url.Link("GetLocation", new {locationId = location.LocationId}).ToLower()
             },
             new Link
             {
             Method = "DELETE",
             Rel = "self",
-            Href = Url.Link("DeleteLocation", new {id = location.LocationId}).ToLower()
+            Href = Url.Link("DeleteLocation", new {locationId = location.LocationId}).ToLower()
             },
             new Link
             {
             Method = "PUT",
             Rel = "self",
-            Href = Url.Link("PutLocation", new {id = location.LocationId}).ToLower()
+            Href = Url.Link("PutLocation", new {locationId = location.LocationId}).ToLower()
             }
             };
             return links;
         }
-
-       
-
     }
 }
-
