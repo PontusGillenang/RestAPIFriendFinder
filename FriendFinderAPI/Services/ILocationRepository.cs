@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using FriendFinderAPI.Models;
+using System.Threading.Tasks;
 
 namespace FriendFinderAPI.Services
 {
