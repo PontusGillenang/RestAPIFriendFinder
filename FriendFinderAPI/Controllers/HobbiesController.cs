@@ -193,30 +193,30 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
-        private IEnumerable<Link> CreateLinksForHobbies(HobbyDto hobby)
+        private IEnumerable<LinkDto> CreateLinksForHobbies(HobbyDto hobbyDto)
         {
             var links = new[]
             {
-                new Link
+                new LinkDto
                 {
-                    Method = "GET",
+                    Href = Url.Link("GetHobby", new {hobbyId = hobbyDto.HobbyId}).ToLower(),
                     Rel = "self",
-                    Href = Url.Link("GetHobby", new {hobbyId = hobby.HobbyId}).ToLower()
+                    Method = "GET"
                 },
-                new Link
+                new LinkDto
                 {
-                    Method = "DELETE",
-                    Rel = "self",
-                    Href = Url.Link("DeleteHobby", new {hobbyId = hobby.HobbyId}).ToLower()
+                    Href = Url.Link("PutHobby", new {hobbyId = hobbyDto.HobbyId}).ToLower(),
+                    Rel = "update hobby",
+                    Method = "PUT"
                 },
-                new Link
+                new LinkDto
                 {
-                    Method = "PUT",
-                    Rel = "self",
-                    Href = Url.Link("PutHobby", new {hobbyId = hobby.HobbyId}).ToLower()
+                    Href = Url.Link("DeleteHobby", new {hobbyId = hobbyDto.HobbyId}).ToLower(),
+                    Rel = "delete hobby",
+                    Method = "DELETE"
                 }
             };
             return links;
-        }
+        }        
     }
 }

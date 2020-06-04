@@ -45,7 +45,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForLocations(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -98,7 +98,7 @@ namespace FriendFinderAPI.Controllers
                     return NotFound();
                 }
 
-                mappedResult.Links = CreateLinksGetAllLocations(mappedResult);
+                mappedResult.Links = CreateLinksForLocations(mappedResult);
 
                 return Ok(mappedResult);
             }
@@ -152,7 +152,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllLocations(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForLocations(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -266,38 +266,31 @@ namespace FriendFinderAPI.Controllers
             }
             return BadRequest();
         }
-
-
-
-
-
-        //-----------------------------------------------------------------------------
-        // CreateLinksGetAllLocations
-        //-----------------------------------------------------------------------------							
-        private IEnumerable<Link> CreateLinksGetAllLocations(LocationDto location)
+        
+        private IEnumerable<LinkDto> CreateLinksForLocations(LocationDto locationDto)
         {
             var links = new[]
             {
-            new Link
-            {
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetLocation", new {locationId = location.LocationId}).ToLower()
-            },
-            new Link
-            {
-            Method = "DELETE",
-            Rel = "self",
-            Href = Url.Link("DeleteLocation", new {locationId = location.LocationId}).ToLower()
-            },
-            new Link
-            {
-            Method = "PUT",
-            Rel = "self",
-            Href = Url.Link("PutLocation", new {locationId = location.LocationId}).ToLower()
-            }
+                new LinkDto
+                {
+                    Href = Url.Link("GetLocation", new {locationId = locationDto.LocationId}).ToLower(),
+                    Rel = "self",
+                    Method = "GET"
+                },
+                new LinkDto
+                {
+                    Href = Url.Link("PutLocation", new {locationId = locationDto.LocationId}).ToLower(),
+                    Rel = "update location",
+                    Method = "PUT"
+                },
+                new LinkDto
+                {
+                    Href = Url.Link("DeleteLocation", new {locationId = locationDto.LocationId}).ToLower(),
+                    Rel = "delete location",
+                    Method = "DELETE"
+                }
             };
             return links;
-        }
+        }        
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using FriendFinderAPI.Models;
 
 namespace FriendFinderAPI.Dtos
 {
@@ -14,6 +13,6 @@ namespace FriendFinderAPI.Dtos
         public int CityId { get; set; }
         public ICollection<HobbyUserDto> HobbyUsers { get; set; }
         public ICollection<EventUserDto> EventUsers { get; set; }
-        public IEnumerable<Link> Links {get; set;}
+        public IEnumerable<LinkDto> Links { get; set; }
     }
 }
