@@ -44,7 +44,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForUsers(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -69,7 +69,7 @@ namespace FriendFinderAPI.Controllers
 
                 var mappedResult = _mapper.Map<UserDto>(result);
 
-                mappedResult.Links = CreateLinksGetAllUsers(mappedResult);
+                mappedResult.Links = CreateLinksForUsers(mappedResult);
 
                 return Ok(mappedResult);
             }
@@ -95,7 +95,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForUsers(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -122,7 +122,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForUsers(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -149,7 +149,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllUsers(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForUsers(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -233,28 +233,29 @@ namespace FriendFinderAPI.Controllers
 
             return BadRequest();
         }
-        private IEnumerable<Link> CreateLinksGetAllUsers(UserDto user)
+
+        private IEnumerable<LinkDto> CreateLinksForUsers(UserDto userDto)
         {
             var links = new[]
             {
-            new Link
-            {
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetUser", new {userId = user.UserId})
-            },
-            new Link
-            {
-            Method = "DELETE",
-            Rel = "self",
-            Href = Url.Link("DeleteUser", new {userId = user.UserId})
-            },
-            new Link
-            {
-            Method = "Put",
-            Rel = "self",
-            Href = Url.Link("PutUser", new {userId = user.UserId})
-            }
+                new LinkDto
+                {
+                    Href = Url.Link("GetUser", new {userId = userDto.UserId}).ToLower(),
+                    Rel = "self",
+                    Method = "GET"
+                },
+                new LinkDto
+                {
+                    Href = Url.Link("PutUser", new {userId = userDto.UserId}).ToLower(),
+                    Rel = "update user",
+                    Method = "PUT"
+                },
+                new LinkDto
+                {
+                    Href = Url.Link("DeleteUser", new {userId = userDto.UserId}).ToLower(),
+                    Rel = "delete user",
+                    Method = "DELETE"
+                }
             };
             return links;
         }

@@ -37,9 +37,6 @@ namespace FriendFinderAPI.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Ignore<Link>();
-
-
             modelBuilder.Entity<HobbyUser>()
             .HasKey(hu => new { hu.HobbyId, hu.UserId });
 

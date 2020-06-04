@@ -42,7 +42,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllCities(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForCities(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -66,7 +66,7 @@ namespace FriendFinderAPI.Controllers
                     return NotFound();
                 }
 
-                mappedResult.Links = CreateLinksGetAllCities(mappedResult);
+                mappedResult.Links = CreateLinksForCities(mappedResult);
 
                 return Ok(mappedResult);
             }
@@ -91,7 +91,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllCities(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForCities(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -117,7 +117,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllCities(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForCities(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -200,29 +200,29 @@ namespace FriendFinderAPI.Controllers
             }
             return BadRequest();
         }
-
-        private IEnumerable<Link> CreateLinksGetAllCities(CityDto cityDto)
+                
+        private IEnumerable<LinkDto> CreateLinksForCities(CityDto cityDto)
         {
             var links = new[]
             {
-            new Link
-            {
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetCity", new {cityId = cityDto.CityId})
-            },
-            new Link
-            {
-            Method = "DELETE",
-            Rel = "self",
-            Href = Url.Link("DeleteCity", new {cityId = cityDto.CityId})
-            },
-            new Link
-            {
-            Method = "PUT",
-            Rel = "self",
-            Href = Url.Link("PutCity", new {cityId = cityDto.CityId})
-            }
+                new LinkDto
+                {
+                    Href = Url.Link("GetCity", new {cityId = cityDto.CityId}).ToLower(),
+                    Rel = "self",
+                    Method = "GET"
+                },
+                new LinkDto
+                {
+                    Href = Url.Link("PutCity", new {cityId = cityDto.CityId}).ToLower(),
+                    Rel = "update city",
+                    Method = "PUT"
+                },
+                new LinkDto
+                {
+                    Href = Url.Link("DeleteCity", new {cityId = cityDto.CityId}).ToLower(),
+                    Rel = "delete city",
+                    Method = "DELETE"
+                }
             };
             return links;
         }
