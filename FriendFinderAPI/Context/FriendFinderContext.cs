@@ -37,48 +37,7 @@ namespace FriendFinderAPI.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<HobbyUser>()
-            .HasKey(hu => new { hu.HobbyId, hu.UserId });
-
-            modelBuilder.Entity<HobbyUser>()
-            .HasOne(hu => hu.Hobby)
-            .WithMany(h => h.HobbyUsers)
-            .HasForeignKey(hu => hu.HobbyId);
-
-            modelBuilder.Entity<HobbyUser>()
-            .HasOne(hu => hu.User)
-            .WithMany(h => h.HobbyUsers)
-            .HasForeignKey(hu => hu.UserId);
-
-
-            modelBuilder.Entity<HobbyLocation>()
-            .HasKey(hl => new { hl.HobbyId, hl.LocationId });
-
-            modelBuilder.Entity<HobbyLocation>()
-            .HasOne(hl => hl.Hobby)
-            .WithMany(h => h.HobbyLocations)
-            .HasForeignKey(hl => hl.HobbyId);
-
-            modelBuilder.Entity<HobbyLocation>()
-            .HasOne(hl => hl.Location)
-            .WithMany(h => h.HobbyLocations)
-            .HasForeignKey(hl => hl.LocationId);
-
-
-            modelBuilder.Entity<EventUser>()
-            .HasKey(bc => new { bc.EventId, bc.UserId });
-
-            modelBuilder.Entity<EventUser>()
-            .HasOne(bc => bc.Event)
-            .WithMany(b => b.EventUsers)
-            .HasForeignKey(bc => bc.EventId);
-
-            modelBuilder.Entity<EventUser>()
-            .HasOne(bc => bc.User)
-            .WithMany(c => c.EventUsers)
-            .HasForeignKey(bc => bc.UserId)
-            .OnDelete(DeleteBehavior.NoAction);
-
+          
 
             string citiesPath = @"../Documentation/DataSets/cities.txt";
             string[] lines = File.ReadAllLines(citiesPath);
@@ -308,92 +267,108 @@ namespace FriendFinderAPI.Context
             modelBuilder.Entity<HobbyLocation>()
             .HasData(new
             {
+                HobbyLocationId = 1,
                 HobbyId = 1,
-                LocationId = 1,
+                LocationId = 1
             }
             , new
             {
+                HobbyLocationId = 2,
                 HobbyId = 2,
-                LocationId = 2,
+                LocationId = 2
             }
             , new
             {
+                HobbyLocationId = 3,
                 HobbyId = 4,
-                LocationId = 3,
+                LocationId = 3
             }
             , new
-            {
+            {                
+                HobbyLocationId = 4,
                 HobbyId = 6,
-                LocationId = 6,
+                LocationId = 6
             }
             , new
             {
+                HobbyLocationId = 5,
                 HobbyId = 7,
-                LocationId = 9,
+                LocationId = 9
             }
             , new
             {
+                HobbyLocationId = 6,
                 HobbyId = 8,
-                LocationId = 6,
+                LocationId = 6
             });
 
             modelBuilder.Entity<EventUser>()
             .HasData(new
             {
+                EventUserId = 1,
                 EventId = 1,
                 UserId = 1,
                 UserIsResponsible = true
             }
             , new
             {
+                EventUserId = 2,
                 EventId = 1,
                 UserId = 2,
                 UserIsResponsible = false
             }
             , new
             {
+                EventUserId = 3,
                 EventId = 3,
                 UserId = 3,
                 UserIsResponsible = true
             }
             , new
             {
+                EventUserId = 4,
                 EventId = 3,
                 UserId = 4,
                 UserIsResponsible = false
             }
             , new
             {
+                EventUserId = 5,
                 EventId = 4,
                 UserId = 5,
                 UserIsResponsible = true
             }
             , new
             {
+                EventUserId = 6,
                 EventId = 4,
                 UserId = 6,
                 UserIsResponsible = false
             }
             , new
             {
+                EventUserId = 7,
                 EventId = 5,
                 UserId = 7,
                 UserIsResponsible = true
             }
             , new
             {
+                EventUserId = 8,
                 EventId = 5,
                 UserId = 8,
                 UserIsResponsible = false
             }
             , new
             {
+                EventUserId = 9,
                 EventId = 6,
                 UserId = 9,
                 UserIsResponsible = true
             }
             , new
             {
+                EventUserId = 10,
                 EventId = 6,
                 UserId = 10,
                 UserIsResponsible = false
@@ -402,60 +377,70 @@ namespace FriendFinderAPI.Context
             modelBuilder.Entity<HobbyUser>()
             .HasData(new
             {
+                HobbyUserId = 1,
                 UserId = 1,
                 HobbyId = 1,
                 SkillLevel = UserSkillLevel.Master
             }
             , new
             {
+                HobbyUserId = 2,
                 UserId = 2,
                 HobbyId = 1,
                 SkillLevel = UserSkillLevel.Intermediate
             }
             , new
             {
+                HobbyUserId = 3,
                 UserId = 3,
                 HobbyId = 3,
                 SkillLevel = UserSkillLevel.Advanced
             }
             , new
             {
+                HobbyUserId = 4,
                 UserId = 4,
                 HobbyId = 3,
                 SkillLevel = UserSkillLevel.Beginner
             }
             , new
             {
+                HobbyUserId = 5,
                 UserId = 5,
                 HobbyId = 8,
                 SkillLevel = UserSkillLevel.Intermediate
             }
             , new
             {
+                HobbyUserId = 6,
                 UserId = 6,
                 HobbyId = 8,
                 SkillLevel = UserSkillLevel.Beginner
             }
             , new
             {
+                HobbyUserId = 7,
                 UserId = 7,
                 HobbyId = 6,
                 SkillLevel = UserSkillLevel.Beginner
             }
             , new
             {
+                HobbyUserId = 8,
                 UserId = 8,
                 HobbyId = 6,
                 SkillLevel = UserSkillLevel.Advanced
             }
             , new
             {
+                HobbyUserId = 9,
                 UserId = 9,
                 HobbyId = 7,
                 SkillLevel = UserSkillLevel.Advanced
             }
             , new
             {
+                HobbyUserId = 10,
                 UserId = 10,
                 HobbyId = 7,
                 SkillLevel = UserSkillLevel.Intermediate

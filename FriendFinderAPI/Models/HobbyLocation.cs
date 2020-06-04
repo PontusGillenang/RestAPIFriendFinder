@@ -4,12 +4,8 @@ namespace FriendFinderAPI.Models
 {
     public class HobbyLocation
     {
-        [ForeignKey("HobbyId")]
-        public int HobbyId { get; set; }
-        public Hobby Hobby { get; set; }
-        
-        [ForeignKey("LocationId")]
-        public int LocationId { get; set; }
-        public Location Location { get; set; }
+        public int HobbyLocationId { get; set; }
+        public virtual Hobby Hobby { get; set; }
+        public virtual Location Location { get; set; }
     }
 }

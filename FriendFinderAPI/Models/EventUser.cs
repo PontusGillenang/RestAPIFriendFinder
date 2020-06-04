@@ -4,13 +4,9 @@ namespace FriendFinderAPI.Models
 {
     public class EventUser
     {
-        [ForeignKey("EventId")]
-        public int EventId { get; set; }
+        public int EventUserId { get; set; }
         public Event Event { get; set; }
-        
-        [ForeignKey("UserId")]
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public bool UserIsResponsible { get; set; }
     }
 }
