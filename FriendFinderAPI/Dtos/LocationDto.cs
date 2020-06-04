@@ -8,11 +8,7 @@ namespace FriendFinderAPI.Dtos
     {
         public int LocationId { get; set; }
         public string LocationName { get; set; }
-
-        [ForeignKey("CityId")]
-        public int CityId { get; set; }
         public CityDto City { get; set; }
-
         public ICollection<HobbyLocationDto> HobbyLocations { get; set; }
         public IEnumerable<Link> Links {get; set;}
     }

@@ -11,7 +11,6 @@ namespace FriendFinderAPI.Dtos
         public string UserPhoneNumber { get; set; }
         public int UserAge { get; set; }
         public CityDto City { get; set; }
-        public int CityId { get; set; }
         public ICollection<HobbyUserDto> HobbyUsers { get; set; }
         public ICollection<EventUserDto> EventUsers { get; set; }
         public IEnumerable<Link> Links {get; set;}
