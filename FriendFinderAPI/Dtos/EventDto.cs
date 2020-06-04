@@ -1,4 +1,3 @@
-using FriendFinderAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +23,6 @@ namespace FriendFinderAPI.Dtos
         public int CityId { get; set; }
         public CityDto City { get; set; }
         public ICollection<EventUserDto> EventUsers { get; set; }
-        public IEnumerable<Link> Links { get; set; }
+        public IEnumerable<LinkDto> Links { get; set; }
     }
 }

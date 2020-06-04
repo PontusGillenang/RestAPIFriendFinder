@@ -41,7 +41,7 @@ namespace FriendFinderAPI.Controllers
 
                 for (int i = 0; i < mappedResults.Length; i++)
                 {
-                    mappedResults[i].Links = CreateLinksGetAllEvents(mappedResults[i]);
+                    mappedResults[i].Links = CreateLinksForEvents(mappedResults[i]);
                 }
 
                 return Ok(mappedResults);
@@ -65,7 +65,7 @@ namespace FriendFinderAPI.Controllers
                     return NotFound();
                 }
 
-                mappedResult.Links = CreateLinksGetAllEvents(mappedResult);
+                mappedResult.Links = CreateLinksForEvents(mappedResult);
 
                 return Ok(mappedResult);
             }
@@ -190,28 +190,28 @@ namespace FriendFinderAPI.Controllers
             return BadRequest();
         }
 
-        private IEnumerable<Link> CreateLinksGetAllEvents(EventDto events)
+        private IEnumerable<LinkDto> CreateLinksForEvents(EventDto eventDto)
         {
             var links = new[]
             {
-            new Link
-            {
-            Method = "GET",
-            Rel = "self",
-            Href = Url.Link("GetEvent", new {eventId = events.EventId}).ToLower()
-            },
-            new Link
-            {
-            Method = "DELETE",
-            Rel = "self",
-            Href = Url.Link("DeleteEvent", new {eventId = events.EventId}).ToLower()
-            },
-            new Link
-            {
-            Method = "PUT",
-            Rel = "self",
-            Href = Url.Link("PutEvent", new {eventId = events.EventId}).ToLower()
-            },
+                new LinkDto
+                {
+                    Href = Url.Link("GetEvent", new {eventId = eventDto.EventId}).ToLower(),
+                    Rel = "self",
+                    Method = "GET"
+                },
+                new LinkDto
+                {
+                    Href = Url.Link("PutEvent", new {eventId = eventDto.EventId}).ToLower(),
+                    Rel = "update event",
+                    Method = "PUT"
+                },
+                new LinkDto
+                {
+                    Href = Url.Link("DeleteEvent", new {eventId = eventDto.EventId}).ToLower(),
+                    Rel = "delete event",
+                    Method = "DELETE"
+                }
             };
             return links;
         }
