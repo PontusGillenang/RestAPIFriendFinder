@@ -71,8 +71,8 @@ namespace FriendFinderAPI.Services
             _logger.LogInformation($"Getting Users for event with ID:{eventId}");
             IQueryable<User> query = _context.Users
                                             .Include(u => u.City)
-                                            .Where(user => user.EventUsers.Any(eventUser => eventUser.Event.EventId == eventId))
-                                            .OrderBy(user => user.EventUsers.First().Event.EventId);
+                                            .Where(user => user.EventUsers.Any(eventUser => eventUser.EventId == eventId))
+                                            .OrderBy(user => user.EventUsers.First().EventId);
 
             return await query.ToArrayAsync();
         }

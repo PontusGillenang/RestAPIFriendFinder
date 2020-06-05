@@ -5,9 +5,13 @@ namespace FriendFinderAPI.Models
 {
     public class HobbyUser
     {
-        public int HobbyUserId { get; set; }
-        public virtual Hobby Hobby { get; set; }
-        public virtual User User { get; set; }
+        [ForeignKey("HobbyId")]
+        public int HobbyId { get; set; }
+        public Hobby Hobby { get; set; }
+
+        [ForeignKey("UserId")]
+        public int UserId { get; set; }
+        public User User { get; set; }
         public UserSkillLevel SkillLevel { get; set; }
     }
 }
